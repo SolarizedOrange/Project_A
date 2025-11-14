@@ -27,12 +27,10 @@ public class PlayerController : CharacterBase
 
         if (MoveDirection == null || MoveDirection.x == 0) // Short circuit evaluation
         {
-            Debug.Log("IDLE");
             Machine.ChangeState(PlayerStateType.Idle);
         }
         else
         {
-            Debug.Log("MOVE");
             Machine.ChangeState(PlayerStateType.Move);
         }
     }

@@ -21,8 +21,6 @@ public class PlayerStateMachine : MonoBehaviour
             StateDic.Add(state.GetStateType(), state);
             state.Init(ctrl);
         }
-        Debug.Log(StateDic.Count);
-
     }
     
     void Start()
