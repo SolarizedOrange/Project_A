@@ -19,12 +19,13 @@ public class PlayerController : CharacterBase
 
     void Update()
     {
+        UpdateMove();   
     }
 
-    public void OnMove(InputValue value)
+    public void UpdateMove()
     {
-        MoveDirection = value.Get<Vector2>();
-
+        if (Machine.CurrentState.GetStateType() == PlayerStateType.Cover) return;
+    
         if (MoveDirection == null || MoveDirection.x == 0) // Short circuit evaluation
         {
             Machine.ChangeState(PlayerStateType.Idle);
@@ -35,6 +36,11 @@ public class PlayerController : CharacterBase
         }
     }
 
+    public void OnMove(InputValue value)
+    {
+        MoveDirection = value.Get<Vector2>();
+    }
+
     public void OnAttack()
     {
 
@@ -42,7 +48,16 @@ public class PlayerController : CharacterBase
 
     public void OnCover()
     {
-
+        if (Machine.CurrentState.GetStateType() != PlayerStateType.Cover)
+        {
+            Debug.Log("Enter Cover State");
+            Machine.ChangeState(PlayerStateType.Cover);
+        }
+        else
+        {
+            Debug.Log("Exit Cover State");
+            Machine.ChangeState(PlayerStateType.Idle);
+        }
     }
 
     public bool TryAttack()
