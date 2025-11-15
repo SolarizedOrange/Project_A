@@ -12,3 +12,11 @@ public enum Layers
 {
     Coverable = 1 << 6,
 }
+
+public enum WeaponType
+{
+    Melee,
+    Handgun,
+    Shotgun,
+    SubmachineGun
+}
