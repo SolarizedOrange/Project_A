@@ -20,3 +20,11 @@ public enum WeaponType
     Shotgun,
     SubmachineGun
 }
+
+public enum HitBoxType
+{
+    Head,
+    Body,
+    Leg,
+    Player
+}
