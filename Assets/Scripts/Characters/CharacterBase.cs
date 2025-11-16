@@ -6,8 +6,7 @@ public class CharacterBase : MonoBehaviour
 {
     [Header("CharacterBase")]
     public CharacterController MoveCtrl;
-    // public CharacterStat Stat;
-    // public List<Attack> Attacks;
+    public WeaponBase CurrentWeapon;
     public bool IsCover;
     public float AttackDistance;
 

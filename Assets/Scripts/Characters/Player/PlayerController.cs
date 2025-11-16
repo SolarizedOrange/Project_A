@@ -6,6 +6,9 @@ public class PlayerController : CharacterBase
 
     public PlayerStateMachine Machine;
     public Vector2 MoveDirection;
+    bool isAiming;
+    bool isAttacking;
+    bool hasJustAttacked;
 
     protected override void Awake()
     {
@@ -19,7 +22,11 @@ public class PlayerController : CharacterBase
 
     void Update()
     {
-        UpdateMove();   
+        UpdateMove();
+        UpdateAim();
+        UpdateAttack();
+
+        hasJustAttacked = false;
     }
 
     public void UpdateMove()
@@ -36,14 +43,36 @@ public class PlayerController : CharacterBase
         }
     }
 
+    public void UpdateAim()
+    {
+        if (isAiming)
+        {
+            // TODO implement aim anim and etc.
+        }
+    }
+
+    public void UpdateAttack()
+    {
+        if (isAiming && isAttacking)
+        {
+            CurrentWeapon.Attack(hasJustAttacked);
+        }
+    }
+
     public void OnMove(InputValue value)
     {
         MoveDirection = value.Get<Vector2>();
     }
 
-    public void OnAttack()
+    public void OnAttack(InputValue value)
     {
+        isAttacking = value.isPressed;
+        hasJustAttacked = value.isPressed;
+    }
 
+    public void OnAim(InputValue value)
+    {
+        isAiming = value.isPressed;
     }
 
     public void OnCover()
