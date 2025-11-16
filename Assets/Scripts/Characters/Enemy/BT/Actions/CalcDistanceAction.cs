@@ -1,0 +1,30 @@
+using System;
+using Unity.Behavior;
+using UnityEngine;
+using Action = Unity.Behavior.Action;
+using Unity.Properties;
+
+[Serializable, GeneratePropertyBag]
+[NodeDescription(name: "CalcDistance", story: "Check [AlertDistnace] [Self] between [Target]", category: "Action", id: "66fec97cbc730f5444a7cbfd92523c2b")]
+public partial class CalcDistanceAction : Action
+{
+    [SerializeReference] public BlackboardVariable<float> AlertDistnace;
+    [SerializeReference] public BlackboardVariable<CharacterBase> Self;
+    [SerializeReference] public BlackboardVariable<CharacterBase> Target;
+
+    protected override Status OnStart()
+    {
+        if (Vector3.Dot(Target.Value.transform.position - Self.Value.transform.position,
+            -Self.Value.transform.right) > 0)
+        {
+            var distance = Vector3.Distance(Self.Value.transform.position, Target.Value.transform.position);
+            if (distance < AlertDistnace.Value)
+                return Status.Success;
+            else
+                return Status.Failure;
+        }
+        else
+            return Status.Failure;
+    }
+}
+

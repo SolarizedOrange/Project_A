@@ -4,11 +4,16 @@ public abstract class RangedWeapon: WeaponBase
 {
     public Transform MuzzlePosition;
 
+    [Header("Test Ray Setting")]
+    [SerializeField] private Color debugRayColor = Color.red;
+
     public void Fire()
     {
         Debug.Log("FIRE");
-        if (Physics.Raycast(MuzzlePosition.position, MuzzlePosition.forward, out var hitInfo))
+        Ray ray = new Ray(MuzzlePosition.position, MuzzlePosition.forward);
+        if (Physics.Raycast(ray, out var hitInfo ,Stat.AttackRange.Val,(int)Layers.HitCollider))
         {
+            Debug.DrawRay(MuzzlePosition.position, MuzzlePosition.forward * Stat.AttackRange.Val, debugRayColor, 5.0f);
             Debug.Log("RayCastHit");
             var res = hitInfo.collider;
             if (res.TryGetComponent<HitBox>(out var hitBox))

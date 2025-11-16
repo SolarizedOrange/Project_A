@@ -1,4 +1,5 @@
 using System;
+using Unity.Behavior;
 
 public enum PlayerStateType
 {
@@ -11,6 +12,7 @@ public enum PlayerStateType
 public enum Layers
 {
     Coverable = 1 << 6,
+    HitCollider = 1 << 7
 }
 
 public enum WeaponType
@@ -27,4 +29,14 @@ public enum HitBoxType
     Body,
     Leg,
     Player
+}
+
+[BlackboardEnum]
+public enum EnemyStateType
+{
+    Idle,
+    BattleIdle,
+    Cover,
+    Chase,
+    Dead
 }

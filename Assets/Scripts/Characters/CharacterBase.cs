@@ -1,29 +1,24 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-[RequireComponent(typeof(CharacterController))]
+[RequireComponent(typeof(CharacterController), typeof(CharacterStat))]
 public class CharacterBase : MonoBehaviour
 {
     [Header("CharacterBase")]
     public CharacterController MoveCtrl;
+    public CharacterStat Stat;
     public WeaponBase CurrentWeapon;
     public bool IsCover;
-    public float AttackDistance;
+    // public float AttackDistance; // Moved to WeaponStat
 
     protected virtual void Awake()
     {
         MoveCtrl = GetComponent<CharacterController>();
+        Stat = GetComponent<CharacterStat>();
     }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public virtual void OnDamage(HitBoxType hitBoxType)
     {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
+        Debug.Log($"{gameObject.name} took damage on {hitBoxType} hitbox.");
     }
 }
