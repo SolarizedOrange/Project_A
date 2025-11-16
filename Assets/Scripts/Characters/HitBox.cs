@@ -12,6 +12,6 @@ public class HitBox : MonoBehaviour
     public void OnHit()
     {
         Debug.Log("HIT");
-        // character.OnDamage(type);
+        character.OnDamage(type);
     }
 }

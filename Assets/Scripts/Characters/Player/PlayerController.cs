@@ -3,7 +3,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : CharacterBase
 {
-
+    [Header("Player Controller")]
     public PlayerStateMachine Machine;
     public Vector2 MoveDirection;
     bool isAiming;
