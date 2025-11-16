@@ -8,7 +8,7 @@ public class CharacterBase : MonoBehaviour
     public CharacterController MoveCtrl;
     public WeaponBase CurrentWeapon;
     public bool IsCover;
-    public float AttackDistance;
+    // public float AttackDistance; // Moved to WeaponStat
 
     protected virtual void Awake()
     {
