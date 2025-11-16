@@ -10,7 +10,7 @@ public class PlayerStateMove : PlayerStateBase
 
     public override void OnUpdate()
     {
-        PlayerCtrl.MoveCtrl.Move(Vector3.right * PlayerCtrl.MoveDirection * Time.deltaTime);
+        PlayerCtrl.MoveCtrl.Move(Vector3.right * PlayerCtrl.MoveDirection * PlayerCtrl.Stat.MoveSpeed.Val * Time.deltaTime);
     }
 
     public override void OnExit()
