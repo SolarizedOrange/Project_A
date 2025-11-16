@@ -1,4 +1,5 @@
 using System;
+using Unity.Behavior;
 
 public enum PlayerStateType
 {
@@ -27,4 +28,14 @@ public enum HitBoxType
     Body,
     Leg,
     Player
+}
+
+[BlackboardEnum]
+public enum EnemyStateType
+{
+    Idle,
+    BattleIdle,
+    Cover,
+    Chase,
+    Dead
 }
