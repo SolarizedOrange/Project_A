@@ -12,6 +12,7 @@ public enum PlayerStateType
 public enum Layers
 {
     Coverable = 1 << 6,
+    HitCollider = 1 << 7
 }
 
 public enum WeaponType
