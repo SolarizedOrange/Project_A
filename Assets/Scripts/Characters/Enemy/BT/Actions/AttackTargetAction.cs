@@ -8,21 +8,24 @@ using Unity.Properties;
 [NodeDescription(name: "AttackTarget", story: "[Agent] attacks [Target] within [AttackDistance]", category: "Action", id: "85cd35e47cd82a5f68c4924ded1af75a")]
 public partial class AttackTargetAction : Action
 {
+    private readonly int StateHash = Animator.StringToHash("CurState");
     [SerializeReference] public BlackboardVariable<CharacterBase> Agent;
     [SerializeReference] public BlackboardVariable<CharacterBase> Target;
     [SerializeReference] public BlackboardVariable<float> AttackDistance;
 
-	protected override Status OnUpdate()
+	protected override Status OnStart()
 	{
-        if (Vector3.Distance(Agent.Value.transform.position, Target.Value.transform.position) <= AttackDistance.Value)
-        {
-            Agent.Value.CurrentWeapon.Attack(true);
-            return Status.Success;
-        }
-        else
-        {
-            return Status.Failure;
-        }
+        Agent.Value.CurrentWeapon.Attack(true);
+        return Status.Success;
+        // if (Vector3.Distance(Agent.Value.transform.position, Target.Value.transform.position) <= AttackDistance.Value)
+        // {
+        //     Agent.Value.CurrentWeapon.Attack(true);
+        //     return Status.Success;
+        // }
+        // else
+        // {
+        //     return Status.Failure;
+        // }
 	}
 }
 

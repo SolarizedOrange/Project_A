@@ -15,7 +15,7 @@ public partial class CalcDistanceAction : Action
     protected override Status OnStart()
     {
         if (Vector3.Dot(Target.Value.transform.position - Self.Value.transform.position,
-            -Self.Value.transform.right) > 0)
+            Self.Value.transform.right) > 0)
         {
             var distance = Vector3.Distance(Self.Value.transform.position, Target.Value.transform.position);
             if (distance < AlertDistnace.Value)
