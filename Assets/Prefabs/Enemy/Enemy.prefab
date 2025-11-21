@@ -123,6 +123,7 @@ GameObject:
   - component: {fileID: 5218575593006026970}
   - component: {fileID: 5614739585257328435}
   - component: {fileID: 4432718035472550395}
+  - component: {fileID: 4904555805253102523}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Untagged
@@ -172,6 +173,7 @@ MonoBehaviour:
   - rid: 8739563111447265437
   - rid: 8739563111447266225
   - rid: 8739563111447266226
+  - rid: 8739563214408778368
   m_OriginalGraph: {fileID: -8989826534361754030, guid: 8d470dfabddaa2b4398cc799f16949f1, type: 2}
   m_IsInitialised: 0
   m_IsStarted: 0
@@ -192,7 +194,7 @@ MonoBehaviour:
         GUID:
           m_Value0: 9764263781811244729
           m_Value1: 16508958719014895283
-        Name: AlertDistance
+        Name: AttackDuration
         m_Value: 10
     - rid: 8739563106375827616
       type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
@@ -258,6 +260,14 @@ MonoBehaviour:
           m_Value1: 4842577411241166453
         Name: Target
         m_Value: {fileID: 0}
+    - rid: 8739563214408778368
+      type: {class: 'BlackboardVariable`1[[UnityEngine.Animator, UnityEngine.AnimationModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 10822056668272992525
+          m_Value1: 13450142152135019937
+        Name: Animator
+        m_Value: {fileID: 4904555805253102523}
 --- !u!143 &5218575593006026970
 CharacterController:
   m_ObjectHideFlags: 0
@@ -333,6 +343,28 @@ MonoBehaviour:
     OnChangedValue:
       m_PersistentCalls:
         m_Calls: []
+--- !u!95 &4904555805253102523
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6052781733463567801}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 6a646d8e4fd086a4585699d87b2e2c79, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1001 &4452375872507644764
 PrefabInstance:
   m_ObjectHideFlags: 0
