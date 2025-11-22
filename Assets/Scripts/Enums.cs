@@ -40,3 +40,12 @@ public enum EnemyStateType
     Chase,
     Dead
 }
+
+public enum AnimationActionType
+{
+    Idle,
+    BattleIdle,
+    Aim,
+    Attack,
+    Die
+}

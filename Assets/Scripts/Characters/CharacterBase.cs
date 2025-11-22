@@ -8,6 +8,7 @@ public class CharacterBase : MonoBehaviour
     public CharacterController MoveCtrl;
     public CharacterStat Stat;
     public WeaponBase CurrentWeapon;
+    public Animator Animator;
     public bool IsCover;
     // public float AttackDistance; // Moved to WeaponStat
 
