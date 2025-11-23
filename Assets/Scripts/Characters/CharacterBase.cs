@@ -1,11 +1,11 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-[RequireComponent(typeof(CharacterController), typeof(CharacterStat))]
+[RequireComponent(typeof(MovementController), typeof(CharacterStat))]
 public class CharacterBase : MonoBehaviour
 {
     [Header("CharacterBase")]
-    public CharacterController MoveCtrl;
+    public MovementController MoveCtrl;
     public CharacterStat Stat;
     public WeaponBase CurrentWeapon;
     public Animator Animator;
@@ -14,7 +14,7 @@ public class CharacterBase : MonoBehaviour
 
     protected virtual void Awake()
     {
-        MoveCtrl = GetComponent<CharacterController>();
+        MoveCtrl = GetComponent<MovementController>();
         Stat = GetComponent<CharacterStat>();
     }
 

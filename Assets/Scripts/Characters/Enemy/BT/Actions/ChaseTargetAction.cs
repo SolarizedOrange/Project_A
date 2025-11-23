@@ -20,7 +20,7 @@ public partial class ChaseTargetAction : Action
         if (Vector3.Distance(Agent.Value.transform.position, Target.Value.transform.position) > MinDistance.Value)
         {
             Vector3 direction = (Target.Value.transform.position - Agent.Value.transform.position).normalized;
-            Agent.Value.MoveCtrl.Move(direction * Time.deltaTime * Agent.Value.Stat.MoveSpeed.Val);
+            Agent.Value.MoveCtrl.Ctrl.Move(direction * Time.deltaTime * Agent.Value.Stat.MoveSpeed.Val);
             return Status.Running;
         }
         else return Status.Success;
