@@ -36,6 +36,7 @@ public class PlayerStateMachine : MonoBehaviour
 
     public void ChangeState(PlayerStateType state)
     {
+        if (CurrentState.GetStateType() == state) return;
         CurrentState.OnExit();
         CurrentState = StateDic[state];
         CurrentState.OnEnter();
