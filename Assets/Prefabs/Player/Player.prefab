@@ -125,7 +125,6 @@ GameObject:
   - component: {fileID: 2500686185973999503}
   - component: {fileID: 5095107289560235250}
   - component: {fileID: 3876561869873500626}
-  - component: {fileID: 7702626791782071856}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -203,7 +202,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 949ec9f8ff46d164b84db9cf2cb41deb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MoveCtrl: {fileID: 0}
+  MoveCtrl: {fileID: 8151976365467373408}
   Stat: {fileID: 0}
   CurrentWeapon: {fileID: 2664924696816261548}
   Animator: {fileID: 4393170893409835017}
@@ -292,20 +291,6 @@ MonoBehaviour:
     OnChangedValue:
       m_PersistentCalls:
         m_Calls: []
---- !u!114 &7702626791782071856
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6236016170068327932}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 17bf66c9de923a1458027ba26c32a54e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Ctrl: {fileID: 0}
-  transitionTime: 0.2
 --- !u!1001 &5392085448036228292
 PrefabInstance:
   m_ObjectHideFlags: 0
