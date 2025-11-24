@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 [CreateAssetMenu(menuName="State/Move")]
@@ -11,19 +12,19 @@ public class PlayerStateMove : PlayerStateBase
 
     public override void OnUpdate()
     {
-        PlayerCtrl.MoveCtrl.TargetVelocity = Vector3.right * PlayerCtrl.MoveDirection * PlayerCtrl.Stat.MoveSpeed.Val;
+        PlayerCtrl.MoveCtrl.TargetVelocity = Vector3.right * PlayerCtrl.MoveDirection.x * PlayerCtrl.Stat.MoveSpeed.Val;
         // if (PlayerCtrl.MoveDirection.x > 0 && isFacingRight)
         // {
             
         // }
         if (!PlayerCtrl.isAiming)
         {
-            PlayerCtrl.MoveCtrl.UpdateRotation(Vector3.right * PlayerCtrl.MoveDirection.x);
+            PlayerCtrl.MoveCtrl.UpdateRotation(Vector3.right * Math.Sign(PlayerCtrl.MoveDirection.x));
             // PlayerCtrl.MoveCtrl.transform.LookAt(PlayerCtrl.MoveCtrl.transform.position + Vector3.right * PlayerCtrl.MoveDirection.x);
         }
         else
         {
-            PlayerCtrl.MoveCtrl.UpdateRotation(Vector3.right * PlayerCtrl.MoveDirection.x);
+            PlayerCtrl.MoveCtrl.UpdateRotation(Vector3.right * Math.Sign(PlayerCtrl.MoveDirection.x));
             // PlayerCtrl.MoveCtrl.transform.LookAt(PlayerCtrl.MoveCtrl.transform.position + Vector3.right);
         }
     }
