@@ -8,7 +8,7 @@ using Unity.Properties;
 [NodeDescription(name: "ChaseTarget", story: "[Agent] Chases [Target] until [MinDistance]", category: "Action", id: "0fcdb71c1f737236de708016bdbc8318")]
 public partial class ChaseTargetAction : Action
 {
-    [SerializeReference] public BlackboardVariable<CharacterBase> Agent;
+    [SerializeReference] public BlackboardVariable<EnemyController> Agent;
     [SerializeReference] public BlackboardVariable<CharacterBase> Target;
     [SerializeReference] public BlackboardVariable<float> MinDistance;
     [SerializeReference] public BlackboardVariable<bool> IsHit;

@@ -3,7 +3,7 @@ using UnityEngine;
 [CreateAssetMenu(menuName="State/Move")]
 public class PlayerStateMove : PlayerStateBase
 {
-    int count = 0;
+    // int count = 0;
     public override void OnEnter()
     {
         // throw new System.NotImplementedException();

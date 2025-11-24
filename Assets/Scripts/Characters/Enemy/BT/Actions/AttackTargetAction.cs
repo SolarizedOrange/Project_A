@@ -9,7 +9,7 @@ using Unity.Properties;
 public partial class AttackTargetAction : Action
 {
     private readonly int StateHash = Animator.StringToHash("CurState");
-    [SerializeReference] public BlackboardVariable<CharacterBase> Agent;
+    [SerializeReference] public BlackboardVariable<EnemyController> Agent;
     [SerializeReference] public BlackboardVariable<CharacterBase> Target;
     [SerializeReference] public BlackboardVariable<float> AttackDistance;
 
@@ -17,15 +17,6 @@ public partial class AttackTargetAction : Action
 	{
         Agent.Value.CurrentWeapon.Attack(true);
         return Status.Success;
-        // if (Vector3.Distance(Agent.Value.transform.position, Target.Value.transform.position) <= AttackDistance.Value)
-        // {
-        //     Agent.Value.CurrentWeapon.Attack(true);
-        //     return Status.Success;
-        // }
-        // else
-        // {
-        //     return Status.Failure;
-        // }
 	}
 }
 
