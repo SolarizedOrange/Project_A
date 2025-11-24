@@ -9,7 +9,7 @@ using Unity.Properties;
 public partial class CalcDistanceAction : Action
 {
     [SerializeReference] public BlackboardVariable<float> AlertDistnace;
-    [SerializeReference] public BlackboardVariable<CharacterBase> Self;
+    [SerializeReference] public BlackboardVariable<EnemyController> Self;
     [SerializeReference] public BlackboardVariable<CharacterBase> Target;
 
     protected override Status OnStart()
