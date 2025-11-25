@@ -79,7 +79,7 @@ public partial class CoverAction : Action
         m_isPlayAnim = true;
         m_origin = Agent.Value.transform.position;
         var dir = (CoverObject.Value.position - Agent.Value.transform.position).normalized;
-        Agent.Value.MoveCtrl.TargetVelocity = dir * Agent.Value.Stat.MoveSpeed.Val;
+        Agent.Value.MoveCtrl.SetTargetVelocity(dir * Agent.Value.Stat.MoveSpeed.Val);
         Debug.Log($"Enter Cover {CoverObject.Value.name}");
     }
 
@@ -88,7 +88,7 @@ public partial class CoverAction : Action
         m_isPlayAnim = true;
         var dir = (CoverObject.Value.position - Agent.Value.transform.position).normalized;
 
-        Agent.Value.MoveCtrl.TargetVelocity = dir * Agent.Value.Stat.MoveSpeed.Val;
+        Agent.Value.MoveCtrl.SetTargetVelocity(dir * Agent.Value.Stat.MoveSpeed.Val);
         Debug.Log("Exit Cover");
     }
 

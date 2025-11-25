@@ -17,12 +17,17 @@ public partial class ChaseTargetAction : Action
     {
         if (IsHit.Value)
             return Status.Failure;
-        if (Vector3.Distance(Agent.Value.transform.position, Target.Value.transform.position) > MinDistance.Value)
+
+        var movement = Target.Value.transform.position - Agent.Value.transform.position;
+
+        if (movement.magnitude > MinDistance.Value)
         {
-            Vector3 direction = (Target.Value.transform.position - Agent.Value.transform.position).normalized;
-            Agent.Value.MoveCtrl.Ctrl.Move(direction * Time.deltaTime * Agent.Value.Stat.MoveSpeed.Val);
+            var dir = movement.normalized;
+            Agent.Value.MoveCtrl.SetTargetVelocity(Vector3.right * dir.x * Agent.Value.Stat.MoveSpeed.Val);
+            Agent.Value.MoveCtrl.SetTargetRotation(Vector3.right * dir.x);
             return Status.Running;
         }
+		
         else return Status.Success;
     }
 }
