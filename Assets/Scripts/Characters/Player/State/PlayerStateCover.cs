@@ -2,12 +2,14 @@ using UnityEngine;
 
 [CreateAssetMenu(menuName="State/Cover")]
 public class PlayerStateCover : PlayerStateBase
-{    public override void OnEnter()
+{    
+    private Vector3 m_originPos;
+    public override void OnEnter()
     {
         float minDist = float.MaxValue;
         Collider closestCover = null;
 
-        Collider[] colliders = Physics.OverlapSphere(PlayerCtrl.transform.position, 3f, (int)Layers.Coverable);
+        Collider[] colliders = Physics.OverlapSphere(PlayerCtrl.transform.position, 3f, (int)Layers.PlayerCoverable);
 
         foreach (var cover in colliders)
         {
@@ -16,6 +18,9 @@ public class PlayerStateCover : PlayerStateBase
             if (minDist > dist)
             {
                 closestCover = cover;
+                m_originPos = Vector3.Scale(PlayerCtrl.transform.position,new Vector3(1,1,0));
+                PlayerCtrl.MoveCtrl.SetTargetPositionXZ(cover.transform.position);
+                // PlayerCtrl.MoveCtrl.SetTargetRotation(Vector3.right);
                 minDist = dist;
             }
         }
@@ -39,6 +44,8 @@ public class PlayerStateCover : PlayerStateBase
     public override void OnExit()
     {
         // throw new System.NotImplementedException();
+        PlayerCtrl.MoveCtrl.SetTargetPositionXZ(m_originPos);
+
     }
 
     public override PlayerStateType GetStateType()
