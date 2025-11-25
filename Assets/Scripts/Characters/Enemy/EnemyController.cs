@@ -23,7 +23,7 @@ public class EnemyController: CharacterBase
 
 	void SyncSpeedAnimator()
 	{
-		Animator.SetFloat(SpeedHash, MoveCtrl.Ctrl.velocity.magnitude);
+		Animator.SetFloat(SpeedHash, MoveCtrl.Ctrl.linearVelocity.magnitude);
 	}
 
 	void SyncAttackDistance()

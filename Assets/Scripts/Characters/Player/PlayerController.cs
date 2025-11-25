@@ -41,7 +41,7 @@ public class PlayerController : CharacterBase
         {
             Machine.ChangeState(PlayerStateType.Move);
         }
-        Animator.SetFloat(SpeedHash, Mathf.Clamp01(MoveCtrl.Ctrl.velocity.magnitude));
+        Animator.SetFloat(SpeedHash, Mathf.Clamp01(MoveCtrl.Ctrl.linearVelocity.magnitude));
     }
 
     public void UpdateAim()
