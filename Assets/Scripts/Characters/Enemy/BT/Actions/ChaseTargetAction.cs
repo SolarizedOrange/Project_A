@@ -17,7 +17,7 @@ public partial class ChaseTargetAction : Action
     {
         if (IsHit.Value)
             return Status.Failure;
-        if (Vector3.Distance(Agent.Value.transform.position, Target.Value.transform.position) > MinDistance.Value)
+
         var movement = Target.Value.transform.position - Agent.Value.transform.position;
 
         if (movement.magnitude > MinDistance.Value)
@@ -27,6 +27,7 @@ public partial class ChaseTargetAction : Action
             Agent.Value.MoveCtrl.SetTargetRotation(Vector3.right * dir.x);
             return Status.Running;
         }
+		
         else return Status.Success;
     }
 }
