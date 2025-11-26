@@ -3,95 +3,51 @@ using Unity.Behavior;
 using UnityEngine;
 using Action = Unity.Behavior.Action;
 using Unity.Properties;
-using UnityEngine.Rendering;
 using Unity.VisualScripting;
 
 [Serializable, GeneratePropertyBag]
-[NodeDescription(name: "Cover", story: "[Agent] covers [CoverObject] within [FindDistance]", category: "Action", id: "4dda05289653fa594013b18a7433b03f")]
+[NodeDescription(name: "Cover", story: "Agent [isCover] in [CoverObject]", category: "Action", id: "fe243adc61bdf0bf1602db6de6f3570d")]
 public partial class CoverAction : Action
 {
-    [SerializeReference] public BlackboardVariable<EnemyController> Agent;
+    [SerializeReference] public BlackboardVariable<bool> IsCover;
+    [SerializeReference] public BlackboardVariable<bool> InEnter;
     [SerializeReference] public BlackboardVariable<Transform> CoverObject;
-    [SerializeReference] public BlackboardVariable<float> FindDistance;
-    [SerializeReference] public BlackboardVariable<float> CoverTime;
+    [SerializeReference] public BlackboardVariable<EnemyController> Agent;
+    [SerializeReference] public BlackboardVariable<Vector3> AgentReturnPos;
 
-    private Vector3 m_origin = Vector3.zero;
-    private bool m_isPlayAnim = false;
+    MovementController ctrl;
 
     protected override Status OnStart()
     {
-        if (Agent.Value.IsCover)
+        Debug.Log("CoverStart");
+
+        ctrl = Agent.Value.MoveCtrl;
+        if (CoverObject.Value == null) return Status.Failure;
+
+        if (IsCover.Value)
 		{
-            Agent.Value.IsCover = false;
+            EnterCover();
+		}
+        else if (InEnter.Value)
+		{
 			ExitCover();
-            return Status.Running;
 		}
-        else
-		{
-			if (TryFindCoverObject())
-			{
-                Agent.Value.IsCover = true;
-                EnterCover();
-                return Status.Running;
-			}
-            return Status.Success;
-		}
-    }
-
-	protected override Status OnUpdate()
-	{
-        
-		if (m_isPlayAnim)
-		{
-			
-            return Status.Running;
-		}
-        else return Status.Success;
-	}
-
-    bool TryFindCoverObject()
-    {
-        var Ctrl = Agent.Value;
-        float minDist = float.MaxValue;
-
-        Collider[] colliders = Physics.OverlapSphere(Ctrl.transform.position, FindDistance, (int)Layers.EnemyCoverable);
-
-        foreach (var cover in colliders)
-        {
-            float dist = Vector3.SqrMagnitude(Ctrl.transform.position - cover.transform.position);
-
-            if (minDist > dist)
-            {
-                CoverObject.Value = cover.transform;
-                minDist = dist;
-            }
-        }
-        if (CoverObject.Value == null)
-        {
-            // Debug.Log("Fallback to BattleIdle");
-            return false;
-        }
-        else return true;
+        return Status.Success;
     }
 
     void EnterCover()
     {
-        m_isPlayAnim = true;
-        m_origin = Agent.Value.transform.position;
-        var dir = (CoverObject.Value.position - Agent.Value.transform.position).normalized;
-        Agent.Value.MoveCtrl.SetTargetVelocity(dir * Agent.Value.Stat.MoveSpeed.Val);
-        Debug.Log($"Enter Cover {CoverObject.Value.name}");
+        AgentReturnPos.Value = Vector3.Scale(Agent.Value.transform.position, new Vector3(1,1,0));
+        ctrl.SetTargetPositionXZ(CoverObject.Value.position);
+        InEnter.Value = true;
+        // Debug.Log($"Enter Cover c:{IsCover.Value}");
     }
 
     void ExitCover()
     {
-        m_isPlayAnim = true;
-        var dir = (CoverObject.Value.position - Agent.Value.transform.position).normalized;
-
-        Agent.Value.MoveCtrl.SetTargetVelocity(dir * Agent.Value.Stat.MoveSpeed.Val);
-        Debug.Log("Exit Cover");
+        ctrl.SetTargetPositionXZ(AgentReturnPos.Value);
+        InEnter.Value = false;
+        // Debug.Log($"Exit Cover c:{IsCover.Value}");
     }
-
-
 }
 
