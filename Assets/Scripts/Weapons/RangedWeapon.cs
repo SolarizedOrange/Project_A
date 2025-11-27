@@ -5,7 +5,7 @@ public abstract class RangedWeapon: WeaponBase
     public Transform MuzzlePosition;
 
     [Header("Test Ray Setting")]
-    [SerializeField] private Color debugRayColor = Color.red;
+    [SerializeField] Color debugRayColor = Color.red;
 
     public void Fire()
     {
