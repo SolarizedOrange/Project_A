@@ -48,5 +48,6 @@ public enum AnimationActionType
     BattleIdle,
     Aim,
     Attack,
+    Cover,
     Die
 }
