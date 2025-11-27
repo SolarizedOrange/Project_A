@@ -6,7 +6,7 @@ using UnityEngine;
 [Condition(name: "CoverCondition", story: "[Agent] isCover?", category: "Conditions", id: "38002e8208067719b844a45cc509c60c")]
 public partial class CoverCondition : Condition
 {
-    [SerializeReference] public BlackboardVariable<CharacterBase> Agent;
+    [SerializeReference] public BlackboardVariable<EnemyController> Agent;
 
     public override bool IsTrue()
     {

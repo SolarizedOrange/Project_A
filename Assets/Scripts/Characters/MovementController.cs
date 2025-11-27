@@ -51,7 +51,7 @@ public class MovementController: MonoBehaviour
         UpdateRotation();
     }
 
-    private void UpdateVelocity()
+    void UpdateVelocity()
 	{
         // moveTimer = Mathf.Clamp(moveTimer + Time.deltaTime, 0, transitionTime);
         // currentVelocity = Vector3.Lerp(lastVelocity, targetVelocity, moveTimer / transitionTime);

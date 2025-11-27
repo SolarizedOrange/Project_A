@@ -5,7 +5,7 @@ using UnityEngine.Events;
 [System.Serializable]
 public class StatBase<T>
 {
-    [SerializeField] private T val;
+    [SerializeField] T val;
     public T Val
     { 
         get
