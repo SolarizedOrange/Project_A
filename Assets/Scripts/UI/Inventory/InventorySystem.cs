@@ -15,6 +15,9 @@ public class InventorySystem : MonoBehaviour
     [SerializeField] List<Image> slotObjects;
     [SerializeField] InputActionMap actionMap;
 
+    [Header("Add Test Inventory Items")]
+    [SerializeField] List<InventoryItemBase> items;
+
     List<InventorySlot> slots;
     List<System.Action<InputAction.CallbackContext>> handlers = new ();
     void OnEnable()
@@ -43,8 +46,13 @@ public class InventorySystem : MonoBehaviour
         foreach (var slot in slotObjects)
 		{
             // null slot image disabled
-            slot.enabled = slot.sprite;
+            slot.enabled = slot.sprite != null;
 			slots.Add(new InventorySlot(){SlotItem = null, SlotImage = slot});
+		}
+
+        for (int i = 0; i < items.Count; i++)
+		{
+			SetSlotItem(i,items[i],true);
 		}
 	}
 
@@ -56,7 +64,7 @@ public class InventorySystem : MonoBehaviour
             return null;
 	}
 
-    public bool SetSlotItme(int idx, InventoryItemBase item,bool isOverride = true)
+    public bool SetSlotItem(int idx, InventoryItemBase item,bool isOverride = true)
 	{
 		if (slots.Count <= idx || idx < 0) return false;
         if (isOverride == false && slots[idx].SlotItem != null) return false;
@@ -65,7 +73,7 @@ public class InventorySystem : MonoBehaviour
         slot.SlotItem = item;
         var img = slot.SlotImage;
         img.sprite = item.ItemSprite;
-        img.enabled = img.sprite;
+        img.enabled = img.sprite != null;
         slots[idx] = slot;
         return true;
 	}
@@ -74,5 +82,11 @@ public class InventorySystem : MonoBehaviour
 	{
         // TODO: Select Method
 		Debug.Log($"Select Item: {idx} Can Select Item: {GetSlotItem(idx)}");
-	}
+        var player = GameManager.Instance.Player;
+        var weapon = GetSlotItem(idx) as InventoryWeaponItem;
+        if (player != null)
+		{
+			player.EquipWeapon(weapon ? weapon.WeaponType : WeaponType.None);
+		}
+    }
 }

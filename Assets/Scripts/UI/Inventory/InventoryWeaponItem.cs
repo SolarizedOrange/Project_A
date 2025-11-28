@@ -4,5 +4,5 @@ using UnityEngine;
 public class InventoryWeaponItem : InventoryItemBase
 {
     [Header("Weapon Info")]
-	public WeaponBase WeaponPrefab;
+	public WeaponType WeaponType;
 }
