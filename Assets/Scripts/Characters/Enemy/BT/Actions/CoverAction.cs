@@ -19,7 +19,7 @@ public partial class CoverAction : Action
 
     protected override Status OnStart()
     {
-        Debug.Log("CoverStart");
+        // Debug.Log("CoverStart");
 
         ctrl = Agent.Value.MoveCtrl;
         if (CoverObject.Value == null) return Status.Failure;

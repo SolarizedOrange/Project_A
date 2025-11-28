@@ -18,6 +18,7 @@ public enum Layers
 
 public enum WeaponType
 {
+    None,
     Melee,
     Handgun,
     Shotgun,
