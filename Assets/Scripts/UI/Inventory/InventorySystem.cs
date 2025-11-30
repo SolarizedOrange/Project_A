@@ -87,6 +87,7 @@ public class InventorySystem : MonoBehaviour
         if (player != null)
 		{
 			player.EquipWeapon(weapon ? weapon.WeaponType : WeaponType.None);
+            player.GetComponent<PlayerCombat>().OnWeaponSwap();
 		}
     }
 }

@@ -68,7 +68,7 @@ public class PlayerController : CharacterBase
 
     public void OnAim(InputValue value)
     {
-        IsAiming = value.isPressed;
+        IsAiming = CurrentWeapon != null && value.isPressed;
     }
 
 }
