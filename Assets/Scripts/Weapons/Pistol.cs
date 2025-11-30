@@ -20,4 +20,13 @@ public class Pistol : RangedWeapon
     {
         return WeaponType.Handgun;
     }
+
+    public override void Reload()
+    {
+        if (Stat.Capacity.Val < Stat.Capacity.MaxVal)
+        {
+            Stat.Capacity.Val = Stat.Capacity.MaxVal;
+            Debug.Log("Reload");
+        }
+    }
 }

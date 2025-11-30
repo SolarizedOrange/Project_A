@@ -6,14 +6,7 @@ public class PlayerCombat: PlayerComponent
     bool hasJustAttacked;
     public void OnWeaponSwap()
     {
-        
-    }
-
-    public void OnAttack(InputValue value)
-    {
-        PlayerCtrl.IsAttacking = value.isPressed;
-        hasJustAttacked = value.isPressed;
-        TryAttack();
+        PlayerCtrl.IsAiming = false;
     }
 
     public void TryAttack()
@@ -28,4 +21,20 @@ public class PlayerCombat: PlayerComponent
         }
         hasJustAttacked = false;
     }
+
+    public void OnAttack(InputValue value)
+    {
+        PlayerCtrl.IsAttacking = value.isPressed;
+        hasJustAttacked = value.isPressed;
+        TryAttack();
+    }
+
+    public void OnReload()
+    {
+        if (PlayerCtrl.CurrentWeapon != null && PlayerCtrl.CurrentWeapon.GetWeaponType() != WeaponType.Melee)
+        {
+            (PlayerCtrl.CurrentWeapon as RangedWeapon).Reload();
+        }
+    }
+
 }

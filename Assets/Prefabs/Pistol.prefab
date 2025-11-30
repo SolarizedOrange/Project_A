@@ -256,8 +256,8 @@ MonoBehaviour:
         m_PersistentCalls:
           m_Calls: []
     Capacity:
-      val: 0
-      MaxVal: 0
+      val: 10
+      MaxVal: 10
       BuffMul: 0
       OnChangedValue:
         m_PersistentCalls:
@@ -270,7 +270,7 @@ MonoBehaviour:
         m_PersistentCalls:
           m_Calls: []
     ShotCount:
-      val: 10
+      val: 1
       MaxVal: 0
       BuffMul: 0
       OnChangedValue:
@@ -284,3 +284,4 @@ MonoBehaviour:
         m_PersistentCalls:
           m_Calls: []
   MuzzlePosition: {fileID: 7928839125599808564}
+  debugRayColor: {r: 1, g: 0, b: 0, a: 1}

@@ -9,7 +9,14 @@ public abstract class RangedWeapon: WeaponBase
 
     public void Fire()
     {
+        if (Stat.Capacity.Val <= 0)
+        {
+            Debug.Log("Out of Ammo");
+            return;
+        }
+
         Debug.Log("FIRE");
+        Stat.Capacity.Val--;
         Ray ray = new Ray(MuzzlePosition.position, MuzzlePosition.forward);
         if (Physics.Raycast(ray, out var hitInfo ,Stat.AttackRange.Val,(int)Layers.HitCollider))
         {
@@ -27,4 +34,5 @@ public abstract class RangedWeapon: WeaponBase
         }
     }
 
+    public abstract void Reload();
 }
