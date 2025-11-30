@@ -79,7 +79,7 @@ public class PlayerCover: PlayerComponent
         yield return new WaitForSeconds(CoverExitDelay);
         isInTransition = false;
         PlayerCtrl.IsCover = false;
-        PlayerCtrl.Animator.SetLayerWeight(2, 0);
+        // PlayerCtrl.Animator.SetLayerWeight(2, 0);
         exitCoroutine = null;
         Debug.Log("EXIT");
     }
@@ -92,13 +92,11 @@ public class PlayerCover: PlayerComponent
             {
                 PlayerCtrl.MoveCtrl.SetTargetPositionXZ(originPos);
                 PlayerCtrl.Animator.SetBool("IsCover", false);
-                PlayerCtrl.Animator.SetLayerWeight(2, 0);
             }
             else if(Math.Abs((PlayerCtrl.transform.position - originPos).sqrMagnitude) < 0.2f)
             {
                 PlayerCtrl.MoveCtrl.SetTargetPositionXZ(currentCover.transform.position);
                 PlayerCtrl.Animator.SetBool("IsCover", true);
-                PlayerCtrl.Animator.SetLayerWeight(2, 1);
             }
             if(isInTransition && enterCoroutine == null)
             {
