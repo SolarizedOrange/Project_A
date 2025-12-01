@@ -36,6 +36,15 @@ public enum EnemyStateType
     Dead
 }
 
+[BlackboardEnum]
+public enum EnemyActionType
+{
+    None,
+    Attack,
+    Reload,
+    Hit,
+}
+
 public enum AnimationActionType
 {
     Idle,
