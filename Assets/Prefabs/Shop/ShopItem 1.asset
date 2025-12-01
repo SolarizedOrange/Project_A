@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b48c2299c0bc9c489b2169f780230a8, type: 3}
+  m_Name: ShopItem 1
+  m_EditorClassIdentifier: 
+  ID: 1
+  ItemName: Puck 1
+  Description: 'Sample Shop Item 1 Description '
+  ItemSprite: {fileID: -156855824, guid: fa09af5dca386a346a0b54fb68221790, type: 3}
+  Price: 0
+  OtherPrice: 40
+  BuyItem: {fileID: 0}

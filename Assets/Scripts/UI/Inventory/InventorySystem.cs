@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public struct InventorySlot
 {
-    public InventoryItemBase SlotItem;
+    public ItemBase SlotItem;
     public Image SlotImage;
 }
 
@@ -16,7 +16,7 @@ public class InventorySystem : MonoBehaviour
     [SerializeField] InputActionMap actionMap;
 
     [Header("Add Test Inventory Items")]
-    [SerializeField] List<InventoryItemBase> items;
+    [SerializeField] List<ItemBase> items;
 
     List<InventorySlot> slots;
     List<System.Action<InputAction.CallbackContext>> handlers = new ();
@@ -56,7 +56,7 @@ public class InventorySystem : MonoBehaviour
 		}
 	}
 
-    public InventoryItemBase GetSlotItem(int idx)
+    public ItemBase GetSlotItem(int idx)
 	{
 		if (slots != null && slots.Count > idx && idx >= 0)
             return slots[idx].SlotItem;
@@ -64,7 +64,7 @@ public class InventorySystem : MonoBehaviour
             return null;
 	}
 
-    public bool SetSlotItem(int idx, InventoryItemBase item,bool isOverride = true)
+    public bool SetSlotItem(int idx, ItemBase item,bool isOverride = true)
 	{
 		if (slots.Count <= idx || idx < 0) return false;
         if (isOverride == false && slots[idx].SlotItem != null) return false;

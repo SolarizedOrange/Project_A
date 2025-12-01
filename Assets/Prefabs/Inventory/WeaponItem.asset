@@ -13,5 +13,7 @@ MonoBehaviour:
   m_Name: WeaponItem
   m_EditorClassIdentifier: 
   ID: 0
+  ItemName: Pistol
+  Description: Ranged weapon that fires a single shot.
   ItemSprite: {fileID: 21300000, guid: d815c031183640148ba0f543015ad296, type: 3}
   WeaponType: 2
