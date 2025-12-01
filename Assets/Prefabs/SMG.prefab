@@ -203,9 +203,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3761712787795266078}
-  - component: {fileID: 8930092025616367558}
+  - component: {fileID: 7315036337040981637}
   m_Layer: 0
-  m_Name: Pistol
+  m_Name: SMG
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -228,7 +228,7 @@ Transform:
   - {fileID: 7928839125599808564}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8930092025616367558
+--- !u!114 &7315036337040981637
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -237,33 +237,33 @@ MonoBehaviour:
   m_GameObject: {fileID: 2835148758359070060}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5af11f7c9cb3b7d4a9088b215bfdae63, type: 3}
+  m_Script: {fileID: 11500000, guid: c8e2338056081d04682d84e005378fb8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Stat:
     Accuracy:
       val: 1
-      MaxVal: 0
+      MaxVal: 1
       BuffMul: 0
       OnChangedValue:
         m_PersistentCalls:
           m_Calls: []
     AttackRate:
-      val: 0.2
-      MaxVal: 0
+      val: 0.1
+      MaxVal: 0.1
       BuffMul: 0
       OnChangedValue:
         m_PersistentCalls:
           m_Calls: []
     Capacity:
-      val: 10
-      MaxVal: 10
+      val: 25
+      MaxVal: 25
       BuffMul: 0
       OnChangedValue:
         m_PersistentCalls:
           m_Calls: []
     Damage:
-      val: 5
+      val: 0
       MaxVal: 0
       BuffMul: 0
       OnChangedValue:
@@ -271,14 +271,14 @@ MonoBehaviour:
           m_Calls: []
     ShotCount:
       val: 1
-      MaxVal: 0
+      MaxVal: 1
       BuffMul: 0
       OnChangedValue:
         m_PersistentCalls:
           m_Calls: []
     AttackRange:
-      val: 8
-      MaxVal: 0
+      val: 10
+      MaxVal: 10
       BuffMul: 0
       OnChangedValue:
         m_PersistentCalls:

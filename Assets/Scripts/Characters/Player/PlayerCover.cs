@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class PlayerCover: PlayerComponent
 {
@@ -9,19 +8,19 @@ public class PlayerCover: PlayerComponent
     [SerializeField] public float CoverExitDelay = 3f;
     Vector3 originPos;
     Collider currentCover;
-
+    Coroutine enterRoutine;
+    Coroutine exitRoutine;
     bool isInTransition = false;
-    Coroutine enterCoroutine;
-    Coroutine exitCoroutine;
+    readonly int CoverHash = Animator.StringToHash("IsCover");
 
     public void OnCover()
     {
-        if (enterCoroutine == null && exitCoroutine == null)
+        if (enterRoutine == null && exitRoutine == null)
         {
             if (PlayerCtrl.IsCover)
             {
                 isInTransition = true;
-                exitCoroutine = StartCoroutine(ExitCover(CoverExitDelay));
+                exitRoutine = StartCoroutine(ExitCoverRoutine(CoverExitDelay));
             }
             else
             {
@@ -64,56 +63,51 @@ public class PlayerCover: PlayerComponent
         // TODO: handle cover sqeuence with closestCover 
     }
 
-    IEnumerator EnterCover(float t)
+    IEnumerator EnterCoverRoutine(float t)
     {
         yield return new WaitForSeconds(CoverEnterDelay);
         isInTransition = false;
-        enterCoroutine = null;
+        enterRoutine = null;
         Debug.Log("ENTER");
         
     }
-    IEnumerator ExitCover(float t)
+    IEnumerator ExitCoverRoutine(float t)
     {
         PlayerCtrl.MoveCtrl.SetTargetPositionXZ(originPos);
-        PlayerCtrl.Animator.SetBool("IsCover", false);
+        PlayerCtrl.Animator.SetBool(CoverHash, false);
         yield return new WaitForSeconds(CoverExitDelay);
         isInTransition = false;
         PlayerCtrl.IsCover = false;
-        PlayerCtrl.Animator.SetLayerWeight(2, 0);
-        exitCoroutine = null;
+        exitRoutine = null;
         Debug.Log("EXIT");
     }
 
-    public void Update()
+    void Update()
     {
-        if (PlayerCtrl.IsCover && exitCoroutine == null)
+        if (PlayerCtrl.IsCover && exitRoutine == null)
         {
-            if (PlayerCtrl.IsAiming)
+            if (Math.Abs((PlayerCtrl.transform.position - originPos).sqrMagnitude) > 0.2f)
             {
-                PlayerCtrl.MoveCtrl.SetTargetPositionXZ(originPos);
-                PlayerCtrl.Animator.SetBool("IsCover", false);
-                PlayerCtrl.Animator.SetLayerWeight(2, 0);
+                if (PlayerCtrl.IsAiming)
+                {
+                    PlayerCtrl.Animator.SetBool(CoverHash, false);
+                    PlayerCtrl.MoveCtrl.SetTargetPositionXZ(originPos);
+                }
+
             }
-            else if(Math.Abs((PlayerCtrl.transform.position - originPos).sqrMagnitude) < 0.2f)
+            else
             {
-                PlayerCtrl.MoveCtrl.SetTargetPositionXZ(currentCover.transform.position);
-                PlayerCtrl.Animator.SetBool("IsCover", true);
-                PlayerCtrl.Animator.SetLayerWeight(2, 1);
+                if (!PlayerCtrl.IsAiming)
+                {
+                    PlayerCtrl.MoveCtrl.SetTargetPositionXZ(currentCover.transform.position);
+                    PlayerCtrl.Animator.SetBool(CoverHash, true);
+                }
             }
-            if(isInTransition && enterCoroutine == null)
+
+            if(isInTransition && enterRoutine == null)
             {
-                enterCoroutine = StartCoroutine(EnterCover(CoverEnterDelay));
+                enterRoutine = StartCoroutine(EnterCoverRoutine(CoverEnterDelay));
             }
         }
     }
-
-    // IEnumerator WaitTimer(float t)
-    // {
-    //     exitCover = false;
-    //     enterCover = false;
-    //     yield return new WaitForSeconds(CoverExitDelay);
-    //     PlayerCtrl.IsCover = false;
-    //     Debug.Log("EXIT");
-    // }
-
 }

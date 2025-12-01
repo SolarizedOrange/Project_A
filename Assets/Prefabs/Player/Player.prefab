@@ -98,8 +98,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MoveCtrl: {fileID: 8151976365467373408}
   Stat: {fileID: 0}
-  CurrentWeapon: {fileID: 2664924696816261548}
   Animator: {fileID: 4393170893409835017}
+  CurrentWeapon: {fileID: 2664924696816261548}
   IsCover: 0
   MoveDirection: {x: 0, y: 0}
   IsAiming: 0

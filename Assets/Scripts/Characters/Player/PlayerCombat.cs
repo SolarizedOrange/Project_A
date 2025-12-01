@@ -1,26 +1,39 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerCombat: PlayerComponent
 {
+    readonly int AttackHash = Animator.StringToHash("IsAttacking");
+    readonly int WeaponTypeHash = Animator.StringToHash("WeaponType");
     bool hasJustAttacked;
-    public void OnWeaponSwap()
+
+    void Start()
     {
-        
+        PlayerCtrl.Animator.SetInteger(
+            WeaponTypeHash, PlayerCtrl.CurrentWeapon != null
+            ? (int)PlayerCtrl.CurrentWeapon.GetWeaponType()
+            : (int)WeaponType.None
+        );
     }
 
-    public void OnAttack(InputValue value)
+    void Update()
     {
-        PlayerCtrl.IsAttacking = value.isPressed;
-        hasJustAttacked = value.isPressed;
-        TryAttack();
+        if (PlayerCtrl.IsAttacking)
+        {
+            TryAttack();
+        }
     }
 
     public void TryAttack()
     {
-        if (PlayerCtrl.IsAiming)
+        if (PlayerCtrl.IsAiming && PlayerCtrl.IsAttacking)
         {
-            PlayerCtrl.CurrentWeapon.Attack(hasJustAttacked);        
+            if (PlayerCtrl.CurrentWeapon.Attack(hasJustAttacked))
+            {
+                Debug.Log("RECOIL");
+                StartCoroutine(DoRecoilRoutine());
+            }
         }
         else
         {
@@ -28,4 +41,38 @@ public class PlayerCombat: PlayerComponent
         }
         hasJustAttacked = false;
     }
+
+    IEnumerator DoRecoilRoutine()
+    {
+        PlayerCtrl.Animator.SetBool(AttackHash, true);
+        yield return new WaitForSeconds(PlayerCtrl.CurrentWeapon.Stat.AttackRate.Val);
+        PlayerCtrl.Animator.SetBool(AttackHash, false);
+        Debug.Log("Do Recoil");
+    }
+
+    public void OnWeaponSwap()
+    {
+        PlayerCtrl.IsAiming = false;
+        PlayerCtrl.Animator.SetInteger(
+            WeaponTypeHash, PlayerCtrl.CurrentWeapon != null
+            ? (int)PlayerCtrl.CurrentWeapon.GetWeaponType()
+            : (int)WeaponType.None
+        );
+    }
+
+    public void OnAttack(InputValue value)
+    {
+        PlayerCtrl.IsAttacking = value.isPressed;
+        hasJustAttacked = value.isPressed;
+    }
+
+    public void OnReload()
+    {
+        var ranged = PlayerCtrl.CurrentWeapon as RangedWeapon;
+        if (ranged != null)
+        {
+            ranged.Reload();
+        }
+    }
+
 }
