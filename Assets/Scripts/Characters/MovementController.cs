@@ -104,7 +104,7 @@ public class MovementController: MonoBehaviour
         }
         if (direction.magnitude > 0.1f)
         {
-            targetRotation = direction;
+            targetRotation = Vector3.Scale(direction, Vector3.right);
         }
     }
 
