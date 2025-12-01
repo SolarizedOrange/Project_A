@@ -27,7 +27,7 @@ public partial class FindCoverObjectAction : Action
     {
         float minDist = float.MaxValue;
         var curPos = Agent.Value.transform.position;
-        var maxDist = FindDistance.Value.magnitude;
+        // var maxDist = FindDistance.Value.magnitude;
 
         // old Ovelap Search
         // Collider[] colliders = Physics.OverlapSphere(curPos, maxDist, (int)Layers.EnemyCoverable);

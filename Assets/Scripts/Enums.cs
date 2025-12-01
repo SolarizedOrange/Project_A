@@ -1,13 +1,6 @@
 using System;
 using Unity.Behavior;
 
-public enum PlayerStateType
-{
-    Idle,
-    Move,
-    Cover
-}
-
 [Flags]
 public enum Layers
 {

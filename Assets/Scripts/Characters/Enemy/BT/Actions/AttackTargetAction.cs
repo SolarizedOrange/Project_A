@@ -15,8 +15,6 @@ public partial class AttackTargetAction : Action
 
 	protected override Status OnStart()
 	{
-        var dir = Target.Value.transform.position - Agent.Value.transform.position;
-        Agent.Value.MoveCtrl.SetTargetRotation(dir);
         Agent.Value.CurrentWeapon.Attack(true);
         return Status.Success;
 	}
