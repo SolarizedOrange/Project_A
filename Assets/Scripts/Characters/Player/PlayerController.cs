@@ -5,24 +5,24 @@ using UnityEngine.InputSystem;
 public class PlayerController : CharacterBase
 {
     [Header("Player Controller")]
-    // public PlayerStateMachine Machine;
     public Vector2 MoveDirection;
+    public Vector3 AimPos;
     public bool IsAiming;
     public bool IsAttacking;
     readonly int SpeedHash = Animator.StringToHash("Speed");
     readonly int AimHash = Animator.StringToHash("IsAiming");
-    readonly int AttackHash = Animator.StringToHash("IsAttacking");
-    readonly int CoverHash = Animator.StringToHash("IsCover");
+    InputAction mouseInputAction;
 
     protected override void Awake()
     {
         base.Awake();
+        mouseInputAction = GetComponent<PlayerInput>().actions["Pointer"];
     }
 
     void Update()
     {
         UpdateMove();
-        UpdateAnim();
+        UpdateAim();
     }
 
     public void UpdateMove()
@@ -38,28 +38,22 @@ public class PlayerController : CharacterBase
             {
                 MoveCtrl.SetTargetRotation(Vector3.right * MoveDirection.x);
             }
-            else
-            {
-                MoveCtrl.SetTargetRotation(Vector3.right * MoveDirection.x);
-            }
         }
+        Animator.SetFloat(SpeedHash, Mathf.Clamp01(MoveCtrl.Ctrl.linearVelocity.magnitude));
     }
 
     public void UpdateAim()
     {
         if (IsAiming)
         {
-            // TODO implement aim anim and etc.
+            AimPos = mouseInputAction.ReadValue<Vector2>();
+            AimPos.x -= Screen.width / 2;
+            AimPos.y -= Screen.height / 2;
+            AimPos = AimPos.normalized;
+            MoveCtrl.SetTargetRotation(AimPos);
         }
-    }
-
-    public void UpdateAnim()
-    {
-        Animator.SetFloat(SpeedHash, Mathf.Clamp01(MoveCtrl.Ctrl.linearVelocity.magnitude));
         Animator.SetBool(AimHash, IsAiming);
-        Animator.SetBool(AttackHash, IsAiming && IsAttacking);
     }
-
 
     public void OnMove(InputValue value)
     {
@@ -70,5 +64,4 @@ public class PlayerController : CharacterBase
     {
         IsAiming = CurrentWeapon != null && value.isPressed;
     }
-
 }
