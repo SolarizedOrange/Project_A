@@ -2,31 +2,17 @@ using UnityEngine;
 
 public class Pistol : RangedWeapon
 {
-    public void Awake()
+    public override bool Attack(bool hasJustAttacked)
     {
-        // Stat = new WeaponStat();
-        // Stat.AttackRate.Val = 0.2f;
-    }
-    public override void Attack(bool hasJustAttacked)
-    {
-        if (hasJustAttacked && ((Time.time - lastAttackTime) >= Stat.AttackRate.Val))
+        //Implement Semiauto
+        if (hasJustAttacked)
         {
-            Fire();
-            lastAttackTime = Time.time;
+            return base.Attack(hasJustAttacked);
         }
+        return false;
     }
-
     public override WeaponType GetWeaponType()
     {
         return WeaponType.Handgun;
-    }
-
-    public override void Reload()
-    {
-        if (Stat.Capacity.Val < Stat.Capacity.MaxVal)
-        {
-            Stat.Capacity.Val = Stat.Capacity.MaxVal;
-            Debug.Log("Reload");
-        }
     }
 }
