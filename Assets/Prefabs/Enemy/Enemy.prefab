@@ -803,7 +803,7 @@ MonoBehaviour:
           m_Calls: []
     Capacity:
       val: 0
-      MaxVal: 0
+      MaxVal: 10
       BuffMul: 0
       OnChangedValue:
         m_PersistentCalls:
@@ -1235,7 +1235,6 @@ MonoBehaviour:
   m_Graph: {fileID: -8989826534361754030, guid: 8d470dfabddaa2b4398cc799f16949f1, type: 2}
   m_BlackboardVariableOverridesList:
   - rid: 8739563098805371128
-  - rid: 8739563106375827615
   - rid: 8739563106375827616
   - rid: 8739563106375827617
   - rid: 8739563109299519771
@@ -1244,7 +1243,7 @@ MonoBehaviour:
   - rid: 8739563329204257348
   - rid: 8739563214408778368
   - rid: 8739563214545616912
-  - rid: 8739563284089537431
+  - rid: 2622587062339764623
   - rid: 8739563303496056898
   - rid: 8739563303496056899
   - rid: 8739563338096443466
@@ -1254,6 +1253,14 @@ MonoBehaviour:
   references:
     version: 2
     RefIds:
+    - rid: 2622587062339764623
+      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 6776827483889308053
+          m_Value1: 11954800712687215179
+        Name: ReloadDelay
+        m_Value: 2
     - rid: 8739563098805371128
       type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
@@ -1262,14 +1269,6 @@ MonoBehaviour:
           m_Value1: 0
         Name: Self
         m_Value: {fileID: 5710684950034404780}
-    - rid: 8739563106375827615
-      type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 9764263781811244729
-          m_Value1: 16508958719014895283
-        Name: AttackDuration
-        m_Value: 3
     - rid: 8739563106375827616
       type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
@@ -1300,7 +1299,7 @@ MonoBehaviour:
         GUID:
           m_Value0: 8308775970336727867
           m_Value1: 7883602168180069657
-        Name: AttackDelay
+        Name: AttackInterval
         m_Value: 1
     - rid: 8739563109299519961
       type: {class: 'BlackboardVariable`1[[System.Single, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
@@ -1326,14 +1325,6 @@ MonoBehaviour:
           m_Value1: 15662745632126722998
         Name: AlertDistance
         m_Value: 8
-    - rid: 8739563284089537431
-      type: {class: 'BlackboardVariable`1[[System.Boolean, mscorlib]]', ns: Unity.Behavior, asm: Unity.Behavior}
-      data:
-        GUID:
-          m_Value0: 16603298966620982000
-          m_Value1: 18402905743207832972
-        Name: IsAttack
-        m_Value: 0
     - rid: 8739563303496056898
       type: {class: 'BlackboardVariable`1[[CharacterBase, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
@@ -1380,8 +1371,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MoveCtrl: {fileID: 6444869309655990748}
   Stat: {fileID: 2703994345116594247}
-  CurrentWeapon: {fileID: 3201777394440688404}
   Animator: {fileID: 2837665446067687758}
+  CurrentWeapon: {fileID: 0}
   IsCover: 0
   Agent: {fileID: 5397251269715790506}
 --- !u!114 &2703994345116594247

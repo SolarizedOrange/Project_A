@@ -45,7 +45,7 @@ public partial class CoverAction : Action
 
     void ExitCover()
     {
-        ctrl.SetTargetPositionXZ(AgentReturnPos.Value);
+        ctrl.SetTargetPositionXZ(AgentReturnPos.Value, false);
         InEnter.Value = false;
         // Debug.Log($"Exit Cover c:{IsCover.Value}");
     }

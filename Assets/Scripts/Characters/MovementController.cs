@@ -19,6 +19,7 @@ public class MovementController: MonoBehaviour
     Vector3 lastRotation;
     Vector3 currentRotationDirection;
     Vector3 targetRotation;
+    bool isAutoRotate = true;
     // public Vector3 TargetVelocity
     // {
     //     get
@@ -75,7 +76,8 @@ public class MovementController: MonoBehaviour
                 Ctrl.constraints |= RigidbodyConstraints.FreezePositionZ;
 				isVelocityMode = true;
 			}
-            SetTargetRotation(Vector3.Scale(targetPosition - curPosXZ,Vector3.right).normalized);
+            if (isAutoRotate)
+                SetTargetRotation(Vector3.Scale(targetPosition - curPosXZ,Vector3.right).normalized);
 		}
         Ctrl.AddForce(a,ForceMode.Acceleration);
 	}
@@ -93,10 +95,10 @@ public class MovementController: MonoBehaviour
 		}
 	}
 
+    // TODO: Check Logic
     public void SetTargetRotation(Vector3 direction)
     {
         direction.x = Math.Sign(direction.x);
-
         if (Vector3.Dot(direction, targetRotation) < 0)
         {      
             lookTimer = 0f;
@@ -113,9 +115,10 @@ public class MovementController: MonoBehaviour
         targetVelocity = velocity;
     }
 
-    public void SetTargetPositionXZ(Vector3 targetPos)
+    public void SetTargetPositionXZ(Vector3 targetPos, bool isAutoRotate = true)
 	{
 		targetPosition = Vector3.Scale(targetPos,new Vector3(1,0,1));
         isVelocityMode = false;
+        this.isAutoRotate = isAutoRotate;
 	}
 }
