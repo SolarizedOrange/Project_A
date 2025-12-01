@@ -1,19 +1,39 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerCombat: PlayerComponent
 {
+    readonly int AttackHash = Animator.StringToHash("IsAttacking");
+    readonly int WeaponTypeHash = Animator.StringToHash("WeaponType");
     bool hasJustAttacked;
-    public void OnWeaponSwap()
+
+    void Start()
     {
-        PlayerCtrl.IsAiming = false;
+        PlayerCtrl.Animator.SetInteger(
+            WeaponTypeHash, PlayerCtrl.CurrentWeapon != null
+            ? (int)PlayerCtrl.CurrentWeapon.GetWeaponType()
+            : (int)WeaponType.None
+        );
+    }
+
+    void Update()
+    {
+        if (PlayerCtrl.IsAttacking)
+        {
+            TryAttack();
+        }
     }
 
     public void TryAttack()
     {
-        if (PlayerCtrl.IsAiming)
+        if (PlayerCtrl.IsAiming && PlayerCtrl.IsAttacking)
         {
-            PlayerCtrl.CurrentWeapon.Attack(hasJustAttacked);        
+            if (PlayerCtrl.CurrentWeapon.Attack(hasJustAttacked))
+            {
+                Debug.Log("RECOIL");
+                StartCoroutine(DoRecoilRoutine());
+            }
         }
         else
         {
@@ -22,18 +42,36 @@ public class PlayerCombat: PlayerComponent
         hasJustAttacked = false;
     }
 
+    IEnumerator DoRecoilRoutine()
+    {
+        PlayerCtrl.Animator.SetBool(AttackHash, true);
+        yield return new WaitForSeconds(PlayerCtrl.CurrentWeapon.Stat.AttackRate.Val);
+        PlayerCtrl.Animator.SetBool(AttackHash, false);
+        Debug.Log("Do Recoil");
+    }
+
+    public void OnWeaponSwap()
+    {
+        PlayerCtrl.IsAiming = false;
+        PlayerCtrl.Animator.SetInteger(
+            WeaponTypeHash, PlayerCtrl.CurrentWeapon != null
+            ? (int)PlayerCtrl.CurrentWeapon.GetWeaponType()
+            : (int)WeaponType.None
+        );
+    }
+
     public void OnAttack(InputValue value)
     {
         PlayerCtrl.IsAttacking = value.isPressed;
         hasJustAttacked = value.isPressed;
-        TryAttack();
     }
 
     public void OnReload()
     {
-        if (PlayerCtrl.CurrentWeapon != null && PlayerCtrl.CurrentWeapon.GetWeaponType() != WeaponType.Melee)
+        var ranged = PlayerCtrl.CurrentWeapon as RangedWeapon;
+        if (ranged != null)
         {
-            (PlayerCtrl.CurrentWeapon as RangedWeapon).Reload();
+            ranged.Reload();
         }
     }
 
