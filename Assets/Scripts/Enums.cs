@@ -1,13 +1,6 @@
 using System;
 using Unity.Behavior;
 
-public enum PlayerStateType
-{
-    Idle,
-    Move,
-    Cover
-}
-
 [Flags]
 public enum Layers
 {
@@ -41,6 +34,15 @@ public enum EnemyStateType
     Cover,
     Chase,
     Dead
+}
+
+[BlackboardEnum]
+public enum EnemyActionType
+{
+    None,
+    Attack,
+    Reload,
+    Hit,
 }
 
 public enum AnimationActionType

@@ -1,3 +1,4 @@
+using System.Linq;
 using Unity.Behavior;
 using UnityEngine;
 
@@ -8,6 +9,12 @@ public class EnemyController: CharacterBase
 	[Header("Enemy Controller")]
     public BehaviorGraphAgent Agent;
 
+	protected override void Awake()
+	{
+		base.Awake();
+		EquipWeapon(Weapons.First().Key);
+	}
+
 	void Update()
 	{
 		SyncSpeedAnimator();
@@ -17,8 +24,8 @@ public class EnemyController: CharacterBase
 	public override void OnDamage(HitBoxType hitBoxType)
 	{
 		base.OnDamage(hitBoxType);
-		Agent.BlackboardReference.GetVariable<bool>("IsHit", out var isHit);
-		isHit.Value = true;
+		Agent.BlackboardReference.GetVariable<EnemyActionType>("CurrentAction", out var curAction);
+		curAction.Value = EnemyActionType.Hit;
 	}
 
 	void SyncSpeedAnimator()
