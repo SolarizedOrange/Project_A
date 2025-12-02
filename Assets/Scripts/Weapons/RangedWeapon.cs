@@ -5,11 +5,12 @@ public abstract class RangedWeapon: WeaponBase
     public Transform MuzzlePosition;
 
     [Header("Test Ray Setting")]
+    [SerializeField] bool IsFullAuto = true;
     [SerializeField] Color debugRayColor = Color.red;
 
     public override bool Attack(bool hasJustAttacked)
     {
-        if (CanAttack())
+        if (CanAttack() && (IsFullAuto || hasJustAttacked))
         {
             Fire();
             lastAttackTime = Time.time;
