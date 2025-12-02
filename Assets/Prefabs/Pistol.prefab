@@ -284,4 +284,5 @@ MonoBehaviour:
         m_PersistentCalls:
           m_Calls: []
   MuzzlePosition: {fileID: 7928839125599808564}
+  IsFullAuto: 0
   debugRayColor: {r: 1, g: 0, b: 0, a: 1}
