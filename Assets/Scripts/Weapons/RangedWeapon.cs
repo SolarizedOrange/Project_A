@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public abstract class RangedWeapon: WeaponBase
@@ -5,13 +6,16 @@ public abstract class RangedWeapon: WeaponBase
     public Transform MuzzlePosition;
 
     [Header("Test Ray Setting")]
+    [SerializeField] bool IsFullAuto = true;
     [SerializeField] Color debugRayColor = Color.red;
+    public bool IsReloading;
 
     public override bool Attack(bool hasJustAttacked)
     {
-        if (CanAttack())
+        if (CanAttack() && (IsFullAuto || hasJustAttacked))
         {
             Fire();
+            IsReloading = false;
             lastAttackTime = Time.time;
             return true;
         }
@@ -21,25 +25,28 @@ public abstract class RangedWeapon: WeaponBase
     {
         Debug.Log("FIRE");
         Stat.Capacity.Val--;
-        Ray ray = new Ray(MuzzlePosition.position, MuzzlePosition.forward);
-        if (Physics.Raycast(ray, out var hitInfo ,Stat.AttackRange.Val,(int)Layers.HitCollider))
-        {
-            Debug.DrawRay(MuzzlePosition.position, MuzzlePosition.forward * Stat.AttackRange.Val, debugRayColor, 5.0f);
-            Debug.Log("RayCastHit");
-            var res = hitInfo.collider;
-            if (res.TryGetComponent<HitBox>(out var hitBox))
+        for (int i = 0; i < Stat.ShotCount.Val; i++)
+        {   
+            Ray ray = new Ray(MuzzlePosition.position, MuzzlePosition.forward);
+            if (Physics.Raycast(ray, out var hitInfo ,Stat.AttackRange.Val,(int)Layers.HitCollider))
             {
-                hitBox.OnHit();
-            }
-            else
-            {
-                
+                Debug.DrawRay(MuzzlePosition.position, MuzzlePosition.forward * Stat.AttackRange.Val, debugRayColor, 5.0f);
+                Debug.Log("RayCastHit");
+                var res = hitInfo.collider;
+                if (res.TryGetComponent<HitBox>(out var hitBox))
+                {
+                    hitBox.OnHit();
+                }
+                else
+                {
+                    
+                }
             }
         }
     }
     public override bool CanAttack()
     {
-        if (Stat.Capacity.Val > 0 && ((Time.time - lastAttackTime) >= Stat.AttackRate.Val))
+        if (!IsReloading && Stat.Capacity.Val > 0 && ((Time.time - lastAttackTime) >= Stat.AttackRate.Val))
         {
             return true;
         }
@@ -47,9 +54,17 @@ public abstract class RangedWeapon: WeaponBase
     }
     public virtual void Reload()
     {
-        if (Stat.Capacity.Val < Stat.Capacity.MaxVal)
+        if (Stat.Capacity.Val < Stat.Capacity.MaxVal && !IsReloading)
         {
-            Stat.Capacity.Val = Stat.Capacity.MaxVal;
+            IsReloading = true;
+            StartCoroutine(ReloadRoutine());
         }
+    }
+
+    IEnumerator ReloadRoutine()
+    {
+        yield return new WaitForSeconds(3f);
+        Stat.Capacity.Val = Stat.Capacity.MaxVal;
+        IsReloading = false;
     }
 }

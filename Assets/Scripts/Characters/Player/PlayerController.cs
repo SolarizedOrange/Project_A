@@ -1,13 +1,16 @@
 using System;
 using UnityEngine;
+using UnityEngine.Animations.Rigging;
 using UnityEngine.InputSystem;
 
 public class PlayerController : CharacterBase
 {
     [Header("Player Controller")]
+    [SerializeField] public Rig AimRig;
     public Vector2 MoveDirection;
     public Vector3 AimPos;
     public bool IsAiming;
+    public bool IsReloading;
     public bool IsAttacking;
     readonly int SpeedHash = Animator.StringToHash("Speed");
     readonly int AimHash = Animator.StringToHash("IsAiming");
@@ -27,7 +30,7 @@ public class PlayerController : CharacterBase
 
     public void UpdateMove()
     {
-        if (IsCover || MoveDirection == null || MoveDirection.x == 0) // Short circuit evaluation
+        if (IsCover || MoveDirection.x == 0)
         {
             MoveCtrl.SetTargetVelocity(Vector3.zero * Stat.MoveSpeed.Val);
         }
@@ -63,5 +66,6 @@ public class PlayerController : CharacterBase
     public void OnAim(InputValue value)
     {
         IsAiming = CurrentWeapon != null && value.isPressed;
+        AimRig.weight = IsAiming ? 1 : 0;
     }
 }

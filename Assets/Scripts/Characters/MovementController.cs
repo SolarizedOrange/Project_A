@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 
 public class MovementController: MonoBehaviour
@@ -98,7 +97,7 @@ public class MovementController: MonoBehaviour
     // TODO: Check Logic
     public void SetTargetRotation(Vector3 direction)
     {
-        direction.x = Math.Sign(direction.x);
+        direction.x = Mathf.Sign(direction.x);
         if (Vector3.Dot(direction, targetRotation) < 0)
         {      
             lookTimer = 0f;

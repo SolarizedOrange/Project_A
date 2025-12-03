@@ -15,7 +15,7 @@ public class PlayerCover: PlayerComponent
 
     public void OnCover()
     {
-        if (enterRoutine == null && exitRoutine == null)
+        if ((object)enterRoutine == null && (object)exitRoutine == null)
         {
             if (PlayerCtrl.IsCover)
             {
@@ -51,7 +51,7 @@ public class PlayerCover: PlayerComponent
                 minDist = dist;
             }
         }
-        if (closestCover == null)
+        if ((object)closestCover == null)
         {
             Debug.Log("Fallback to Idle");
             return;
@@ -84,7 +84,7 @@ public class PlayerCover: PlayerComponent
 
     void Update()
     {
-        if (PlayerCtrl.IsCover && exitRoutine == null)
+        if (PlayerCtrl.IsCover && (object)exitRoutine == null)
         {
             if (Math.Abs((PlayerCtrl.transform.position - originPos).sqrMagnitude) > 0.2f)
             {
@@ -104,7 +104,7 @@ public class PlayerCover: PlayerComponent
                 }
             }
 
-            if(isInTransition && enterRoutine == null)
+            if(isInTransition && (object)enterRoutine == null)
             {
                 enterRoutine = StartCoroutine(EnterCoverRoutine(CoverEnterDelay));
             }

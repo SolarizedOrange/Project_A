@@ -19,13 +19,11 @@ public class PlayerCombat: PlayerComponent
 
     void Update()
     {
-        if (PlayerCtrl.IsAttacking)
-        {
-            TryAttack();
-        }
+        UpdateAttack();
+        UpdateReload();
     }
 
-    public void TryAttack()
+    public void UpdateAttack()
     {
         if (PlayerCtrl.IsAiming && PlayerCtrl.IsAttacking)
         {
@@ -50,6 +48,16 @@ public class PlayerCombat: PlayerComponent
         Debug.Log("Do Recoil");
     }
 
+    public void UpdateReload()
+    {
+        if (PlayerCtrl.IsReloading)
+        {
+            var ranged = PlayerCtrl.CurrentWeapon as RangedWeapon;
+            ranged.Reload();
+            PlayerCtrl.IsReloading = ranged.IsReloading;
+        }
+    }
+
     public void OnWeaponSwap()
     {
         PlayerCtrl.IsAiming = false;
@@ -71,7 +79,7 @@ public class PlayerCombat: PlayerComponent
         var ranged = PlayerCtrl.CurrentWeapon as RangedWeapon;
         if (ranged != null)
         {
-            ranged.Reload();
+            PlayerCtrl.IsReloading = true;
         }
     }
 
