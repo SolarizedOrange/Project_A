@@ -38,7 +38,7 @@ public partial class CoverAction : Action
     void EnterCover()
     {
         AgentReturnPos.Value = Vector3.Scale(Agent.Value.transform.position, new Vector3(1,1,0));
-        ctrl.SetTargetPositionXZ(CoverObject.Value.position);
+        ctrl.SetTargetPositionXZ(CoverObject.Value.position,false);
         InEnter.Value = true;
         // Debug.Log($"Enter Cover c:{IsCover.Value}");
     }
