@@ -52,5 +52,6 @@ public enum AnimationActionType
     Aim,
     Attack,
     Cover,
+    Reload,
     Die
 }
