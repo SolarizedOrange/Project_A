@@ -49,7 +49,7 @@ MonoBehaviour:
   Stat:
     Accuracy:
       val: 0.5
-      MaxVal: 0.7
+      MaxVal: 0.9
       BuffMul: 1
       OnChangedValue:
         m_PersistentCalls:
@@ -92,6 +92,7 @@ MonoBehaviour:
   MuzzlePosition: {fileID: 8653317694286964318}
   IsFullAuto: 0
   debugRayColor: {r: 1, g: 0, b: 0, a: 1}
+  IsReloading: 0
 --- !u!1773428102 &-8202851297830144610
 ParentConstraint:
   m_ObjectHideFlags: 0

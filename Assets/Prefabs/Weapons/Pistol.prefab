@@ -48,7 +48,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Stat:
     Accuracy:
-      val: 1
+      val: 0.9
       MaxVal: 1
       BuffMul: 0
       OnChangedValue:
@@ -92,6 +92,7 @@ MonoBehaviour:
   MuzzlePosition: {fileID: 8653317694286964318}
   IsFullAuto: 0
   debugRayColor: {r: 1, g: 0, b: 0, a: 1}
+  IsReloading: 0
 --- !u!1773428102 &7329665266722980514
 ParentConstraint:
   m_ObjectHideFlags: 0
