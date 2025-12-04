@@ -27,10 +27,13 @@ public abstract class RangedWeapon: WeaponBase
         Stat.Capacity.Val--;
         for (int i = 0; i < Stat.ShotCount.Val; i++)
         {   
-            Ray ray = new Ray(MuzzlePosition.position, MuzzlePosition.forward);
+            Vector3 rayPos = 0.1f * (1.0f - Stat.Accuracy.Val) * Random.insideUnitSphere;
+            rayPos.z *= 0.5f;
+            rayPos = (MuzzlePosition.forward + rayPos).normalized;
+            Ray ray = new Ray(MuzzlePosition.position, rayPos);
             if (Physics.Raycast(ray, out var hitInfo ,Stat.AttackRange.Val,(int)Layers.HitCollider))
             {
-                Debug.DrawRay(MuzzlePosition.position, MuzzlePosition.forward * Stat.AttackRange.Val, debugRayColor, 5.0f);
+                Debug.DrawRay(MuzzlePosition.position, rayPos * Stat.AttackRange.Val, debugRayColor, 5.0f);
                 Debug.Log("RayCastHit");
                 var res = hitInfo.collider;
                 if (res.TryGetComponent<HitBox>(out var hitBox))
@@ -61,7 +64,7 @@ public abstract class RangedWeapon: WeaponBase
         }
     }
 
-    IEnumerator ReloadRoutine()
+    protected virtual IEnumerator ReloadRoutine()
     {
         yield return new WaitForSeconds(3f);
         Stat.Capacity.Val = Stat.Capacity.MaxVal;
