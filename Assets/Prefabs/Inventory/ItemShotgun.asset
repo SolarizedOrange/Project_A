@@ -9,13 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7b48c2299c0bc9c489b2169f780230a8, type: 3}
-  m_Name: ShopItem 1
+  m_Script: {fileID: 11500000, guid: b4cec32277374c247a7e9d925050aad9, type: 3}
+  m_Name: ItemShotgun
   m_EditorClassIdentifier: 
   ID: 1
-  ItemName: Perk 1
-  Description: 'Sample Shop Item 1 Description '
-  ItemSprite: {fileID: -156855824, guid: fa09af5dca386a346a0b54fb68221790, type: 3}
-  Price: 0
-  OtherPrice: 40
-  BuyItem: {fileID: 0}
+  ItemName: Shotgun
+  Description: Ranged weapon that fires a single shot.
+  ItemSprite: {fileID: 21300000, guid: d815c031183640148ba0f543015ad296, type: 3}
+  WeaponType: 3

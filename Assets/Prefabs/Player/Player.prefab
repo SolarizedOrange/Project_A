@@ -93,13 +93,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3c430f382484144e925c097c2d33cfe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Weight: 1
+  m_Weight: 0.5
   m_Data:
     m_ConstrainedObject: {fileID: 2313856351857991004}
     m_SourceObjects:
       m_Length: 1
       m_Item0:
-        transform: {fileID: 0}
+        transform: {fileID: 1457127280810403513}
         weight: 1
       m_Item1:
         transform: {fileID: 0}
@@ -127,7 +127,7 @@ MonoBehaviour:
     m_MaxLimit: 90
     m_AimAxis: 4
     m_UpAxis: 2
-    m_WorldUpType: 0
+    m_WorldUpType: 1
     m_WorldUpObject: {fileID: 0}
     m_WorldUpAxis: 2
     m_MaintainOffset: 0
@@ -185,7 +185,7 @@ MonoBehaviour:
     m_SourceObjects:
       m_Length: 1
       m_Item0:
-        transform: {fileID: 0}
+        transform: {fileID: 1457127280810403513}
         weight: 1
       m_Item1:
         transform: {fileID: 0}
@@ -213,7 +213,7 @@ MonoBehaviour:
     m_MaxLimit: 90
     m_AimAxis: 2
     m_UpAxis: 1
-    m_WorldUpType: 0
+    m_WorldUpType: 1
     m_WorldUpObject: {fileID: 0}
     m_WorldUpAxis: 2
     m_MaintainOffset: 0
@@ -221,6 +221,37 @@ MonoBehaviour:
       x: 1
       y: 1
       z: 1
+--- !u!1 &5263134241344892452
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1457127280810403513}
+  m_Layer: 0
+  m_Name: AimTarget
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1457127280810403513
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5263134241344892452}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 7472029237836386749}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6236016170068327932
 GameObject:
   m_ObjectHideFlags: 0
@@ -262,6 +293,7 @@ Transform:
   - {fileID: 1901783340472211204}
   - {fileID: 3503146642515792655}
   - {fileID: 2973398768998039625}
+  - {fileID: 1457127280810403513}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!54 &216689474094107182
@@ -289,7 +321,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 84
+  m_Constraints: 88
   m_CollisionDetection: 0
 --- !u!114 &8151976365467373408
 MonoBehaviour:
@@ -325,6 +357,7 @@ MonoBehaviour:
   CurrentWeapon: {fileID: 2664924696816261548}
   IsCover: 0
   AimRig: {fileID: 7985968138325498704}
+  AimTarget: {fileID: 1457127280810403513}
   MoveDirection: {x: 0, y: 0}
   AimPos: {x: 0, y: 0, z: 0}
   IsAiming: 0
@@ -435,7 +468,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8422798307777717583
 Transform:
   m_ObjectHideFlags: 0
@@ -723,13 +756,21 @@ PrefabInstance:
       propertyPath: type
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 5221539403929455963, guid: b2780fdbe1a0b664f882830de997f0c1, type: 3}
+      propertyPath: m_Size.y
+      value: 1.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 5221539403929455963, guid: b2780fdbe1a0b664f882830de997f0c1, type: 3}
+      propertyPath: m_Size.z
+      value: 0.32
+      objectReference: {fileID: 0}
     - target: {fileID: 7176252122587389069, guid: b2780fdbe1a0b664f882830de997f0c1, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7176252122587389069, guid: b2780fdbe1a0b664f882830de997f0c1, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: -0.074
       objectReference: {fileID: 0}
     - target: {fileID: 7176252122587389069, guid: b2780fdbe1a0b664f882830de997f0c1, type: 3}
       propertyPath: m_LocalPosition.z

@@ -7,6 +7,7 @@ public class PlayerController : CharacterBase
 {
     [Header("Player Controller")]
     [SerializeField] public Rig AimRig;
+    [SerializeField] Transform AimTarget;
     public Vector2 MoveDirection;
     public Vector3 AimPos;
     public bool IsAiming;
@@ -54,6 +55,7 @@ public class PlayerController : CharacterBase
             AimPos.y -= Screen.height / 2;
             AimPos = AimPos.normalized;
             MoveCtrl.SetTargetRotation(AimPos);
+            AimTarget.position = transform.position + 3f * AimPos;
         }
         Animator.SetBool(AimHash, IsAiming);
     }
