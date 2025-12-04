@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: ShopItem 2
   m_EditorClassIdentifier: 
   ID: 2
-  ItemName: Puck 2
+  ItemName: Perk 2
   Description: 'Sample Shop Item 2 Description '
   ItemSprite: {fileID: 1537865904, guid: fa09af5dca386a346a0b54fb68221790, type: 3}
   Price: 0
