@@ -4,9 +4,9 @@ public class Shotgun: RangedWeapon
 {
     public override void Reload()
     {
-        if (Stat.ShotCount.Val < Stat.ShotCount.MaxVal)
+        if (Stat.Capacity.Val < Stat.Capacity.MaxVal)
         {
-            Stat.ShotCount.Val++;
+            Stat.Capacity.Val++;
         }
     }
 
