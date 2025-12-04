@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Shotgun: RangedWeapon
@@ -17,6 +18,15 @@ public class Shotgun: RangedWeapon
             return true;
         }
         return false;
+    }
+    protected override IEnumerator ReloadRoutine()
+    {
+        yield return new WaitForSeconds(1f);
+        if (IsReloading)
+        {
+            Stat.Capacity.Val++;
+            IsReloading = false;
+        }
     }
 
     public override WeaponType GetWeaponType()

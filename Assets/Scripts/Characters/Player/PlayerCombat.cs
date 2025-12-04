@@ -5,6 +5,7 @@ using UnityEngine.InputSystem;
 public class PlayerCombat: PlayerComponent
 {
     readonly int AttackHash = Animator.StringToHash("IsAttacking");
+    readonly int ReloadHash = Animator.StringToHash("IsReloading");
     readonly int WeaponTypeHash = Animator.StringToHash("WeaponType");
     bool hasJustAttacked;
 
@@ -31,6 +32,7 @@ public class PlayerCombat: PlayerComponent
             {
                 Debug.Log("RECOIL");
                 StartCoroutine(DoRecoilRoutine());
+                PlayerCtrl.IsReloading = false;
             }
         }
         else
@@ -56,11 +58,14 @@ public class PlayerCombat: PlayerComponent
             ranged.Reload();
             PlayerCtrl.IsReloading = ranged.IsReloading;
         }
+        PlayerCtrl.Animator.SetBool(ReloadHash, PlayerCtrl.IsReloading);
     }
 
     public void OnWeaponSwap()
     {
         PlayerCtrl.IsAiming = false;
+        PlayerCtrl.IsAttacking = false;
+        PlayerCtrl.IsReloading = false;
         PlayerCtrl.Animator.SetInteger(
             WeaponTypeHash, PlayerCtrl.CurrentWeapon != null
             ? (int)PlayerCtrl.CurrentWeapon.GetWeaponType()
