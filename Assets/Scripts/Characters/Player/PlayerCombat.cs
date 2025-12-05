@@ -45,7 +45,7 @@ public class PlayerCombat: PlayerComponent
     IEnumerator DoRecoilRoutine()
     {
         PlayerCtrl.Animator.SetBool(AttackHash, true);
-        yield return new WaitForSeconds(PlayerCtrl.CurrentWeapon.Stat.AttackRate.Val);
+        yield return new WaitForSeconds(PlayerCtrl.CurrentWeapon.Stat.AttackRate.BaseVal);
         PlayerCtrl.Animator.SetBool(AttackHash, false);
         Debug.Log("Do Recoil");
     }

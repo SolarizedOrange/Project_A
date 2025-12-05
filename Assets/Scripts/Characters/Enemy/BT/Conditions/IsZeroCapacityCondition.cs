@@ -12,7 +12,7 @@ public partial class IsZeroCapacityCondition : Condition
     public override bool IsTrue()
     {
         var weapon = Agent.Value.CurrentWeapon;
-        if (weapon != null && weapon.Stat.Capacity.Val > 0)
+        if (weapon != null && weapon.Stat.Capacity.BaseVal > 0)
             return false == IsZero.Value;
         return true == IsZero.Value;
     }

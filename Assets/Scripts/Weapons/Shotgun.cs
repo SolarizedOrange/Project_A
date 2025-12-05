@@ -3,17 +3,28 @@ using UnityEngine;
 
 public class Shotgun: RangedWeapon
 {
+
+    bool temp;
     public override void Reload()
     {
-        if (Stat.Capacity.Val < Stat.Capacity.MaxVal)
+        if (ammo < Stat.Capacity.BaseVal)
         {
-            Stat.Capacity.Val++;
+            if (!temp)
+            {
+                temp = true;
+                StartCoroutine(ReloadRoutine());            
+            }
+            IsReloading = true;
+        }
+        else
+        {
+            IsReloading = false;        
         }
     }
 
     public override bool CanAttack()
     {
-        if (Stat.Capacity.Val > 0 && ((Time.time - lastAttackTime) >= Stat.AttackRate.Val))
+        if (ammo > 0 && ((Time.time - lastAttackTime) >= Stat.AttackRate.BaseVal))
         {
             return true;
         }
@@ -24,9 +35,9 @@ public class Shotgun: RangedWeapon
         yield return new WaitForSeconds(1f);
         if (IsReloading)
         {
-            Stat.Capacity.Val++;
-            IsReloading = false;
+            ammo++;
         }
+        temp = false;
     }
 
     public override WeaponType GetWeaponType()
