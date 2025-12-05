@@ -725,6 +725,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DontDestroyOnLoadCheck: 0
   Player: {fileID: 1097694270078968495}
+  PlayerSpawnOffset: {x: 0, y: 0, z: 0}
 --- !u!4 &966311391
 Transform:
   m_ObjectHideFlags: 0
@@ -1748,6 +1749,46 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1973593344990013848, guid: 17c6bf1532692d044bddf7cf8319f84a, type: 3}
+      propertyPath: Stat
+      value: 
+      objectReference: {fileID: 1097694270078968498}
+    - target: {fileID: 3876561869873500626, guid: 17c6bf1532692d044bddf7cf8319f84a, type: 3}
+      propertyPath: Hp.maxVal
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 3876561869873500626, guid: 17c6bf1532692d044bddf7cf8319f84a, type: 3}
+      propertyPath: Hp.minVal
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 3876561869873500626, guid: 17c6bf1532692d044bddf7cf8319f84a, type: 3}
+      propertyPath: Hp.baseVal
+      value: 100
+      objectReference: {fileID: 0}
+    - target: {fileID: 3876561869873500626, guid: 17c6bf1532692d044bddf7cf8319f84a, type: 3}
+      propertyPath: MoveSpeed.maxVal
+      value: 4.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3876561869873500626, guid: 17c6bf1532692d044bddf7cf8319f84a, type: 3}
+      propertyPath: MoveSpeed.minVal
+      value: 0.75
+      objectReference: {fileID: 0}
+    - target: {fileID: 3876561869873500626, guid: 17c6bf1532692d044bddf7cf8319f84a, type: 3}
+      propertyPath: Precision.maxVal
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3876561869873500626, guid: 17c6bf1532692d044bddf7cf8319f84a, type: 3}
+      propertyPath: Precision.minVal
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3876561869873500626, guid: 17c6bf1532692d044bddf7cf8319f84a, type: 3}
+      propertyPath: MoveSpeed.baseVal
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3876561869873500626, guid: 17c6bf1532692d044bddf7cf8319f84a, type: 3}
+      propertyPath: Precision.baseVal
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6236016170068327932, guid: 17c6bf1532692d044bddf7cf8319f84a, type: 3}
       propertyPath: m_Name
       value: Player
@@ -1808,6 +1849,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 949ec9f8ff46d164b84db9cf2cb41deb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1097694270078968498 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 3876561869873500626, guid: 17c6bf1532692d044bddf7cf8319f84a, type: 3}
+  m_PrefabInstance: {fileID: 1097694270078968481}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 410345fda1080c34e8dca7c4c1aabefc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &6299184871360002955
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1816,6 +1868,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5397251269715790506, guid: 56a1f285e2fd44747a870e9531d03a98, type: 3}
+      propertyPath: managedReferences[8739563303496056898].m_Value
+      value: 
+      objectReference: {fileID: 1097694270078968495}
     - target: {fileID: 6052781733463567801, guid: 56a1f285e2fd44747a870e9531d03a98, type: 3}
       propertyPath: m_Name
       value: Enemy

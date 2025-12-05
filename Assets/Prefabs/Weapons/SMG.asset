@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 077190ba98e20f2499de32235978824a, type: 3}
+  m_Name: SMG
+  m_EditorClassIdentifier: 
+  Accuracy:
+    baseVal: 0.8
+    minVal: 0.5
+    maxVal: 0.95
+  AttackRate:
+    baseVal: 0.05
+    minVal: 0.05
+    maxVal: 0.1
+  Capacity:
+    baseVal: 25
+    minVal: 25
+    maxVal: 40
+  Damage:
+    baseVal: 33
+    minVal: 20
+    maxVal: 35
+  ShotCount:
+    baseVal: 1
+    minVal: 1
+    maxVal: 1
+  AttackRange:
+    baseVal: 8
+    minVal: 8
+    maxVal: 10

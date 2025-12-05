@@ -23,7 +23,7 @@ public partial class ChaseTargetAction : Action
         var dir = movement.normalized;
         if (movement.magnitude > MinDistance.Value)
         {
-            Agent.Value.MoveCtrl.SetTargetVelocity(Vector3.right * dir.x * Agent.Value.Stat.MoveSpeed.Val);
+            Agent.Value.MoveCtrl.SetTargetVelocity(Vector3.right * dir.x * Agent.Value.Stat.MoveSpeed.BaseVal);
         }
         else 
         {

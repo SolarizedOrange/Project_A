@@ -9,6 +9,12 @@ public abstract class RangedWeapon: WeaponBase
     [SerializeField] bool IsFullAuto = true;
     [SerializeField] Color debugRayColor = Color.red;
     public bool IsReloading;
+    protected int ammo;
+
+    void Start()
+    {
+        ammo = Stat.Capacity.BaseVal;
+    }
 
     public override bool Attack(bool hasJustAttacked)
     {
@@ -24,16 +30,16 @@ public abstract class RangedWeapon: WeaponBase
     public void Fire()
     {
         Debug.Log("FIRE");
-        Stat.Capacity.Val--;
-        for (int i = 0; i < Stat.ShotCount.Val; i++)
+        ammo--;
+        for (int i = 0; i < Stat.ShotCount.BaseVal; i++)
         {   
-            Vector3 rayPos = 0.1f * (1.0f - Stat.Accuracy.Val) * Random.insideUnitSphere;
+            Vector3 rayPos = 0.1f * (1.0f - Stat.Accuracy.BaseVal) * Random.insideUnitSphere;
             rayPos.z *= 0.5f;
             rayPos = (MuzzlePosition.forward + rayPos).normalized;
             Ray ray = new Ray(MuzzlePosition.position, rayPos);
-            if (Physics.Raycast(ray, out var hitInfo ,Stat.AttackRange.Val,(int)Layers.HitCollider))
+            if (Physics.Raycast(ray, out var hitInfo ,Stat.AttackRange.BaseVal,(int)Layers.HitCollider))
             {
-                Debug.DrawRay(MuzzlePosition.position, rayPos * Stat.AttackRange.Val, debugRayColor, 5.0f);
+                Debug.DrawRay(MuzzlePosition.position, rayPos * Stat.AttackRange.BaseVal, debugRayColor, 5.0f);
                 Debug.Log("RayCastHit");
                 var res = hitInfo.collider;
                 if (res.TryGetComponent<HitBox>(out var hitBox))
@@ -49,7 +55,7 @@ public abstract class RangedWeapon: WeaponBase
     }
     public override bool CanAttack()
     {
-        if (!IsReloading && Stat.Capacity.Val > 0 && ((Time.time - lastAttackTime) >= Stat.AttackRate.Val))
+        if (!IsReloading && ammo > 0 && ((Time.time - lastAttackTime) >= Stat.AttackRate.BaseVal))
         {
             return true;
         }
@@ -57,7 +63,7 @@ public abstract class RangedWeapon: WeaponBase
     }
     public virtual void Reload()
     {
-        if (Stat.Capacity.Val < Stat.Capacity.MaxVal && !IsReloading)
+        if (ammo < Stat.Capacity.BaseVal && !IsReloading)
         {
             IsReloading = true;
             StartCoroutine(ReloadRoutine());
@@ -67,7 +73,7 @@ public abstract class RangedWeapon: WeaponBase
     protected virtual IEnumerator ReloadRoutine()
     {
         yield return new WaitForSeconds(3f);
-        Stat.Capacity.Val = Stat.Capacity.MaxVal;
+        ammo = Stat.Capacity.BaseVal;
         IsReloading = false;
     }
 }

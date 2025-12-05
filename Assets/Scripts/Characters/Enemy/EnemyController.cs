@@ -40,7 +40,7 @@ public class EnemyController: CharacterBase
 		// Update AttackDistance in Blackboard
 		Agent.BlackboardReference.GetVariable<float>("AttackDistnace", out var range);
 		if (CurrentWeapon != null)
-			range.Value = CurrentWeapon.Stat.AttackRange.Val;
+			range.Value = CurrentWeapon.Stat.AttackRange.BaseVal;
 		else
 			range.Value = 0f;
 

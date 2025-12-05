@@ -46,52 +46,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8e2338056081d04682d84e005378fb8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Stat:
-    Accuracy:
-      val: 0.7
-      MaxVal: 0.9
-      BuffMul: 1
-      OnChangedValue:
-        m_PersistentCalls:
-          m_Calls: []
-    AttackRate:
-      val: 0.05
-      MaxVal: 0.1
-      BuffMul: 1
-      OnChangedValue:
-        m_PersistentCalls:
-          m_Calls: []
-    Capacity:
-      val: 25
-      MaxVal: 25
-      BuffMul: 1
-      OnChangedValue:
-        m_PersistentCalls:
-          m_Calls: []
-    Damage:
-      val: 33
-      MaxVal: 40
-      BuffMul: 1
-      OnChangedValue:
-        m_PersistentCalls:
-          m_Calls: []
-    ShotCount:
-      val: 1
-      MaxVal: 1
-      BuffMul: 0
-      OnChangedValue:
-        m_PersistentCalls:
-          m_Calls: []
-    AttackRange:
-      val: 10
-      MaxVal: 10
-      BuffMul: 0
-      OnChangedValue:
-        m_PersistentCalls:
-          m_Calls: []
+  Stat: {fileID: 11400000, guid: f03cfecd87c37b0498864bfb361d057a, type: 2}
   MuzzlePosition: {fileID: 8653317694286964318}
   IsFullAuto: 1
   debugRayColor: {r: 1, g: 0, b: 0, a: 1}
+  IsReloading: 0
 --- !u!1773428102 &8359474900249218459
 ParentConstraint:
   m_ObjectHideFlags: 0

@@ -1,27 +1,32 @@
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Events;
 
 [System.Serializable]
 public class StatBase<T>
 {
-    [SerializeField] T val;
-    public T Val
-    { 
+    [SerializeField] T baseVal;
+    public T BaseVal
+    {
         get
         {
-            return val;
-        }
-
-        set
-        {
-            val = value;
-            OnChangedValue?.Invoke(val);
+            return baseVal;
         }
     }
-    public T MaxVal;
-    // public Dictionary<BuffType, Buff> BuffMulDic;
-    public float BuffMul;
 
-    public UnityEvent<T> OnChangedValue;
+    [SerializeField] T minVal;
+    public T MinVal
+    {
+        get
+        {
+            return minVal;
+        }    
+    }
+
+    [SerializeField] T maxVal;
+    public T MaxVal
+    {
+        get
+        {
+            return maxVal;
+        }
+    }
 }
