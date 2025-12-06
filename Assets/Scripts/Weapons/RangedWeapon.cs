@@ -13,7 +13,7 @@ public abstract class RangedWeapon: WeaponBase
 
     void Start()
     {
-        ammo = Stat.Capacity.BaseVal;
+        ammo = (int)Stat.Capacity.BaseVal;
     }
 
     public override bool Attack(bool hasJustAttacked)
@@ -63,7 +63,7 @@ public abstract class RangedWeapon: WeaponBase
     }
     public virtual void Reload()
     {
-        if (ammo < Stat.Capacity.BaseVal && !IsReloading)
+        if (ammo < (int)Stat.Capacity.BaseVal && !IsReloading)
         {
             IsReloading = true;
             StartCoroutine(ReloadRoutine());
@@ -73,7 +73,7 @@ public abstract class RangedWeapon: WeaponBase
     protected virtual IEnumerator ReloadRoutine()
     {
         yield return new WaitForSeconds(3f);
-        ammo = Stat.Capacity.BaseVal;
+        ammo = (int)Stat.Capacity.BaseVal;
         IsReloading = false;
     }
 }

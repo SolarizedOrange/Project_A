@@ -20,16 +20,22 @@ public class TradeHubSystem : MonoBehaviour
         shopSystem.gameObject.SetActive(false);
 	}
 
-    public List<ShopItem> GetSelectedItems()
+	void OnDisable()
 	{
-        List<ShopItem> items = new ();
+		perkItems.Clear();
+        shopItems.Clear();
+	}
+
+	public List<ItemBase> GetBuyItemInstance()
+	{
+        List<ItemBase> items = new ();
         foreach (var slot in perkSystem.CurrentSelectSlots)
         {
-            items.Add(slot.Item);
+            items.Add(Instantiate(slot.Item.BuyItem));
         }
         foreach (var slot in shopSystem.CurrentSelectSlots)
         {
-            items.Add(slot.Item);
+            items.Add(Instantiate(slot.Item.BuyItem));
         }
         return items;
 	}

@@ -267,7 +267,6 @@ GameObject:
   - component: {fileID: 6908155596739163105}
   - component: {fileID: 5095107289560235250}
   - component: {fileID: 5919592066658854068}
-  - component: {fileID: 3876561869873500626}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -352,10 +351,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MoveCtrl: {fileID: 8151976365467373408}
-  Stat: {fileID: 0}
   Animator: {fileID: 4393170893409835017}
-  CurrentWeapon: {fileID: 2664924696816261548}
   IsCover: 0
+  Stat: {fileID: 11400000, guid: ac264b8a8ff313543b8aabac6569265c, type: 2}
+  PerkList: []
+  TestPerk: {fileID: 11400000, guid: 1fe0c287807260443b8955501d301b28, type: 2}
+  CurrentWeapon: {fileID: 2664924696816261548}
   AimRig: {fileID: 7985968138325498704}
   AimTarget: {fileID: 1457127280810403513}
   MoveDirection: {x: 0, y: 0}
@@ -419,39 +420,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df11b51acc8bdf849b1299fcf496e92a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &3876561869873500626
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6236016170068327932}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 410345fda1080c34e8dca7c4c1aabefc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Hp:
-    val: 100
-    MaxVal: 0
-    BuffMul: 0
-    OnChangedValue:
-      m_PersistentCalls:
-        m_Calls: []
-  MoveSpeed:
-    val: 3
-    MaxVal: 0
-    BuffMul: 0
-    OnChangedValue:
-      m_PersistentCalls:
-        m_Calls: []
-  Precision:
-    val: 0
-    MaxVal: 0
-    BuffMul: 0
-    OnChangedValue:
-      m_PersistentCalls:
-        m_Calls: []
 --- !u!1 &8596329170053885305
 GameObject:
   m_ObjectHideFlags: 0
