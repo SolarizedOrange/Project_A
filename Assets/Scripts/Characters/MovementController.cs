@@ -5,8 +5,11 @@ public class MovementController: MonoBehaviour
     [Header("Movement Settings")]
     public Rigidbody Ctrl;
     [SerializeField] float velocityTransitionTime = 0.2f;
+    public float VelocityTransitionTime { get{ return velocityTransitionTime; } }
     [SerializeField] float rotateTransitionTime = 0.2f;
+    public float RotateTransitionTime { get{ return rotateTransitionTime; } }
     [SerializeField] float positionTransitionTime = 0.2f;
+    public float PositionTransitionTime { get{ return positionTransitionTime; } }
 
     // float moveTimer = 0f;
     float lookTimer = 0f;
