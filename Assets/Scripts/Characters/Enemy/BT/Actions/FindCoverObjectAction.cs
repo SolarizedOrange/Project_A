@@ -17,7 +17,7 @@ public partial class FindCoverObjectAction : Action
     {
         if (TryFindCoverObject())
 		{
-            Debug.Log("Find");
+            // Debug.Log("Find");
 			return Status.Success;
 		}
         else return Status.Failure;
