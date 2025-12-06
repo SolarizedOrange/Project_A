@@ -3,7 +3,6 @@ using Unity.Behavior;
 using UnityEngine;
 using Action = Unity.Behavior.Action;
 using Unity.Properties;
-using Unity.VisualScripting;
 
 [Serializable, GeneratePropertyBag]
 [NodeDescription(name: "Cover", story: "Agent [isCover] in [CoverObject]", category: "Action", id: "fe243adc61bdf0bf1602db6de6f3570d")]
@@ -22,7 +21,7 @@ public partial class CoverAction : Action
         // Debug.Log("CoverStart");
 
         ctrl = Agent.Value.MoveCtrl;
-        if (CoverObject.Value == null) return Status.Failure;
+        if (CoverObject.Value == null) return Status.Success;
 
         if (IsCover.Value)
 		{
