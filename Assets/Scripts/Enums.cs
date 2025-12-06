@@ -55,3 +55,14 @@ public enum AnimationActionType
     Reload,
     Die
 }
+
+// StatType
+public enum CharacterStatType
+{
+    HP, MoveSpeed, Precision
+}
+
+public enum WeaponStatType
+{
+	Accuracy, AttackRate, Capacity, Damage, ShotCount, AttackRange
+}
