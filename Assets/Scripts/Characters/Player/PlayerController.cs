@@ -51,11 +51,11 @@ public class PlayerController : CharacterBase
         if (IsAiming)
         {
             AimPos = mouseInputAction.ReadValue<Vector2>();
-            AimPos.x -= Screen.width / 2;
-            AimPos.y -= Screen.height / 2;
-            AimPos = AimPos.normalized;
-            MoveCtrl.SetTargetRotation(AimPos);
-            AimTarget.position = transform.position + 3f * AimPos;
+            AimPos.z = Vector3.Dot(transform.position - Camera.main.transform.position, Camera.main.transform.forward);
+            AimPos = Camera.main.ScreenToWorldPoint(AimPos);
+            MoveCtrl.SetTargetRotation(AimPos - transform.position);
+            // AimTarget.position = AimPos;
+            AimTarget.LookAt(AimPos);
         }
         Animator.SetBool(AimHash, IsAiming);
     }

@@ -93,13 +93,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3c430f382484144e925c097c2d33cfe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Weight: 0.5
+  m_Weight: 1
   m_Data:
     m_ConstrainedObject: {fileID: 2313856351857991004}
     m_SourceObjects:
       m_Length: 1
       m_Item0:
-        transform: {fileID: 1457127280810403513}
+        transform: {fileID: 6075596671385570333}
         weight: 1
       m_Item1:
         transform: {fileID: 0}
@@ -122,7 +122,7 @@ MonoBehaviour:
       m_Item7:
         transform: {fileID: 0}
         weight: 0
-    m_Offset: {x: 0, y: 0, z: 0}
+    m_Offset: {x: 20, y: 35, z: 0}
     m_MinLimit: -90
     m_MaxLimit: 90
     m_AimAxis: 4
@@ -135,6 +135,37 @@ MonoBehaviour:
       x: 1
       y: 1
       z: 1
+--- !u!1 &2724093682646444358
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6075596671385570333}
+  m_Layer: 0
+  m_Name: AimTarget
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6075596671385570333
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2724093682646444358}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 3}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1457127280810403513}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &4119001922459659539
 GameObject:
   m_ObjectHideFlags: 0
@@ -185,7 +216,7 @@ MonoBehaviour:
     m_SourceObjects:
       m_Length: 1
       m_Item0:
-        transform: {fileID: 1457127280810403513}
+        transform: {fileID: 6075596671385570333}
         weight: 1
       m_Item1:
         transform: {fileID: 0}
@@ -231,7 +262,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1457127280810403513}
   m_Layer: 0
-  m_Name: AimTarget
+  m_Name: AimOrigin
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -249,7 +280,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 6075596671385570333}
   m_Father: {fileID: 7472029237836386749}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6236016170068327932
@@ -355,7 +387,6 @@ MonoBehaviour:
   IsCover: 0
   Stat: {fileID: 11400000, guid: ac264b8a8ff313543b8aabac6569265c, type: 2}
   PerkList: []
-  TestPerk: {fileID: 11400000, guid: 1fe0c287807260443b8955501d301b28, type: 2}
   CurrentWeapon: {fileID: 2664924696816261548}
   AimRig: {fileID: 7985968138325498704}
   AimTarget: {fileID: 1457127280810403513}
