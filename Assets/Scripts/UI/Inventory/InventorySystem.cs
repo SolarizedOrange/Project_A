@@ -1,93 +1,159 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
-public struct InventorySlot
+public struct QuickSlot
 {
-    public ItemBase SlotItem;
+    public InventoryWeaponSlot InventorySlot;
     public Image SlotImage;
 }
 
 public class InventorySystem : MonoBehaviour
 {
     [Header("Inventory Settings")]
-    [SerializeField] List<Image> slotObjects;
-    [SerializeField] InputActionMap actionMap;
+    [SerializeField] GameObject playerInfo;
+    [SerializeField] List<Image> quickSlotObjects;
+    [SerializeField] InputActionMap inventoryActionMap;
+    [SerializeField] InputActionMap slotActionMap;
 
-    [Header("Add Test Inventory Items")]
-    [SerializeField] List<ItemBase> items;
+    PlayerController player;
+    List<Action<InputAction.CallbackContext>> slotHandlers = new ();
+    Action<InputAction.CallbackContext> inventoryHandler;
 
-    List<InventorySlot> slots;
-    List<System.Action<InputAction.CallbackContext>> handlers = new ();
-    void OnEnable()
+    bool canUseQuickSlot = true;
+    bool canUseInventory = true;
+    void InitInput()
     {
-        actionMap.Enable();
-        for(int i = 0; i < actionMap.actions.Count; i++)
+        inventoryActionMap.Enable();
+        for (int i = 0; i< inventoryActionMap.actions.Count; i++)
+		{
+            inventoryHandler = (callback) => 
+            { 
+                if (canUseInventory == false) return;
+                playerInfo.SetActive(!playerInfo.activeSelf);
+                canUseQuickSlot = !playerInfo.activeSelf;
+            };
+            inventoryActionMap.actions[i].performed += inventoryHandler;
+		}
+
+        slotActionMap.Enable();
+        for(int i = 0; i < slotActionMap.actions.Count; i++)
 		{
             int idx = i;
-            System.Action<InputAction.CallbackContext> handler = (callback) => OnSelectItem(idx);
-            handlers.Add(handler);
-            actionMap.actions[i].performed += handler;
+            Action<InputAction.CallbackContext> handler = (callback) => OnSelectItem(idx);
+            slotHandlers.Add(handler);
+            slotActionMap.actions[i].performed += handler;
 		}
     }
-    void OnDisable()
+    void OnDestroy()
     {
-        for(int i = 0; i < actionMap.actions.Count; i++)
+        for (int i = 0; i< inventoryActionMap.actions.Count; i++)
 		{
-            actionMap.actions[i].performed -= handlers[i];
+			inventoryActionMap.actions[i].performed -= inventoryHandler;
 		}
-        actionMap.Disable();
+        for(int i = 0; i < slotActionMap.actions.Count; i++)
+		{
+            slotActionMap.actions[i].performed -= slotHandlers[i];
+		}
+        slotActionMap.Disable();
     }
 
-	void Awake()
+	void Start()
 	{
-        slots = new ();
-        foreach (var slot in slotObjects)
-		{
-            // null slot image disabled
-            slot.enabled = slot.sprite != null;
-			slots.Add(new InventorySlot(){SlotItem = null, SlotImage = slot});
-		}
-
-        for (int i = 0; i < items.Count; i++)
-		{
-			SetSlotItem(i,items[i],true);
-		}
-	}
-
-    public ItemBase GetSlotItem(int idx)
-	{
-		if (slots != null && slots.Count > idx && idx >= 0)
-            return slots[idx].SlotItem;
-        else 
-            return null;
-	}
-
-    public bool SetSlotItem(int idx, ItemBase item,bool isOverride = true)
-	{
-		if (slots.Count <= idx || idx < 0) return false;
-        if (isOverride == false && slots[idx].SlotItem != null) return false;
-
-        var slot = slots[idx];
-        slot.SlotItem = item;
-        var img = slot.SlotImage;
-        img.sprite = item.ItemSprite;
-        img.enabled = img.sprite != null;
-        slots[idx] = slot;
-        return true;
+        player = GameManager.Instance.Player;
+        InitInput();
+        InitQuickSlot();
+        InitWeaponSlot();
 	}
 
     void OnSelectItem(int idx)
 	{
+        if (canUseInventory == false || canUseQuickSlot == false) return;
+
         // TODO: Select Method
-		Debug.Log($"Select Item: {idx} Can Select Item: {GetSlotItem(idx)}");
-        var player = GameManager.Instance.Player;
-        var weapon = GetSlotItem(idx) as InventoryWeaponItem;
+		Debug.Log($"Select Item: {idx} Can Select Item: {GetQuickSlot(idx)}");
+        var slot = GetQuickSlot(idx);
         if (player != null)
 		{
-			player.EquipWeapon(weapon ? weapon.WeaponType : WeaponType.None);
+			player.EquipWeapon(slot != null ? slot.InstanceItem : null);
             player.GetComponent<PlayerCombat>().OnWeaponSwap();
 		}
     }
+
+    public void SetInventoryInput(bool isEnable)
+	{
+		canUseInventory = isEnable;
+	}
+
+#region QuickSlot
+    List<QuickSlot> quickSlots;
+    void InitQuickSlot()
+	{
+		quickSlots = new ();
+        foreach (var slot in quickSlotObjects)
+		{
+            // null slot image disabled
+            slot.enabled = slot.sprite != null;
+			quickSlots.Add(new QuickSlot(){InventorySlot = null, SlotImage = slot});
+		}
+	}
+
+    public InventoryWeaponSlot GetQuickSlot(int idx)
+	{
+        if (quickSlots.Count > idx && idx >= 0)
+            return quickSlots[idx].InventorySlot;
+        else 
+            return null;
+	}
+
+    public void UpdateQuickSlot()
+	{
+        for (int i = 0; i< WeaponSlots.Count; i++)
+		{
+		    if (quickSlots.Count <= i) break;
+            var quickSlot = quickSlots[i];
+            var img = quickSlot.SlotImage;
+            quickSlot.InventorySlot = WeaponSlots[i];
+            var slot = quickSlot.InventorySlot;
+            if (slot != null && slot.Item != null)
+                img.sprite = slot.Item.ItemSprite;
+            else
+                img.sprite = null;
+            img.enabled = img.sprite != null;
+            quickSlots[i] = quickSlot;
+        }
+	}
+#endregion
+
+#region WeaponSlot
+    public List<InventoryWeaponSlot> WeaponSlots;
+    [SerializeField] List<LineSlot> lineSlots;
+    
+    void InitWeaponSlot()
+	{
+		WeaponSlots = GetComponentsInChildren<InventoryWeaponSlot>(true).ToList();
+        lineSlots = GetComponentsInChildren<LineSlot>(true).ToList();
+        UpdateWeaponSlot();
+	}
+
+    public void DisableLineSlot(int currentWeponSLotidx)
+	{
+		lineSlots[(currentWeponSLotidx-1)/2].gameObject.SetActive(false);
+	}
+
+    public void UpdateWeaponSlot()
+	{
+		for (int i = 0; i < lineSlots.Count; i++)
+        {
+            lineSlots[i].gameObject.SetActive(true);
+            lineSlots[i].transform.SetSiblingIndex(2*i);
+        }
+
+        WeaponSlots.Sort((a,b) => a.transform.GetSiblingIndex().CompareTo(b.transform.GetSiblingIndex()));
+        UpdateQuickSlot();
+	}
+#endregion
 }
