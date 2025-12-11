@@ -13,26 +13,37 @@ MonoBehaviour:
   m_Name: SMG
   m_EditorClassIdentifier: 
   Accuracy:
+    isFloating: 1
     baseVal: 0.8
     minVal: 0.5
     maxVal: 0.95
   AttackRate:
+    isFloating: 1
     baseVal: 0.05
     minVal: 0.05
     maxVal: 0.1
   Capacity:
+    isFloating: 0
     baseVal: 25
     minVal: 25
     maxVal: 40
   Damage:
+    isFloating: 1
     baseVal: 33
     minVal: 20
     maxVal: 35
   ShotCount:
+    isFloating: 0
     baseVal: 1
     minVal: 1
     maxVal: 1
   AttackRange:
+    isFloating: 1
     baseVal: 8
     minVal: 8
     maxVal: 10
+  Recoil:
+    isFloating: 1
+    baseVal: 0.8
+    minVal: 0.5
+    maxVal: 1.5

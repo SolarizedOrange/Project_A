@@ -10,6 +10,7 @@ public class WeaponStat : ScriptableObject, IStatField<WeaponStatType>
 	public StatBase Damage;
 	public StatBase ShotCount;
 	public StatBase AttackRange;
+	public StatBase Recoil;
 
 	public float GetApplyBuffStatBase(WeaponStatType statType, float buffMul)
 	{
@@ -50,6 +51,8 @@ public class WeaponStat : ScriptableObject, IStatField<WeaponStatType>
                 return ShotCount;
             case WeaponStatType.AttackRange:
                 return ShotCount;
+			case WeaponStatType.Recoil:
+				return Recoil;
             default:
                 return null;
         }
