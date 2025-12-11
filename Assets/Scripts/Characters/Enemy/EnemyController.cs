@@ -1,4 +1,3 @@
-using System.Linq;
 using Unity.Behavior;
 using UnityEngine;
 
@@ -9,12 +8,6 @@ public class EnemyController: CharacterBase
 
 	[Header("Enemy Controller")]
     public BehaviorGraphAgent Agent;
-
-	protected override void Awake()
-	{
-		base.Awake();
-		EquipWeapon(Weapons.First().Key);
-	}
 
 	void Update()
 	{
