@@ -5,25 +5,13 @@ using UnityEngine;
 public class TradeSystemBase : MonoBehaviour
 {
     [Header("Trade System Settings")]
-    public List<ShopItem> ItemList;
+    public List<ItemBase> ItemList;
 
-    [Header("Puck System Info")]
-    public HashSet<TradeSlot> CurrentSelectSlots;
+    [Header("Trade System Info")]
     public List<TradeSlot> Slots;
-	void Awake()
-	{
-		Init();
-	}
 
-	void OnDestroy()
-	{
-		foreach (var slot in Slots)
-        {
-            slot.SlotButton.onClick.RemoveAllListeners();
-        }
-	}
-
-    protected virtual void Init() { CurrentSelectSlots = new ();}
+    protected PlayerController player;
+    public virtual void Init() { player = GameManager.Instance.Player; }
 
 	public virtual void GenerateItemList()
     {
@@ -34,16 +22,29 @@ public class TradeSystemBase : MonoBehaviour
                 break;
 
             var randomIndex = Random.Range(0, last);
-            Slots[i].Item = ItemList[randomIndex];
+            // SO Item Instancing 
+            Slots[i].Item = Instantiate(ItemList[randomIndex]);
             var item = ItemList[last-1];
             ItemList[last-1] = ItemList[randomIndex];
             ItemList[randomIndex] = item;
         }
     }
 
-    protected bool CanSelectSlot()
+    protected virtual bool CanBuyItem(ItemBase item,bool isResell = false) 
+    { 
+        var price = isResell ? item.ResellPrice : item.Price;
+        var otherPrice = isResell ? item.OtherResellPrice : item.OtherPrice;
+        return price<= player.Money.Value && otherPrice <= player.XP; 
+    }
+
+    protected void BuyItem(ItemBase item, bool isResell = false)
 	{
-		// TODO: Perk Item Price Check
-        return true;
+		player.Money.Value -= isResell ? item.ResellPrice : item.Price;
 	}
+
+    protected void SellItem(ItemBase item, bool isResell = false)
+	{
+		player.Money.Value += isResell ? item.ResellPrice : item.Price;
+	}
+    public virtual void OnCompleteSelect() {}
 }

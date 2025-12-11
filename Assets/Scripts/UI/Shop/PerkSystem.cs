@@ -1,8 +1,12 @@
 using System.Linq;
+using UnityEngine;
 
 public class PerkSystem : TradeSystemBase
 {
-    protected override void Init()
+    [Header("PerkSystem Settings")]
+    public TradeSlot CurrentSelectSlot;
+
+    public override void Init()
 	{
         base.Init();
 		Slots = new ();
@@ -11,19 +15,20 @@ public class PerkSystem : TradeSystemBase
         {
             slot.SlotButton.onClick.AddListener(() =>
             {
-                if (CanSelectSlot() == false)
+                if (CanBuyItem(slot.Item) == false)
                     return;
 
-                foreach (var s in CurrentSelectSlots)
-                {
-                    s.SlotButton.interactable = true;
-                }
-                CurrentSelectSlots.Clear();
-
-                CurrentSelectSlots.Add(slot);
-
+                if (CurrentSelectSlot != null)
+                    CurrentSelectSlot.SlotButton.interactable = true;
+                CurrentSelectSlot = slot;
                 slot.SlotButton.interactable = false;
             });
         }
+	}
+	public override void OnCompleteSelect()
+	{
+        if (CurrentSelectSlot != null && CurrentSelectSlot.Item != null
+            && CurrentSelectSlot.Item is PerkItem item)
+            player.AddPerk(item);
 	}
 }
