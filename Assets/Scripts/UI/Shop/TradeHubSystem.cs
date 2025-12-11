@@ -5,13 +5,17 @@ public class TradeHubSystem : MonoBehaviour
 {
     [SerializeField] TradeSystemBase perkSystem;
     [SerializeField] ShopSystem shopSystem;
-    [SerializeField] List<ShopItem> perkItems;
-    [SerializeField] List<ShopItem> shopItems;
+    [SerializeField] List<ItemBase> perkItems;
+    [SerializeField] List<ItemBase> weaponItems;
+    [SerializeField] List<ItemBase> bulletItems;
+    [SerializeField] List<ItemBase> armorItems;
 
-	void OnEnable()
+	void Start()
 	{
         perkSystem.ItemList = perkItems;
-        shopSystem.ItemList = shopItems;
+        shopSystem.ItemList = weaponItems;
+        perkSystem.Init();
+        shopSystem.Init();
 
 		perkSystem.GenerateItemList();
 		shopSystem.GenerateItemList();
@@ -20,23 +24,4 @@ public class TradeHubSystem : MonoBehaviour
         shopSystem.gameObject.SetActive(false);
 	}
 
-	void OnDisable()
-	{
-		perkItems.Clear();
-        shopItems.Clear();
-	}
-
-	public List<ItemBase> GetBuyItemInstance()
-	{
-        List<ItemBase> items = new ();
-        foreach (var slot in perkSystem.CurrentSelectSlots)
-        {
-            items.Add(Instantiate(slot.Item.BuyItem));
-        }
-        foreach (var slot in shopSystem.CurrentSelectSlots)
-        {
-            items.Add(Instantiate(slot.Item.BuyItem));
-        }
-        return items;
-	}
 }
