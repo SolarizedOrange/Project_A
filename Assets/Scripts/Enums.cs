@@ -64,5 +64,5 @@ public enum CharacterStatType
 
 public enum WeaponStatType
 {
-	Accuracy, AttackRate, Capacity, Damage, ShotCount, AttackRange
+	Accuracy, AttackRate, Capacity, Damage, ShotCount, AttackRange, Recoil
 }

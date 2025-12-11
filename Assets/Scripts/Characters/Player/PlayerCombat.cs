@@ -8,6 +8,7 @@ public class PlayerCombat: PlayerComponent
     readonly int ReloadHash = Animator.StringToHash("IsReloading");
     readonly int WeaponTypeHash = Animator.StringToHash("WeaponType");
     bool hasJustAttacked;
+    bool recoverRecoil = true;
 
     void Start()
     {
@@ -33,20 +34,23 @@ public class PlayerCombat: PlayerComponent
                 Debug.Log("RECOIL");
                 StartCoroutine(DoRecoilRoutine());
                 PlayerCtrl.IsReloading = false;
+                PlayerCtrl.Recoil.x += PlayerCtrl.CurrentWeapon.Stat.Recoil.BaseVal * Random.Range(-0.1f, 0.1f);
+                PlayerCtrl.Recoil.y += PlayerCtrl.CurrentWeapon.Stat.Recoil.BaseVal * Random.Range(-0.2f, 0.3f);
+                PlayerCtrl.Recoil.x = Mathf.Clamp(PlayerCtrl.Recoil.x, -0.3f, 0.3f);
             }
         }
-        else
-        {
-            // Do Melee
-        }
+
+        PlayerCtrl.Recoil = Vector3.Lerp(PlayerCtrl.Recoil, Vector3.zero, recoverRecoil ? 2f * Time.deltaTime : 0.25f * Time.deltaTime);
         hasJustAttacked = false;
     }
 
     IEnumerator DoRecoilRoutine()
     {
-        PlayerCtrl.Animator.SetBool(AttackHash, true);
+        recoverRecoil = false;
+        // PlayerCtrl.Animator.SetBool(AttackHash, true);
         yield return new WaitForSeconds(PlayerCtrl.CurrentWeapon.Stat.AttackRate.BaseVal);
-        PlayerCtrl.Animator.SetBool(AttackHash, false);
+        // PlayerCtrl.Animator.SetBool(AttackHash, false);
+        recoverRecoil = true;
         Debug.Log("Do Recoil");
     }
 
@@ -71,6 +75,7 @@ public class PlayerCombat: PlayerComponent
             ? (int)PlayerCtrl.CurrentWeapon.GetWeaponType()
             : (int)WeaponType.None
         );
+        PlayerCtrl.Recoil = Vector3.zero;
     }
 
     public void OnAttack(InputValue value)

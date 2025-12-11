@@ -7,9 +7,11 @@ public class PlayerController : CharacterBase
 {
     [Header("Player Controller")]
     [SerializeField] public Rig AimRig;
+    [SerializeField] Transform AimOrigin;
     [SerializeField] Transform AimTarget;
     public Vector2 MoveDirection;
     public Vector3 AimPos;
+    public Vector3 Recoil;
     public bool IsAiming;
     public bool IsReloading;
     public bool IsAttacking;
@@ -54,8 +56,11 @@ public class PlayerController : CharacterBase
             AimPos.z = Vector3.Dot(transform.position - Camera.main.transform.position, Camera.main.transform.forward);
             AimPos = Camera.main.ScreenToWorldPoint(AimPos);
             MoveCtrl.SetTargetRotation(AimPos - transform.position);
-            // AimTarget.position = AimPos;
-            AimTarget.LookAt(AimPos);
+            if ((AimPos - AimOrigin.position).sqrMagnitude > 0.1f)
+            {
+                AimOrigin.LookAt(AimPos);                
+            }
+            AimTarget.localPosition = Vector3.forward * 3 + Recoil;
         }
         Animator.SetBool(AimHash, IsAiming);
     }
