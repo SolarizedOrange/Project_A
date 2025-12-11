@@ -1,51 +1,50 @@
 using System;
 using System.Collections.Generic;
 
-public class BuffManager<T> where T:Enum
+public class BuffManager
 {
-    Dictionary<T,HashSet<Buff<T>>> buffDic;
-    Dictionary<T,float> buffMulDic;
+    Dictionary<Enum,(HashSet<Buff> hashSet,float buffMul)> buffDic;
 
 	public BuffManager()
 	{
         buffDic = new ();
-        buffMulDic = new ();
-		foreach(T statType in Enum.GetValues(typeof(T)))
-		{
-			buffDic.Add(statType,new HashSet<Buff<T>>());
-            buffMulDic.Add(statType, 1f);
-		}
 	}
 
-	public void AddBuff(Buff<T> buff)
-	{
-		buffDic[buff.StatType].Add(buff);
-        UpdateBuff(buff.StatType);
-	}
-
-    public void RemoveBuff(Buff<T> buff)
+	public void AddBuff(Buff buff)
 	{
         var statType = buff.StatType;
-        if (buffDic[statType].Remove(buff))
+		if (buffDic.ContainsKey(statType) == false)
+			buffDic.Add(statType, (new (),1f));
+
+		buffDic[statType].hashSet.Add(buff);
+        UpdateBuff(statType);
+	}
+
+    public void RemoveBuff(Buff buff)
+	{
+        var statType = buff.StatType;
+        if (buffDic.TryGetValue(statType,out var tuple)
+			&& tuple.hashSet.Remove(buff))
 		{
 			UpdateBuff(statType);
 		} 
 	}
 
-    void UpdateBuff(T statType)
+    void UpdateBuff(Enum statType)
 	{
+		var tuple = buffDic[statType];
 		var updateVal = 1f;
-        foreach (var buff in buffDic[statType])
+        foreach (var buff in tuple.hashSet)
         {
             updateVal *= buff.Value;
         }
-        buffMulDic[statType] = updateVal;
+        tuple.buffMul = updateVal;
 	}
 
-    public float GetBuffMul(T statType)
+    public float GetBuffMul(Enum statType)
 	{
-        if (buffMulDic.TryGetValue(statType, out var buffMul))
-		    return buffMul;
+        if (buffDic.TryGetValue(statType, out var tuple))
+		    return tuple.buffMul;
         return 1f;
 	}
 }
