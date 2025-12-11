@@ -1,21 +1,18 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations;
 
-[RequireComponent(typeof(BuffManager<WeaponStatType>))]
+[RequireComponent(typeof(ParentConstraint))]
 public abstract class WeaponBase : MonoBehaviour
 {
     [Header("WeaponBase Settings")]
     public WeaponStat Stat;
+    public ParentConstraint ParentConstraint;
     protected float lastAttackTime = 0;
 
-    [Header("BuffManager")]
-    public BuffManager<WeaponStatType> BuffManager;
-    public List<WeaponStatPerkItem> PerkList;
-
-	protected virtual void Awake()
+    protected virtual void Awake()
 	{
-		BuffManager = new();
-        PerkList = new();
+		this.ParentConstraint = GetComponent<ParentConstraint>();
 	}
 
 	public abstract bool Attack(bool hasJustAttacked);

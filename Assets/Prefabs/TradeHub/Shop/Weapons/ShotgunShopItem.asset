@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 049f41d545cd21545922580039c56087, type: 3}
+  m_Name: ShotgunShopItem
+  m_EditorClassIdentifier: 
+  ID: 32
+  ItemName: Remington 870
+  Description: 
+  ItemSprite: {fileID: 21300000, guid: d815c031183640148ba0f543015ad296, type: 3}
+  Price: 200
+  ResellPrice: 0
+  OtherPrice: 0
+  OtherResellPrice: 0
+  WeaponPref: {fileID: 584975488285603197, guid: 93ba34e7c206c6443bca77d99b504287, type: 3}

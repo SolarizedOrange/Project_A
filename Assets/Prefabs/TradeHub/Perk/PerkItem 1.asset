@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 20a7106c1f8f4c44ea8895134569a9ec, type: 3}
+  m_Name: PerkItem 1
+  m_EditorClassIdentifier: 
+  ID: 10
+  ItemName: Fast
+  Description: FastSpeed
+  ItemSprite: {fileID: 734886224, guid: fa09af5dca386a346a0b54fb68221790, type: 3}
+  Price: 0
+  ResellPrice: 0
+  OtherPrice: 0
+  OtherResellPrice: 0
+  PerkGroup: 0
+  BuffList:
+  - IsCharacterBuff: 1
+    Buff:
+      rid: 2622587214113538125
+  references:
+    version: 2
+    RefIds:
+    - rid: 2622587214113538125
+      type: {class: CharacterBuff, ns: , asm: Assembly-CSharp}
+      data:
+        value: 10
+        duration: 0
+        statType: 1

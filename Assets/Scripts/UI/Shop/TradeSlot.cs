@@ -5,15 +5,16 @@ using UnityEngine;
 public class TradeSlot : MonoBehaviour
 {
     [Header("Trade Slot Settings")]
-    [SerializeField] Image ItemImage;
-    [SerializeField] TextMeshProUGUI NameText;
-    [SerializeField] TextMeshProUGUI PriceText;
-    [SerializeField] TextMeshProUGUI DecriptionText;
+    [SerializeField] Image itemImage;
+    [SerializeField] TextMeshProUGUI nameText;
+    [SerializeField] TextMeshProUGUI priceText;
+    [SerializeField] TextMeshProUGUI decriptionText;
     public Button SlotButton;
 
-    [Header("Puck Slot Item Info")]
-    [SerializeField] ShopItem item;
-    public ShopItem Item
+    public bool IsResellSlot;
+    [Header("Trade Slot Item Info")]
+    [SerializeField] ItemBase item;
+    public ItemBase Item
 	{
 		get
 		{
@@ -21,14 +22,41 @@ public class TradeSlot : MonoBehaviour
 		}
         set
 		{
-			if (value != null)
-            {
-                item = value;
-                ItemImage.sprite = item.ItemSprite;
-                NameText.text = item.ItemName;
-                PriceText.text = item.OtherPrice.ToString();
-                DecriptionText.text = item.Description;
-            }
+            item = value;
+            if (value != null)
+			{
+                itemImage.sprite = item.ItemSprite;
+                nameText.text = item.ItemName;
+                decriptionText.text = item.Description;
+                UpdatePriceText();
+			}
 		}
+	}
+
+    void UpdatePriceText()
+	{
+        if (IsResellSlot)
+		{
+			if (Item is InventoryWeaponItem)
+            {
+                priceText.text = item.ResellPrice.ToString();
+            }
+            else
+			{
+				priceText.text = item.OtherPrice.ToString();
+			}
+		}
+        else
+		{
+			if (item is InventoryWeaponItem)
+			{
+				priceText.text = item.Price.ToString();
+			}
+            else
+			{
+				priceText.text = item.OtherPrice.ToString();
+			}
+		}
+		
 	}
 }

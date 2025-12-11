@@ -15,7 +15,8 @@ public enum WeaponType
     Melee,
     Handgun,
     Shotgun,
-    SubmachineGun
+    SubmachineGun,
+    Length
 }
 
 public enum HitBoxType
@@ -65,4 +66,10 @@ public enum CharacterStatType
 public enum WeaponStatType
 {
 	Accuracy, AttackRate, Capacity, Damage, ShotCount, AttackRange, Recoil
+}
+
+// Perk
+public enum PerkGroup
+{
+	Group1,Group2,Group3,Group4
 }
