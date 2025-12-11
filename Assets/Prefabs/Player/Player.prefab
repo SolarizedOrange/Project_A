@@ -389,9 +389,11 @@ MonoBehaviour:
   PerkList: []
   CurrentWeapon: {fileID: 2664924696816261548}
   AimRig: {fileID: 7985968138325498704}
-  AimTarget: {fileID: 1457127280810403513}
+  AimOrigin: {fileID: 1457127280810403513}
+  AimTarget: {fileID: 6075596671385570333}
   MoveDirection: {x: 0, y: 0}
   AimPos: {x: 0, y: 0, z: 0}
+  Recoil: {x: 0, y: 0, z: 0}
   IsAiming: 0
   IsReloading: 0
   IsAttacking: 0
