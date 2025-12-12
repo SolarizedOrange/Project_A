@@ -7,7 +7,7 @@ public class Shotgun: RangedWeapon
     bool temp;
     public override void Reload()
     {
-        if (ammo < Stat.Capacity.BaseVal)
+        if (ammo < Stat.Capacity)
         {
             if (!temp)
             {
@@ -24,7 +24,7 @@ public class Shotgun: RangedWeapon
 
     public override bool CanAttack()
     {
-        if (ammo > 0 && ((Time.time - lastAttackTime) >= Stat.AttackRate.BaseVal))
+        if (ammo > 0 && ((Time.time - lastAttackTime) >= Stat.AttackRate))
         {
             return true;
         }

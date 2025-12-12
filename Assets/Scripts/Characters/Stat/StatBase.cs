@@ -1,12 +1,4 @@
-using System;
 using UnityEngine;
-
-public interface IStatField<T> where T: Enum
-{
-	public StatBase GetStatBase(T statType);
-    public float GetApplyBuffStatBase(T statType, float buffMul);
-}
-
 
 [System.Serializable]
 public class StatBase

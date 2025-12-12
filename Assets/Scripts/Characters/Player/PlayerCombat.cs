@@ -34,8 +34,8 @@ public class PlayerCombat: PlayerComponent
                 Debug.Log("RECOIL");
                 StartCoroutine(DoRecoilRoutine());
                 PlayerCtrl.IsReloading = false;
-                PlayerCtrl.Recoil.x += PlayerCtrl.CurrentWeapon.Stat.Recoil.BaseVal * Random.Range(-0.1f, 0.1f);
-                PlayerCtrl.Recoil.y += PlayerCtrl.CurrentWeapon.Stat.Recoil.BaseVal * Random.Range(-0.2f, 0.3f);
+                PlayerCtrl.Recoil.x += PlayerCtrl.CurrentWeapon.Stat.Recoil * Random.Range(-0.1f, 0.1f);
+                PlayerCtrl.Recoil.y += PlayerCtrl.CurrentWeapon.Stat.Recoil * Random.Range(-0.2f, 0.3f);
                 PlayerCtrl.Recoil.x = Mathf.Clamp(PlayerCtrl.Recoil.x, -0.3f, 0.3f);
             }
         }
@@ -48,7 +48,7 @@ public class PlayerCombat: PlayerComponent
     {
         recoverRecoil = false;
         // PlayerCtrl.Animator.SetBool(AttackHash, true);
-        yield return new WaitForSeconds(PlayerCtrl.CurrentWeapon.Stat.AttackRate.BaseVal);
+        yield return new WaitForSeconds(PlayerCtrl.CurrentWeapon.Stat.AttackRate);
         // PlayerCtrl.Animator.SetBool(AttackHash, false);
         recoverRecoil = true;
         Debug.Log("Do Recoil");
