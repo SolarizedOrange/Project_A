@@ -12,8 +12,9 @@ public class CharacterBase : MonoBehaviour
     public bool IsCover;
 
     [Header("CharacterStat")]
-    public CharacterStat Stat;
-    public int HP { get; set; }
+    [SerializeField] CharacterStat stat; 
+    public CharacterStatWrapper Stat ;
+    public ObserverFloat HP;
     public ObserverInt Money;
     public int XP { get; set; }
     public Dictionary<WeaponType,ObserverInt> BulletAmmo;
@@ -21,6 +22,8 @@ public class CharacterBase : MonoBehaviour
 
     void InitStat()
 	{
+        Stat = new (this, stat);
+        HP = new () { Value = Stat.Hp };
         Money = new (Money);
         HasArmor = new (HasArmor);
         // Bullet Init
@@ -38,7 +41,7 @@ public class CharacterBase : MonoBehaviour
 
     void InitPerk()
 	{
-		CharacterBuff = new ();
+		CharacterBuff = new();
         WeaponBuff = new();
         PerkDic = new ();
 	}
@@ -88,6 +91,12 @@ public class CharacterBase : MonoBehaviour
         return;
     }
 
+    public float GetWeaponBuffMul(WeaponType weaponType, WeaponStatType statType)
+	{
+		if (WeaponBuff.TryGetValue(weaponType, out var buffManager) == false) return 1f;
+        return buffManager.GetBuffMul(statType);
+	}
+
 #endregion
 
 #region Weapon
@@ -100,7 +109,6 @@ public class CharacterBase : MonoBehaviour
     void InitWeapon()
 	{
 		Weapons = UIController.Instance.Inventory.WeaponSlots;
-        CurrentWeapon = null;
         handConstraint = new ();
         handConstraint.weight = 1f;
         handConstraint.sourceTransform = handPosition;
@@ -115,6 +123,7 @@ public class CharacterBase : MonoBehaviour
 
         if (CurrentWeapon != null)
 		{
+            CurrentWeapon.InitWeapon(this);
 			CurrentWeapon.ParentConstraint.SetSource(0,handConstraint);
             CurrentWeapon.gameObject.SetActive(true);
 		}
@@ -124,8 +133,9 @@ public class CharacterBase : MonoBehaviour
     protected virtual void Awake()
     {
         MoveCtrl = GetComponent<MovementController>();
-        InitStat();
         InitPerk();
+        InitStat();
+        if (CurrentWeapon != null) CurrentWeapon.InitWeapon(this);
     }
 
 	void Start()
