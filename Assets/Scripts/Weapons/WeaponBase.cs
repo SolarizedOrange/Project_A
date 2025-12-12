@@ -6,13 +6,19 @@ using UnityEngine.Animations;
 public abstract class WeaponBase : MonoBehaviour
 {
     [Header("WeaponBase Settings")]
-    public WeaponStat Stat;
+    [SerializeField] WeaponStat stat;
+    public WeaponStatWrapper Stat;
     public ParentConstraint ParentConstraint;
     protected float lastAttackTime = 0;
 
     protected virtual void Awake()
 	{
-		this.ParentConstraint = GetComponent<ParentConstraint>();
+		ParentConstraint = GetComponent<ParentConstraint>();
+	}
+
+    public void InitWeapon(CharacterBase character)
+	{
+        Stat = new(character,GetWeaponType(),stat);
 	}
 
 	public abstract bool Attack(bool hasJustAttacked);

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "WeaponStat", menuName = "Weapon/WeaponStat")]
-public class WeaponStat : ScriptableObject, IStatField<WeaponStatType>
+public class WeaponStat : ScriptableObject
 {
 	public StatBase Accuracy;
 	public StatBase AttackRate;
@@ -12,89 +12,54 @@ public class WeaponStat : ScriptableObject, IStatField<WeaponStatType>
 	public StatBase AttackRange;
 	public StatBase Recoil;
 
-	public float GetApplyBuffStatBase(WeaponStatType statType, float buffMul)
-	{
-		var statBase = GetStatBase(statType);
-        if (statBase.IsFloating)
-		{
-			return Mathf.Clamp(statBase.BaseVal * buffMul, statBase.MinVal, statBase.MaxVal);
-		}
-        else
-		{
-			return (int)Mathf.Clamp(statBase.BaseVal * buffMul, statBase.MinVal, statBase.MaxVal);
-		}
-	}
 
-	// public int Get(StatBase<int> val)
-	// {
-	//     return Mathf.Clamp(val.BaseVal, val.MinVal, val.MaxVal);
-	// }
-
-	// public float Get(StatBase<float> val)
-	// {
-	//     return Mathf.Clamp(val.BaseVal, val.MinVal, val.MaxVal);
-	// }
-
-	public StatBase GetStatBase(WeaponStatType statType)
-	{
-		switch (statType)
-        {
-            case WeaponStatType.Accuracy:
-                return Accuracy;
-            case WeaponStatType.AttackRate:
-                return AttackRate;
-            case WeaponStatType.Capacity:
-                return Capacity;
-            case WeaponStatType.Damage:
-                return Damage;
-            case WeaponStatType.ShotCount:
-                return ShotCount;
-            case WeaponStatType.AttackRange:
-                return ShotCount;
-			case WeaponStatType.Recoil:
-				return Recoil;
-            default:
-                return null;
-        }
-	}
 }
 
-// public class BuffMul
-// {
-//     public float Mul = 1.0f;
-//     List<float> packed;
-//     Dictionary<string, int> sparse;
-//     Dictionary<int, string> invertedSparse;
-//     public void Insert(string name, float mul)
-//     {
-//         sparse[name] = packed.Count;
-//         invertedSparse[packed.Count] = name;
-//         packed.Add(mul);
-//     }
+public class WeaponStatWrapper
+{
+	WeaponType type;
+    WeaponStat stat;
+    CharacterBase owner;
 
-//     public void Remove(string name)
-//     {
-//         if (sparse[name] != packed.Count - 1)
-//         {
-//             sparse[invertedSparse[packed.Count - 1]] = sparse[name];
-//             invertedSparse[sparse[name]] = invertedSparse[packed.Count - 1];
-//             packed[sparse[name]] = packed[packed.Count - 1];
-//         }
-//         packed.RemoveAt(packed.Count - 1);
-//         for (int i = sparse[name]; i < packed.Count; i++)
-// 		{
-			
-// 		}
-//     }
-// }
-// public class WeaponStatBuff
-// {
-//     public WeaponStat Stat;
-//     float accuracy;
-//     public float Accuracy{
-//         get
-//         {
-//             return Mathf.Clamp(accuracy * Stat.Accuracy.BaseVal, Stat.Accuracy.MinVal, Stat.Accuracy.MaxVal);
-//         }
-//     }
-// }
+    public WeaponStatWrapper(CharacterBase owner, WeaponType type , WeaponStat stat)
+    {
+        this.owner = owner;
+        this.stat = stat;
+		this.type = type;
+    }
+
+    public float Accuracy
+    {
+        get { return Mathf.Clamp(stat.Accuracy.BaseVal * owner.GetWeaponBuffMul(type,WeaponStatType.Accuracy), stat.Accuracy.MinVal,stat.Accuracy.MaxVal ); }
+    }
+
+    public float AttackRate
+    {
+        get { return Mathf.Clamp(stat.AttackRate.BaseVal * owner.GetWeaponBuffMul(type,WeaponStatType.AttackRate), stat.AttackRate.MinVal,stat.AttackRate.MaxVal ); }
+    }
+
+    public int Capacity
+    {
+        get { return (int)Mathf.Clamp(stat.Capacity.BaseVal * owner.GetWeaponBuffMul(type,WeaponStatType.Capacity), stat.Capacity.MinVal,stat.Capacity.MaxVal ); }
+    }
+
+    public float Damage
+    {
+        get { return Mathf.Clamp(stat.Damage.BaseVal * owner.GetWeaponBuffMul(type,WeaponStatType.Damage), stat.Damage.MinVal,stat.Damage.MaxVal ); }
+    }
+
+    public int ShotCount
+    {
+        get { return (int)Mathf.Clamp(stat.ShotCount.BaseVal * owner.GetWeaponBuffMul(type,WeaponStatType.ShotCount), stat.ShotCount.MinVal,stat.ShotCount.MaxVal ); }
+    }
+
+    public float AttackRange
+    {
+        get { return Mathf.Clamp(stat.AttackRange.BaseVal * owner.GetWeaponBuffMul(type,WeaponStatType.AttackRange), stat.AttackRange.MinVal,stat.AttackRange.MaxVal ); }
+    }
+
+    public float Recoil
+    {
+        get { return Mathf.Clamp(stat.Recoil.BaseVal * owner.GetWeaponBuffMul(type,WeaponStatType.Recoil), stat.Recoil.MinVal,stat.Recoil.MaxVal ); }
+    }
+}

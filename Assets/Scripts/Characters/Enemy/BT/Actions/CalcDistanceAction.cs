@@ -14,6 +14,8 @@ public partial class CalcDistanceAction : Action
 
     protected override Status OnStart()
     {
+        if(Self.Value.CurrentWeapon == null) return Status.Failure;
+        
         if (Vector3.Dot(Target.Value.transform.position - Self.Value.transform.position,
             Self.Value.transform.right) > 0)
         {

@@ -15,12 +15,12 @@ public class MovementController: MonoBehaviour
     float lookTimer = 0f;
     // Vector3 lastVelocity;
     // Vector3 currentVelocity;
-    Vector3 targetVelocity;
-    Vector3 targetPosition;
+    Vector3 targetVelocity = Vector3.zero;
+    Vector3 targetPosition = Vector3.zero;
     bool isVelocityMode = true;
-    Vector3 lastRotation;
-    Vector3 currentRotationDirection;
-    Vector3 targetRotation;
+    Vector3 lastRotation = Vector3.zero;
+    Vector3 currentRotationDirection = Vector3.zero;
+    Vector3 targetRotation = Vector3.zero;
     bool isAutoRotate = true;
     // public Vector3 TargetVelocity
     // {
@@ -38,14 +38,6 @@ public class MovementController: MonoBehaviour
     //         targetVelocity = value;
     //     }
     // }
-
-    void Awake()
-    {
-        currentRotationDirection = Vector3.right;
-        targetRotation = currentRotationDirection;
-        lastRotation = currentRotationDirection;
-        // lastVelocity = Vector3.zero;
-    }
 
     // Update is called once per frame
     void Update()
@@ -86,6 +78,7 @@ public class MovementController: MonoBehaviour
 
     public void UpdateRotation()
 	{
+        if (lastRotation == Vector3.zero && currentRotationDirection == Vector3.zero && targetRotation == Vector3.zero) return;
         lookTimer = Mathf.Clamp(lookTimer + Time.deltaTime, 0, rotateTransitionTime);
         currentRotationDirection = Vector3.Lerp(lastRotation, targetRotation, lookTimer / rotateTransitionTime);
         var targetLookPos = new Vector3(currentRotationDirection.x, 0f, -Mathf.Sqrt(1 - Vector3.SqrMagnitude(currentRotationDirection)));

@@ -32,18 +32,20 @@ public partial class ChaseTargetAction : Action
 
     void MoveToTarget()
 	{
-        var movement = Target.Value.transform.position - Agent.Value.transform.position;
+        var p = Agent.Value;
+        var movement = Target.Value.transform.position - p.transform.position;
 
         var dir = movement.normalized;
         if (movement.magnitude > MinDistance.Value)
         {
-            Agent.Value.MoveCtrl.SetTargetVelocity(Vector3.right * dir.x * Agent.Value.Stat.MoveSpeed.BaseVal);
+            var spd = p.Stat.MoveSpeed;
+            p.MoveCtrl.SetTargetVelocity(Vector3.right * dir.x * spd);
         }
         else 
         {
-            Agent.Value.MoveCtrl.SetTargetVelocity(Vector3.zero);
+            p.MoveCtrl.SetTargetVelocity(Vector3.zero);
         }
-        Agent.Value.MoveCtrl.SetTargetRotation(Vector3.right * dir.x);
+        p.MoveCtrl.SetTargetRotation(Vector3.right * dir.x);
 	}
 
 	protected override void OnEnd()

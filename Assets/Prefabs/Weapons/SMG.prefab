@@ -46,7 +46,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c8e2338056081d04682d84e005378fb8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Stat: {fileID: 11400000, guid: f03cfecd87c37b0498864bfb361d057a, type: 2}
+  stat: {fileID: 11400000, guid: f03cfecd87c37b0498864bfb361d057a, type: 2}
+  ParentConstraint: {fileID: 0}
   MuzzlePosition: {fileID: 8653317694286964318}
   IsFullAuto: 1
   debugRayColor: {r: 1, g: 0, b: 0, a: 1}

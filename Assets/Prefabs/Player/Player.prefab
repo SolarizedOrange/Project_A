@@ -382,7 +382,12 @@ MonoBehaviour:
   MoveCtrl: {fileID: 8151976365467373408}
   Animator: {fileID: 4393170893409835017}
   IsCover: 0
-  Stat: {fileID: 11400000, guid: ac264b8a8ff313543b8aabac6569265c, type: 2}
+  stat: {fileID: 11400000, guid: ac264b8a8ff313543b8aabac6569265c, type: 2}
+  HP:
+    value: 0
+    onValueChanged:
+      m_PersistentCalls:
+        m_Calls: []
   Money:
     value: 999999
   HasArmor:

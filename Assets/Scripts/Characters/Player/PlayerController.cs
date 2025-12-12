@@ -35,11 +35,11 @@ public class PlayerController : CharacterBase
     {
         if (IsCover || MoveDirection.x == 0)
         {
-            MoveCtrl.SetTargetVelocity(Vector3.zero * Stat.MoveSpeed.BaseVal);
+            MoveCtrl.SetTargetVelocity(Vector3.zero * Stat.MoveSpeed);
         }
         else
         {
-            MoveCtrl.SetTargetVelocity(Vector3.right * MoveDirection.x * Stat.MoveSpeed.BaseVal);
+            MoveCtrl.SetTargetVelocity(Vector3.right * MoveDirection.x * Stat.MoveSpeed);
             if (!IsAiming)
             {
                 MoveCtrl.SetTargetRotation(Vector3.right * MoveDirection.x);
