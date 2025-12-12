@@ -9,9 +9,9 @@ public class HitBox : MonoBehaviour
     {
         character = GetComponentInParent<CharacterBase>();
     }
-    public void OnHit()
+    public void OnHit(float damage)
     {
         Debug.Log("HIT");
-        character.OnDamage(type);
+        character.OnDamage(type,damage);
     }
 }

@@ -1,3 +1,4 @@
+using System.Collections;
 using Unity.Behavior;
 using UnityEngine;
 
@@ -9,17 +10,41 @@ public class EnemyController: CharacterBase
 	[Header("Enemy Controller")]
     public BehaviorGraphAgent Agent;
 
+	bool isDebuffApplied;
 	void Update()
 	{
 		SyncSpeedAnimator();
 		SyncBlackboard();
 	}
 
-	public override void OnDamage(HitBoxType hitBoxType)
+	public override void OnDamage(HitBoxType hitBoxType, float damage)
 	{
-		base.OnDamage(hitBoxType);
-		Agent.BlackboardReference.GetVariable<EnemyActionType>("CurrentAction", out var curAction);
-		curAction.Value = EnemyActionType.Hit;
+		base.OnDamage(hitBoxType, damage);
+
+		if (isDebuffApplied) return;
+		
+		if (hitBoxType == HitBoxType.Head)
+		{
+			Agent.BlackboardReference.GetVariable<EnemyActionType>("CurrentAction", out var curAction);
+			curAction.Value = EnemyActionType.Hit;
+		}
+		else if (hitBoxType == HitBoxType.Leg)
+		{
+			var debuff = new CharacterBuff();
+			debuff.Value = 0.5f;
+			debuff.Duration = 5f;
+			debuff.StatType = CharacterStatType.MoveSpeed;
+			CharacterBuff.AddBuff(debuff);
+		}
+		StartCoroutine(HitRoutine());
+		isDebuffApplied = true;
+
+	}
+
+	IEnumerator HitRoutine()
+	{
+		yield return new WaitForSeconds(5f);
+		isDebuffApplied = false;
 	}
 
 	void SyncSpeedAnimator()
@@ -33,7 +58,7 @@ public class EnemyController: CharacterBase
 		// Update AttackDistance in Blackboard
 		Agent.BlackboardReference.GetVariable<float>("AttackDistnace", out var range);
 		if (CurrentWeapon != null)
-			range.Value = CurrentWeapon.Stat.AttackRange.BaseVal;
+			range.Value = CurrentWeapon.Stat.AttackRange;
 		else
 			range.Value = 0f;
 

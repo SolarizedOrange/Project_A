@@ -14,12 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Hp:
     isFloating: 0
-    baseVal: 0
+    baseVal: 10000
     minVal: 0
-    maxVal: 0
+    maxVal: 10000
   MoveSpeed:
     isFloating: 1
-    baseVal: 3
+    baseVal: 6
     minVal: 1
     maxVal: 10
   Precision:

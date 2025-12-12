@@ -143,8 +143,9 @@ public class CharacterBase : MonoBehaviour
         InitWeapon();
 	}
 
-	public virtual void OnDamage(HitBoxType hitBoxType)
+	public virtual void OnDamage(HitBoxType hitBoxType, float damage)
     {
         Debug.Log($"{gameObject.name} took damage on {hitBoxType} hitbox.");
+        HP.Value -= damage;
     }
 }
