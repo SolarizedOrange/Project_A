@@ -3,13 +3,6 @@ using UnityEngine;
 [System.Serializable]
 public class StatBase
 {
-    [Header("StatSetting")]
-    [SerializeField] bool isFloating;
-    public bool IsFloating
-	{
-		get { return isFloating; }
-	}
-
     [Header("Stat")]
     [SerializeField] float baseVal;
     public float BaseVal

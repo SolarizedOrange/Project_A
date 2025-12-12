@@ -19,65 +19,19 @@ public class CharacterStatWrapper
 		this.stat = stat;
 	}
 
-	public float GetApplyBuffStatBase(CharacterStatType statType, float buffMul)
-	{
-		StatBase statBase;
-		switch (statType)
-        {
-            case CharacterStatType.HP:
-                statBase = stat.Hp;
-                break;
-            case CharacterStatType.MoveSpeed:
-                statBase = stat.MoveSpeed;
-                break;
-            case CharacterStatType.Precision:
-                statBase = stat.Precision;
-                break;
-            default:
-                return 0f;
-        }
-
-        if (statBase.IsFloating)
-		{
-			return Mathf.Clamp(statBase.BaseVal * buffMul, statBase.MinVal, statBase.MaxVal);
-		}
-        else
-		{
-			return (int)Mathf.Clamp(statBase.BaseVal * buffMul, statBase.MinVal, statBase.MaxVal);
-		}
-	}
-
 	public float Hp
     {
-        get
-        {
-            return GetApplyBuffStatBase(
-                CharacterStatType.HP,
-                owner.CharacterBuff.GetBuffMul(CharacterStatType.HP)
-            );
-        }
+        get { return Mathf.Clamp(stat.Hp.BaseVal * owner.CharacterBuff.GetBuffMul(CharacterStatType.HP), stat.Hp.MinVal, stat.Hp.MaxVal); }
     }
 
     public float MoveSpeed
     {
-        get
-        {
-            return GetApplyBuffStatBase(
-                CharacterStatType.MoveSpeed,
-                owner.CharacterBuff.GetBuffMul(CharacterStatType.MoveSpeed)
-            );
-        }
+        get { return Mathf.Clamp(stat.MoveSpeed.BaseVal * owner.CharacterBuff.GetBuffMul(CharacterStatType.MoveSpeed), stat.MoveSpeed.MinVal, stat.MoveSpeed.MaxVal); }
     }
 
     public float Precision
     {
-        get
-        {
-            return GetApplyBuffStatBase(
-                CharacterStatType.Precision,
-                owner.CharacterBuff.GetBuffMul(CharacterStatType.Precision)
-            );
-        }
+        get { return Mathf.Clamp(stat.Precision.BaseVal * owner.CharacterBuff.GetBuffMul(CharacterStatType.Precision), stat.Precision.MinVal, stat.Precision.MaxVal); }
     }
 
 }
