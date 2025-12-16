@@ -17,12 +17,19 @@ public class PlayerController : CharacterBase
     public bool IsAttacking;
     readonly int SpeedHash = Animator.StringToHash("Speed");
     readonly int AimHash = Animator.StringToHash("IsAiming");
+    PlayerCombat playerCombat;
+    PlayerCover playerCover;
+    PlayerDamage playerDamage;
     InputAction mouseInputAction;
 
     protected override void Awake()
     {
         base.Awake();
         mouseInputAction = GetComponent<PlayerInput>().actions["Pointer"];
+
+        playerCombat = GetComponent<PlayerCombat>();
+        playerCover = GetComponent<PlayerCover>();
+        playerDamage = GetComponent<PlayerDamage>();
     }
 
     void Update()
@@ -72,7 +79,13 @@ public class PlayerController : CharacterBase
 
     public void OnAim(InputValue value)
     {
+        if (value.isPressed) playerDamage.DoDamage(HitBoxType.Player, 10);
         IsAiming = CurrentWeapon != null && value.isPressed;
         AimRig.weight = IsAiming ? 1 : 0;
+    }
+
+    public override void OnDamage(HitBoxType hitboxType, float damage)
+    {
+        playerDamage.DoDamage(hitboxType, damage);
     }
 }

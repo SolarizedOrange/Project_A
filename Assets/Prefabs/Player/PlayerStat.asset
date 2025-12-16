@@ -13,17 +13,14 @@ MonoBehaviour:
   m_Name: PlayerStat
   m_EditorClassIdentifier: 
   Hp:
-    isFloating: 0
-    baseVal: 0
-    minVal: 0
-    maxVal: 0
+    baseVal: 100
+    minVal: 50
+    maxVal: 200
   MoveSpeed:
-    isFloating: 1
     baseVal: 3
     minVal: 0
     maxVal: 100
   Precision:
-    isFloating: 1
     baseVal: 0
     minVal: 0
     maxVal: 0

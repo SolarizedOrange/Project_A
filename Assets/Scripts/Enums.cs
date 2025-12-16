@@ -73,3 +73,8 @@ public enum PerkGroup
 {
 	Group1,Group2,Group3,Group4
 }
+
+public enum EndureNoteType
+{
+    Tap, Hold
+}
