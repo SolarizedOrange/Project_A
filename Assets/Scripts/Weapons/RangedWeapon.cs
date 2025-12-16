@@ -35,7 +35,6 @@ public abstract class RangedWeapon: WeaponBase
     }
     public void Fire()
     {
-        Debug.Log("FIRE");
         ammo--;
         for (int i = 0; i < Stat.ShotCount; i++)
         {   
@@ -46,7 +45,6 @@ public abstract class RangedWeapon: WeaponBase
             if (Physics.Raycast(ray, out var hitInfo ,Stat.AttackRange,(int)Layers.HitCollider))
             {
                 Debug.DrawRay(MuzzlePosition.position, rayPos * Stat.AttackRange, debugRayColor, 5.0f);
-                Debug.Log("RayCastHit");
                 var res = hitInfo.collider;
                 if (res.TryGetComponent<HitBox>(out var hitBox))
                 {

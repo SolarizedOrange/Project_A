@@ -30,7 +30,6 @@ public class PlayerCombat: PlayerComponent
         {
             if (PlayerCtrl.CurrentWeapon.Attack(hasJustAttacked))
             {
-                Debug.Log("RECOIL");
                 StartCoroutine(DoRecoilRoutine());
                 PlayerCtrl.IsReloading = false;
                 PlayerCtrl.Recoil.x += PlayerCtrl.CurrentWeapon.Stat.Recoil * Random.Range(-0.1f, 0.1f);
@@ -48,7 +47,6 @@ public class PlayerCombat: PlayerComponent
         recoverRecoil = false;
         yield return new WaitForSeconds(PlayerCtrl.CurrentWeapon.Stat.AttackRate);
         recoverRecoil = true;
-        Debug.Log("Do Recoil");
     }
 
     IEnumerator DoReloadRoutine()
