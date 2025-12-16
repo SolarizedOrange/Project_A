@@ -365,7 +365,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Ctrl: {fileID: 216689474094107182}
-  velocityTransitionTime: 0.2
+  velocityTransitionTime: 0.1
   rotateTransitionTime: 0.2
   positionTransitionTime: 0.5
 --- !u!114 &1973593344990013848

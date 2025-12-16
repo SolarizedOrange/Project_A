@@ -22,25 +22,8 @@ public class MovementController: MonoBehaviour
     Vector3 currentRotationDirection = Vector3.zero;
     Vector3 targetRotation = Vector3.zero;
     bool isAutoRotate = true;
-    // public Vector3 TargetVelocity
-    // {
-    //     get
-    //     {
-    //         return targetVelocity;
-    //     }
-    //     set
-    //     {
-    //         if (targetVelocity != value)
-    //         {
-    //             moveTimer = 0f;
-    //             lastVelocity = currentVelocity;
-    //         }
-    //         targetVelocity = value;
-    //     }
-    // }
 
-    // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         UpdateVelocity();
         UpdateRotation();
@@ -48,13 +31,10 @@ public class MovementController: MonoBehaviour
 
     void UpdateVelocity()
 	{
-        // moveTimer = Mathf.Clamp(moveTimer + Time.deltaTime, 0, transitionTime);
-        // currentVelocity = Vector3.Lerp(lastVelocity, targetVelocity, moveTimer / transitionTime);
-        // Ctrl.linearVelocity = currentVelocity;
-        var a = Vector3.zero;
+        var acceleration = Vector3.zero;
         if (isVelocityMode)
 		{
-            a = Vector3.right * (targetVelocity.x - Ctrl.linearVelocity.x) / velocityTransitionTime;
+            acceleration = Vector3.right * (targetVelocity.x - Ctrl.linearVelocity.x) / velocityTransitionTime;
 		}
         else
 		{
@@ -63,7 +43,7 @@ public class MovementController: MonoBehaviour
 
             var reqVelocity = (targetPosition - curPosXZ) / positionTransitionTime;
             var velocityDiff = reqVelocity - Ctrl.linearVelocity;
-            a = velocityDiff /  positionTransitionTime;
+            acceleration = velocityDiff /  positionTransitionTime;
 
             if (Vector3.Distance(curPosXZ, targetPosition) < 0.1f)
 			{
@@ -73,16 +53,16 @@ public class MovementController: MonoBehaviour
             if (isAutoRotate)
                 SetTargetRotation(Vector3.Scale(targetPosition - curPosXZ,Vector3.right).normalized);
 		}
-        Ctrl.AddForce(a,ForceMode.Acceleration);
+        Ctrl.AddForce(acceleration,ForceMode.Acceleration);
 	}
 
     public void UpdateRotation()
 	{
         if (lastRotation == Vector3.zero && currentRotationDirection == Vector3.zero && targetRotation == Vector3.zero) return;
-        lookTimer = Mathf.Clamp(lookTimer + Time.deltaTime, 0, rotateTransitionTime);
+        lookTimer = Mathf.Clamp(lookTimer + Time.fixedDeltaTime, 0, rotateTransitionTime);
         currentRotationDirection = Vector3.Lerp(lastRotation, targetRotation, lookTimer / rotateTransitionTime);
         var targetLookPos = new Vector3(currentRotationDirection.x, 0f, -Mathf.Sqrt(1 - Vector3.SqrMagnitude(currentRotationDirection)));
-        // transform.LookAt(transform.position + new Vector3(currentRotation.x, 0f, -Mathf.Sqrt(1 - Vector3.SqrMagnitude(currentRotation))));
+
         if (targetLookPos.sqrMagnitude > 0.01f)
 		{
 			var rot = Quaternion.LookRotation(targetLookPos);
