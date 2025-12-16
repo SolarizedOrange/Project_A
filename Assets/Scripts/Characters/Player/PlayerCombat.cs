@@ -22,7 +22,6 @@ public class PlayerCombat: PlayerComponent
     void Update()
     {
         UpdateAttack();
-        UpdateReload();
     }
 
     public void UpdateAttack()
@@ -47,22 +46,27 @@ public class PlayerCombat: PlayerComponent
     IEnumerator DoRecoilRoutine()
     {
         recoverRecoil = false;
-        // PlayerCtrl.Animator.SetBool(AttackHash, true);
         yield return new WaitForSeconds(PlayerCtrl.CurrentWeapon.Stat.AttackRate);
-        // PlayerCtrl.Animator.SetBool(AttackHash, false);
         recoverRecoil = true;
         Debug.Log("Do Recoil");
     }
 
-    public void UpdateReload()
+    IEnumerator DoReloadRoutine()
     {
-        if (PlayerCtrl.IsReloading)
+        var ranged = PlayerCtrl.CurrentWeapon as RangedWeapon;
+        
+        if (ranged != null)
         {
-            var ranged = PlayerCtrl.CurrentWeapon as RangedWeapon;
-            ranged.Reload();
-            PlayerCtrl.IsReloading = ranged.IsReloading;
+            PlayerCtrl.IsReloading = true;
+            PlayerCtrl.Animator.SetBool(ReloadHash, PlayerCtrl.IsReloading);
+
+            ranged.Reload(PlayerCtrl.BulletAmmo[ranged.GetWeaponType()]);
+
+            yield return new WaitUntil(() => !ranged.IsReloading);
+
+            PlayerCtrl.IsReloading = false;
+            PlayerCtrl.Animator.SetBool(ReloadHash, PlayerCtrl.IsReloading);
         }
-        PlayerCtrl.Animator.SetBool(ReloadHash, PlayerCtrl.IsReloading);
     }
 
     public void OnWeaponSwap()
@@ -70,6 +74,7 @@ public class PlayerCombat: PlayerComponent
         PlayerCtrl.IsAiming = false;
         PlayerCtrl.IsAttacking = false;
         PlayerCtrl.IsReloading = false;
+        PlayerCtrl.Animator.SetBool(ReloadHash, PlayerCtrl.IsReloading);
         PlayerCtrl.Animator.SetInteger(
             WeaponTypeHash, PlayerCtrl.CurrentWeapon != null
             ? (int)PlayerCtrl.CurrentWeapon.GetWeaponType()
@@ -86,11 +91,7 @@ public class PlayerCombat: PlayerComponent
 
     public void OnReload()
     {
-        var ranged = PlayerCtrl.CurrentWeapon as RangedWeapon;
-        if (ranged != null)
-        {
-            PlayerCtrl.IsReloading = true;
-        }
+        StartCoroutine(DoReloadRoutine());
     }
 
 }

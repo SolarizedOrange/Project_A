@@ -11,8 +11,7 @@ public class WeaponStat : ScriptableObject
 	public StatBase ShotCount;
 	public StatBase AttackRange;
 	public StatBase Recoil;
-
-
+    public StatBase ReloadTime;
 }
 
 public class WeaponStatWrapper
@@ -61,5 +60,10 @@ public class WeaponStatWrapper
     public float Recoil
     {
         get { return Mathf.Clamp(stat.Recoil.BaseVal * owner.GetWeaponBuffMul(type,WeaponStatType.Recoil), stat.Recoil.MinVal,stat.Recoil.MaxVal ); }
+    }
+
+    public float ReloadTime
+    {
+        get { return Mathf.Clamp(stat.ReloadTime.BaseVal * owner.GetWeaponBuffMul(type,WeaponStatType.ReloadTime), stat.ReloadTime.MinVal,stat.ReloadTime.MaxVal ); }
     }
 }

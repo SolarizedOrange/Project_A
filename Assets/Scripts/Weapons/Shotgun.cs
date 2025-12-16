@@ -3,22 +3,12 @@ using UnityEngine;
 
 public class Shotgun: RangedWeapon
 {
-
-    bool temp;
-    public override void Reload()
+    public override void Reload(ObserverInt ammoInventory)
     {
-        if (ammo < Stat.Capacity)
+        if (!IsReloading)
         {
-            if (!temp)
-            {
-                temp = true;
-                StartCoroutine(ReloadRoutine());            
-            }
             IsReloading = true;
-        }
-        else
-        {
-            IsReloading = false;        
+            StartCoroutine(ReloadRoutine(ammoInventory));
         }
     }
 
@@ -30,14 +20,18 @@ public class Shotgun: RangedWeapon
         }
         return false;
     }
-    protected override IEnumerator ReloadRoutine()
+    protected override IEnumerator ReloadRoutine(ObserverInt ammoInventory)
     {
-        yield return new WaitForSeconds(1f);
-        if (IsReloading)
+        while (IsReloading && ammo < Stat.Capacity && ammoInventory.Value > 0)
         {
-            ammo++;
+            yield return new WaitForSeconds(Stat.ReloadTime);
+            if (IsReloading)
+            {
+                ammoInventory.Value--;
+                ammo++;
+            }
         }
-        temp = false;
+        IsReloading = false;
     }
 
     public override WeaponType GetWeaponType()

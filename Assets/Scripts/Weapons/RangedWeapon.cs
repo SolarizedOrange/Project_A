@@ -10,10 +10,16 @@ public abstract class RangedWeapon: WeaponBase
     [SerializeField] Color debugRayColor = Color.red;
     public bool IsReloading;
     protected int ammo;
+    public int Ammo { get{ return ammo; }}
 
     void Start()
     {
-        ammo = (int)Stat.Capacity;
+        ammo = Stat.Capacity;
+    }
+
+    void OnDisable()
+    {
+        IsReloading = false;
     }
 
     public override bool Attack(bool hasJustAttacked)
@@ -62,19 +68,24 @@ public abstract class RangedWeapon: WeaponBase
         }
         return false;
     }
-    public virtual void Reload()
+    public virtual void Reload(ObserverInt ammoInventory = null)
     {
-        if (ammo < (int)Stat.Capacity && !IsReloading)
+        if (!IsReloading)
         {
-            IsReloading = true;
-            StartCoroutine(ReloadRoutine());
+            if (ammoInventory.Value > 0 && ammo < Stat.Capacity)
+            {
+                IsReloading = true;
+                StartCoroutine(ReloadRoutine(ammoInventory));
+            }
         }
     }
 
-    protected virtual IEnumerator ReloadRoutine()
+    protected virtual IEnumerator ReloadRoutine(ObserverInt ammoInventory)
     {
-        yield return new WaitForSeconds(3f);
-        ammo = (int)Stat.Capacity;
+        yield return new WaitForSeconds(Stat.ReloadTime);
+        ammoInventory.Value = ammoInventory.Value + ammo;
+        ammo = Mathf.Min(Stat.Capacity, ammoInventory.Value);
+        ammoInventory.Value = Mathf.Max(ammoInventory.Value - Stat.Capacity, 0);
         IsReloading = false;
     }
 }

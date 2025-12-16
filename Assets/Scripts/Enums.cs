@@ -65,7 +65,7 @@ public enum CharacterStatType
 
 public enum WeaponStatType
 {
-	Accuracy, AttackRate, Capacity, Damage, ShotCount, AttackRange, Recoil
+	Accuracy, AttackRate, Capacity, Damage, ShotCount, AttackRange, Recoil, ReloadTime
 }
 
 // Perk

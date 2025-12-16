@@ -13,37 +13,34 @@ MonoBehaviour:
   m_Name: Shotgun
   m_EditorClassIdentifier: 
   Accuracy:
-    isFloating: 0
     baseVal: 0.5
     minVal: 0.5
     maxVal: 0.8
   AttackRate:
-    isFloating: 1
     baseVal: 1
     minVal: 0.5
     maxVal: 1.5
   Capacity:
-    isFloating: 0
     baseVal: 8
     minVal: 4
     maxVal: 8
   Damage:
-    isFloating: 1
     baseVal: 15
     minVal: 10
     maxVal: 120
   ShotCount:
-    isFloating: 0
     baseVal: 8
     minVal: 1
     maxVal: 12
   AttackRange:
-    isFloating: 1
     baseVal: 6
     minVal: 6
     maxVal: 8
   Recoil:
-    isFloating: 1
     baseVal: 5
     minVal: 3
     maxVal: 10
+  ReloadTime:
+    baseVal: 1
+    minVal: 0.5
+    maxVal: 1.5
