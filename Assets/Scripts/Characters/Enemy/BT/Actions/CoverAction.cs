@@ -15,12 +15,14 @@ public partial class CoverAction : Action
     [SerializeReference] public BlackboardVariable<Vector3> AgentReturnPos;
 
     MovementController ctrl;
+    float timer;
 
     protected override Status OnStart()
     {
         // Debug.Log("CoverStart");
 
         ctrl = Agent.Value.MoveCtrl;
+        timer = 0f;
         if (CoverObject.Value == null) return Status.Success;
 
         if (IsCover.Value)
@@ -31,12 +33,20 @@ public partial class CoverAction : Action
 		{
 			ExitCover();
 		}
-        return Status.Success;
+        return Status.Running;
+    }
+
+    protected override Status OnUpdate()
+    {
+        var delay = Mathf.Max(ctrl.PositionTransitionTime, ctrl.RotateTransitionTime);
+        if (timer > delay) return Status.Success;
+
+        timer += Time.deltaTime;
+        return Status.Running;
     }
 
     void EnterCover()
     {
-        AgentReturnPos.Value = Vector3.Scale(Agent.Value.transform.position, new Vector3(1,1,0));
         ctrl.SetTargetPositionXZ(CoverObject.Value.position,false);
         InEnter.Value = true;
         // Debug.Log($"Enter Cover c:{IsCover.Value}");

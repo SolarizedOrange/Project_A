@@ -11,12 +11,15 @@ public partial class FindCoverObjectAction : Action
     [SerializeReference] public BlackboardVariable<EnemyController> Agent;
     [SerializeReference] public BlackboardVariable<Transform> CoverObject;
     [SerializeReference] public BlackboardVariable<Vector3> FindDistance;
+    [SerializeReference] public BlackboardVariable<Vector3> ReturnPosition;
+
     // [SerializeReference] public BlackboardVariable<float> coverMinDistance;
 
     protected override Status OnStart()
     {
         if (TryFindCoverObject())
 		{
+            ReturnPosition.Value = Vector3.Scale(Agent.Value.transform.position,new Vector3(1,1,0));
             // Debug.Log("Find");
 			return Status.Success;
 		}

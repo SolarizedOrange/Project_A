@@ -6,11 +6,20 @@ public class EnemyController: CharacterBase
 {
 	readonly int SpeedHash = Animator.StringToHash("Speed");
 	readonly int IsEnterHash = Animator.StringToHash("IsEnter");
+	readonly int LastHitTypeHash = Animator.StringToHash("LastHitType");
 
 	[Header("Enemy Controller")]
+	[SerializeField] Collider characterCollider;
     public BehaviorGraphAgent Agent;
-
+    public Vector3 Recoil;
 	bool isDebuffApplied;
+	void Start()
+	{
+		foreach (var item in BulletAmmo.Values)
+		{
+			item.Value = 999999;
+		}
+	}
 	void Update()
 	{
 		SyncSpeedAnimator();
@@ -21,8 +30,18 @@ public class EnemyController: CharacterBase
 	{
 		base.OnDamage(hitBoxType, damage);
 
+		Animator.SetInteger(LastHitTypeHash, (int)hitBoxType);
+		
+		if (HP.Value < 0.001f)
+		{
+			characterCollider.excludeLayers = (int)Layers.Player;
+			return;
+		}
+
+
 		if (isDebuffApplied) return;
 		
+		// Debuff
 		if (hitBoxType == HitBoxType.Head)
 		{
 			Agent.BlackboardReference.GetVariable<EnemyActionType>("CurrentAction", out var curAction);
@@ -37,6 +56,7 @@ public class EnemyController: CharacterBase
 			CharacterBuff.AddBuff(debuff);
 		}
 		StartCoroutine(HitRoutine());
+
 		isDebuffApplied = true;
 
 	}

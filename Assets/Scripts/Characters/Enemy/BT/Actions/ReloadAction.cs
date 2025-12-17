@@ -10,15 +10,29 @@ public partial class ReloadAction : Action
 {
     [SerializeReference] public BlackboardVariable<EnemyController> Agent;
 
+    float timer;
+    RangedWeapon weapon;
     protected override Status OnStart()
     {
-        var weapon = Agent.Value.CurrentWeapon as RangedWeapon;
+        weapon = Agent.Value.CurrentWeapon as RangedWeapon;
+        timer = weapon.Stat.ReloadTime;
         if (weapon != null)
         {
-            weapon.Reload();
-            return Status.Success;
+            weapon.Reload(Agent.Value.BulletAmmo[weapon.GetWeaponType()]);
+            return Status.Running;
         }
         return Status.Failure;
+    }
+
+	protected override Status OnUpdate()
+	{
+		if (timer < 0f || weapon == null) 
+        { 
+            weapon.IsReloading = false;
+            return Status.Success;
+        }
+        timer -= Time.deltaTime;
+        return Status.Running;
     }
 }
 
