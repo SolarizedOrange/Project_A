@@ -13,37 +13,34 @@ MonoBehaviour:
   m_Name: Pistol
   m_EditorClassIdentifier: 
   Accuracy:
-    isFloating: 1
     baseVal: 0.9
     minVal: 0.7
     maxVal: 1
   AttackRate:
-    isFloating: 1
     baseVal: 0.1
     minVal: 0.1
     maxVal: 0.3
   Capacity:
-    isFloating: 0
     baseVal: 8
     minVal: 6
     maxVal: 20
   Damage:
-    isFloating: 1
     baseVal: 34
     minVal: 34
     maxVal: 50
   ShotCount:
-    isFloating: 0
     baseVal: 1
     minVal: 1
     maxVal: 1
   AttackRange:
-    isFloating: 1
     baseVal: 8
     minVal: 8
     maxVal: 10
   Recoil:
-    isFloating: 1
     baseVal: 1
     minVal: 0.25
     maxVal: 2
+  ReloadTime:
+    baseVal: 2
+    minVal: 1
+    maxVal: 3

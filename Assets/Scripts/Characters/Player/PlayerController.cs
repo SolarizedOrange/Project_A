@@ -79,7 +79,6 @@ public class PlayerController : CharacterBase
 
     public void OnAim(InputValue value)
     {
-        if (value.isPressed) playerDamage.DoDamage(HitBoxType.Player, 10);
         IsAiming = CurrentWeapon != null && value.isPressed;
         AimRig.weight = IsAiming ? 1 : 0;
     }
