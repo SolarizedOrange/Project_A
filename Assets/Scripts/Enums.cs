@@ -6,7 +6,8 @@ public enum Layers
 {
     PlayerCoverable = 1 << 6,
     HitCollider = 1 << 7,
-    EnemyCoverable = 1 << 8
+    EnemyCoverable = 1 << 8,
+    Player = 1 << 9,
 }
 
 public enum WeaponType
@@ -46,15 +47,15 @@ public enum EnemyActionType
     Hit,
 }
 
-public enum AnimationActionType
+[BlackboardEnum]
+public enum EnemyAnimationActionType
 {
     Idle,
     BattleIdle,
     Aim,
     Attack,
     Cover,
-    Reload,
-    Die
+    Reload
 }
 
 // StatType
