@@ -16,21 +16,24 @@ public partial class CoverAction : Action
 
     MovementController ctrl;
     float timer;
+    bool isMoveToCover;
 
     protected override Status OnStart()
     {
         // Debug.Log("CoverStart");
-
+        isMoveToCover = false;
         ctrl = Agent.Value.MoveCtrl;
-        timer = 0f;
+        timer = Mathf.Max(ctrl.PositionTransitionTime, ctrl.RotateTransitionTime);
         if (CoverObject.Value == null) return Status.Success;
 
         if (IsCover.Value)
 		{
+            isMoveToCover = true;
             EnterCover();
 		}
         else if (InEnter.Value)
 		{
+            isMoveToCover = true;
 			ExitCover();
 		}
         return Status.Running;
@@ -38,10 +41,9 @@ public partial class CoverAction : Action
 
     protected override Status OnUpdate()
     {
-        var delay = Mathf.Max(ctrl.PositionTransitionTime, ctrl.RotateTransitionTime);
-        if (timer > delay) return Status.Success;
+        if (timer < 0 || isMoveToCover == false) return Status.Success;
 
-        timer += Time.deltaTime;
+        timer -= Time.deltaTime;
         return Status.Running;
     }
 
