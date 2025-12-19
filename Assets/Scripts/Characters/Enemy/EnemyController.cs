@@ -15,6 +15,7 @@ public class EnemyController: CharacterBase
 	bool isDebuffApplied;
 	void Start()
 	{
+		EquipWeapon(GetComponentInChildren<WeaponBase>());
 		foreach (var item in BulletAmmo.Values)
 		{
 			item.Value = 999999;
@@ -24,11 +25,12 @@ public class EnemyController: CharacterBase
 	{
 		SyncSpeedAnimator();
 		SyncBlackboard();
+		Destroy(null);
 	}
-
+	
 	public override void OnDamage(HitBoxType hitBoxType, float damage)
 	{
-		base.OnDamage(hitBoxType, damage);
+		HP.Value -= damage;
 
 		Animator.SetInteger(LastHitTypeHash, (int)hitBoxType);
 		
@@ -76,12 +78,6 @@ public class EnemyController: CharacterBase
 	void SyncBlackboard()
 	{
 		// Update AttackDistance in Blackboard
-		Agent.BlackboardReference.GetVariable<float>("AttackDistnace", out var range);
-		if (CurrentWeapon != null)
-			range.Value = CurrentWeapon.Stat.AttackRange;
-		else
-			range.Value = 0f;
-
 		Agent.BlackboardReference.GetVariable<bool>("IsCover", out var isCover);
 		IsCover = isCover.Value;
 	}
