@@ -5,7 +5,6 @@ using UnityEngine;
 public class EnemyController: CharacterBase
 {
 	readonly int SpeedHash = Animator.StringToHash("Speed");
-	readonly int IsEnterHash = Animator.StringToHash("IsEnter");
 	readonly int LastHitTypeHash = Animator.StringToHash("LastHitType");
 
 	[Header("Enemy Controller")]
@@ -13,8 +12,9 @@ public class EnemyController: CharacterBase
     public BehaviorGraphAgent Agent;
     public Vector3 Recoil;
 	bool isDebuffApplied;
-	void Start()
+	protected override void Awake()
 	{
+		base.Awake();
 		EquipWeapon(GetComponentInChildren<WeaponBase>());
 		foreach (var item in BulletAmmo.Values)
 		{
@@ -24,8 +24,6 @@ public class EnemyController: CharacterBase
 	void Update()
 	{
 		SyncSpeedAnimator();
-		SyncBlackboard();
-		Destroy(null);
 	}
 	
 	public override void OnDamage(HitBoxType hitBoxType, float damage)
@@ -72,13 +70,5 @@ public class EnemyController: CharacterBase
 	void SyncSpeedAnimator()
 	{
 		Animator.SetFloat(SpeedHash, MoveCtrl.Ctrl.linearVelocity.magnitude);
-		Animator.SetBool(IsEnterHash, Agent.BlackboardReference.GetVariable<bool>("IsEnter", out var isEnter) && isEnter.Value);
-	}
-
-	void SyncBlackboard()
-	{
-		// Update AttackDistance in Blackboard
-		Agent.BlackboardReference.GetVariable<bool>("IsCover", out var isCover);
-		IsCover = isCover.Value;
 	}
 }
