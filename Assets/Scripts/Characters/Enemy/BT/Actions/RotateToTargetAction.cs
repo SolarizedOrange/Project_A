@@ -12,12 +12,22 @@ public partial class RotateToTargetAction : Action
     [SerializeReference] public BlackboardVariable<CharacterBase> Target;
     [SerializeReference] public BlackboardVariable<Transform> TargetPosition;
 
+    float timer;
     protected override Status OnStart()
     {
         var dir = Target.Value.transform.position - Agent.Value.transform.position;
-        TargetPosition.Value.position = Target.Value.transform.position;
         Agent.Value.MoveCtrl.SetTargetRotation(dir.x * Vector3.right);
-        return Status.Success;
+        timer = Agent.Value.MoveCtrl.RotateTransitionTime;
+        return Status.Running;  
     }
+
+	protected override Status OnUpdate()
+	{
+		if (timer < 0)
+            return Status.Success;
+
+        timer -= Time.deltaTime;
+        return Status.Running;
+	}
 }
 

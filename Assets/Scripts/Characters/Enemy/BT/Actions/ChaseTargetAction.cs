@@ -6,12 +6,11 @@ using Unity.Properties;
 using UnityEngine.Animations.Rigging;
 
 [Serializable, GeneratePropertyBag]
-[NodeDescription(name: "ChaseTarget", story: "[Agent] Chases [Target] until [MinDistance]", category: "Action", id: "0fcdb71c1f737236de708016bdbc8318")]
+[NodeDescription(name: "ChaseTarget", story: "[Agent] Chases [Target] until WeaponRange", category: "Action", id: "0fcdb71c1f737236de708016bdbc8318")]
 public partial class ChaseTargetAction : Action
 {
     [SerializeReference] public BlackboardVariable<EnemyController> Agent;
     [SerializeReference] public BlackboardVariable<CharacterBase> Target;
-    [SerializeReference] public BlackboardVariable<float> MinDistance;
     [SerializeReference] public BlackboardVariable<bool> IsHit;
     [SerializeReference] public BlackboardVariable<Transform> TargetPosition;
 
@@ -36,7 +35,14 @@ public partial class ChaseTargetAction : Action
         var movement = Target.Value.transform.position - p.transform.position;
 
         var dir = movement.normalized;
-        if (movement.magnitude > MinDistance.Value)
+
+        var weaponDistance = 0f;
+        if (Agent.Value.CurrentWeapon != null)
+        {
+            weaponDistance = Agent.Value.CurrentWeapon.Stat.AttackRange;
+        }
+
+        if (movement.magnitude > weaponDistance)
         {
             var spd = p.Stat.MoveSpeed;
             p.MoveCtrl.SetTargetVelocity(Vector3.right * dir.x * spd);

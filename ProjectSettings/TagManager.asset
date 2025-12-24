@@ -14,7 +14,7 @@ TagManager:
   - PlayerCoverable
   - HitCollider
   - EnemyCoverable
-  - 
+  - Player
   - 
   - 
   - 

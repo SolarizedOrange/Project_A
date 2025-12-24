@@ -49,10 +49,9 @@ public class ObserverInt
 		get => value;
 		set
 		{
-			if (this.value != value
-				&& value >= 0)
+			if (this.value != value)
 			{
-				this.value = value;
+				this.value = value < 0? 0: value;
 				onValueChanged?.Invoke(this.value);
 			}
 		}
@@ -87,10 +86,9 @@ public class ObserverFloat
 		get => value;
 		set
 		{
-			if (this.value != value
-				&& value >= 0)
+			if (this.value != value)
 			{
-				this.value = value;
+				this.value = value < 0? 0f: value;
 				onValueChanged?.Invoke(this.value);
 			}
 		}

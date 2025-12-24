@@ -106,13 +106,6 @@ public class CharacterBase : MonoBehaviour
     public List<InventoryWeaponSlot> Weapons;
     ConstraintSource handConstraint;
     // public float AttackDistance; // Moved to WeaponStat
-    void InitWeapon()
-	{
-		Weapons = UIController.Instance.Inventory.WeaponSlots;
-        handConstraint = new ();
-        handConstraint.weight = 1f;
-        handConstraint.sourceTransform = handPosition;
-	}
 
     public void EquipWeapon(WeaponBase weapon)
 	{
@@ -123,9 +116,9 @@ public class CharacterBase : MonoBehaviour
 
         if (CurrentWeapon != null)
 		{
+            CurrentWeapon.gameObject.SetActive(true);
             CurrentWeapon.InitWeapon(this);
 			CurrentWeapon.ParentConstraint.SetSource(0,handConstraint);
-            CurrentWeapon.gameObject.SetActive(true);
 		}
 	}
 #endregion
@@ -135,17 +128,12 @@ public class CharacterBase : MonoBehaviour
         MoveCtrl = GetComponent<MovementController>();
         InitPerk();
         InitStat();
-        if (CurrentWeapon != null) CurrentWeapon.InitWeapon(this);
+        handConstraint = new ();
+        handConstraint.weight = 1f;
+        handConstraint.sourceTransform = handPosition;
+
+        EquipWeapon(CurrentWeapon);
     }
 
-	void Start()
-	{
-        InitWeapon();
-	}
-
-	public virtual void OnDamage(HitBoxType hitBoxType, float damage)
-    {
-        Debug.Log($"{gameObject.name} took damage on {hitBoxType} hitbox.");
-        HP.Value -= damage;
-    }
+	public virtual void OnDamage(HitBoxType hitBoxType, float damage) {}
 }

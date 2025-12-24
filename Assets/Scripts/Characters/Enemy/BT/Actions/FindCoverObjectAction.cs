@@ -9,14 +9,18 @@ using Unity.Properties;
 public partial class FindCoverObjectAction : Action
 {
     [SerializeReference] public BlackboardVariable<EnemyController> Agent;
-    [SerializeReference] public BlackboardVariable<Transform> CoverObject;
+    [SerializeReference] public BlackboardVariable<CharacterBase> Target;
+    [SerializeReference] public BlackboardVariable<CoverObject> CoverObject;
     [SerializeReference] public BlackboardVariable<Vector3> FindDistance;
+    [SerializeReference] public BlackboardVariable<Vector3> ReturnPosition;
+
     // [SerializeReference] public BlackboardVariable<float> coverMinDistance;
 
     protected override Status OnStart()
     {
         if (TryFindCoverObject())
 		{
+            ReturnPosition.Value = Vector3.Scale(Agent.Value.transform.position,new Vector3(1,1,0));
             // Debug.Log("Find");
 			return Status.Success;
 		}
@@ -48,13 +52,17 @@ public partial class FindCoverObjectAction : Action
                 minDist = dist;
             }
         }
-        CoverObject.Value = findMinObject;
+        CoverObject.Value = findMinObject == null? null : findMinObject.GetComponent<CoverObject>();
         if (CoverObject.Value == null)
         {
             // Debug.Log("Fallback to BattleIdle");
             return false;
         }
-        else return true;
+        else
+        {
+            return true && Vector3.Dot(Target.Value.transform.position - curPos, -CoverObject.Value.transform.forward) < -1;
+        } 
+            
     }
 }
 
