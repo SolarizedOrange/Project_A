@@ -20,6 +20,14 @@ public class EndureNoteUI : MonoBehaviour
         img.material = mat;
     }
 
+    void OnDestroy()
+    {
+        if (mat != null)
+        {
+            Destroy(mat);
+        }
+    }
+
     public void Init(EndureNote note)
     {
         startTime = note.StartTime;

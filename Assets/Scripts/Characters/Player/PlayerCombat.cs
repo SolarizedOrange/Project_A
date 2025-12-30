@@ -19,11 +19,6 @@ public class PlayerCombat: PlayerComponent
         );
     }
 
-    void Update()
-    {
-        UpdateAttack();
-    }
-
     public void UpdateAttack()
     {
         if (PlayerCtrl.IsAiming && PlayerCtrl.IsAttacking)
@@ -69,8 +64,6 @@ public class PlayerCombat: PlayerComponent
 
     public void OnWeaponSwap()
     {
-        PlayerCtrl.IsAiming = false;
-        PlayerCtrl.IsAttacking = false;
         PlayerCtrl.IsReloading = false;
         PlayerCtrl.Animator.SetBool(ReloadHash, PlayerCtrl.IsReloading);
         PlayerCtrl.Animator.SetInteger(

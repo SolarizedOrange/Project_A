@@ -14,6 +14,19 @@ public class EndureNote
 
 public class PlayerDamage: PlayerComponent
 {
+    [SerializeField] float cooldown = 5.0f;
+    [SerializeField] int missTolerance = 5;
+
+    bool inProcess = false;
+    bool invincible = false;
+    bool success;
+    int missCount;
+    int dodgeCount = 0;
+    int currentHPSection = 1;
+    float marginTime = 0.1f;
+    float lastActivatedTime = -10.0f;
+    float[] sections = {1.0f, 0.75f, 0.5f, 0.25f, 0.0f};
+
     // Class whose only use is for handling endure mechanics.
     // This class should only be used within PlayerDamage class.
     struct LogicalEndureNote
@@ -26,54 +39,129 @@ public class PlayerDamage: PlayerComponent
         Tap, HoldStart, HoldEnd
     }
 
-    Queue<LogicalEndureNote> q;
-    bool inProcess = false;
-    bool success;
-    int missCount;
-    float marginTime = 0.1f;
-    float lastActivatedTime = -10.0f;
-    [SerializeField] float cooldown = 5.0f;
+    Queue<LogicalEndureNote> queue = new();
 
     public static UnityEvent EndureStartEvent = new();
     public static UnityEvent<bool> EndureEndEvent = new();
     public static UnityEvent<EndureNote> EndureNoteEvent = new();
     public static UnityEvent EndureMissEvent = new();
-    
-    void Start()
-    {
-        q = new();
-    }
 
+    public void UpdateDamage()
+    {
+        if (!inProcess && currentHPSection > 1 && Time.time > lastActivatedTime + cooldown)
+        {
+            StartCoroutine(StartEndureRoutine());
+        }
+    }
     public void DoDamage(HitBoxType hitBoxType, float damage)
     {
-        PlayerCtrl.HP.Value -= damage;
-        if (PlayerCtrl.HP.Value <= 50 && !inProcess && Time.time - lastActivatedTime > cooldown)
-        {
-            success = true;
-            inProcess = true;
-            missCount = 0;
-            
-            EndureStartEvent?.Invoke();
-            
-            AddNote(new EndureNote{StartTime = Time.time + 5.0f, Duration = 0.0f, Type = EndureNoteType.Tap});
-            AddNote(new EndureNote{StartTime = Time.time + 6.0f, Duration = 1.0f, Type = EndureNoteType.Hold});
-            
-            StartCoroutine(StartEndureRoutine());
+        if (!invincible)
+        {            
+            // 플레이어가 버티기 모드가 아닐 때는 모든 데미지 적용,
+            // 플레이어가 버티기 모드일 때는 데미지의 1/10 적용,
+            // 하지만 currentHPSection을 넘어가는 피해를 받을 시 더 이상 체력이 깎이지 않음.
 
-            Debug.Log($"START: {Time.time}");
+            damage = Mathf.Max(0.0f, damage - (PlayerCtrl.HasArmor.Value ? 5.0f : 0.0f));
+
+            PlayerCtrl.HP.Value = Mathf.Max(
+                PlayerCtrl.HP.Value - damage * (inProcess ? 0.1f : 1.0f),
+                PlayerCtrl.Stat.Hp * sections[currentHPSection]
+            );
+            if (!inProcess)
+            {
+                CheckHP();
+            }
         }
+    }
+
+    void CheckHP()
+    {
+        if (PlayerCtrl.HP.Value <= PlayerCtrl.Stat.Hp * sections[currentHPSection])
+        {
+            for (int i = currentHPSection + 1; i < sections.Length; i++)
+            {
+                if (PlayerCtrl.HP.Value > PlayerCtrl.Stat.Hp * sections[i])
+                {
+                    currentHPSection = i;
+                    break;
+                }
+            }
+
+            if (PlayerCtrl.HasArmor.Value && currentHPSection == (sections.Length - 1))
+            {
+                Debug.Log("ARMOR");
+                PlayerCtrl.HasArmor.Value = false;
+
+                currentHPSection = Mathf.Max(1, currentHPSection - 2);
+                PlayerCtrl.HP.Value = PlayerCtrl.Stat.Hp * sections[currentHPSection - 1];
+            }
+            StartCoroutine(InvincibleRoutine());
+        }
+    }
+
+    void GenerateNotes()
+    {
+        int noteCount = 5 + Mathf.Min(10, dodgeCount * 2);
+        float noteTime = 1.5f;
+
+        while (noteCount > 0)
+        {
+            int num;
+            switch(Random.Range(0, 4))
+            {
+                case 0:
+                    num = Mathf.Min(Random.Range(2, 5), noteCount);
+                    for (int i = 0; i < num; i++)
+                    {
+                        AddNote(new EndureNote{StartTime = Time.time + noteTime, Duration = 0.0f, Type = EndureNoteType.Tap});
+                        AddNote(new EndureNote{StartTime = Time.time + noteTime + 0.25f, Duration = 0.0f, Type = EndureNoteType.Tap});
+                        noteTime += 1.0f;
+                        noteCount -= 1;
+                    }
+                    break;
+                case 1:
+                    num = Mathf.Min(Random.Range(1, 3), noteCount);
+                    for (int i = 0; i < num; i++)
+                    {
+                        AddNote(new EndureNote{StartTime = Time.time + noteTime, Duration = 0.25f, Type = EndureNoteType.Hold});
+                        noteTime += 0.5f;
+                        noteCount -= 1;
+                    }
+                    break;
+                case 2:
+                    num = Mathf.Min(Random.Range(1, 3), noteCount);
+                    for (int i = 0; i < num; i++)
+                    {
+                        AddNote(new EndureNote{StartTime = Time.time + noteTime, Duration = 0.5f, Type = EndureNoteType.Hold});
+                        noteTime += 0.75f;
+                        noteCount -= 1;
+                    }
+                    break;
+                case 3:
+                    num = Mathf.Min(Random.Range(1, 3), noteCount);
+                    for (int i = 0; i < num; i++)
+                    {
+                        AddNote(new EndureNote{StartTime = Time.time + noteTime, Duration = 1.0f, Type = EndureNoteType.Hold});
+                        noteTime += 1.5f;
+                        noteCount -= 1;
+                    }
+                    break;
+            }
+        }
+
+        Debug.Log($"START: {Time.time}");
     }
 
     void AddNote(EndureNote note)
     {
         if (note.Type == EndureNoteType.Hold)
         {
-            q.Enqueue(new LogicalEndureNote{Time = note.StartTime, Type = LogicalNoteType.HoldStart});
-            q.Enqueue(new LogicalEndureNote{Time = note.StartTime + note.Duration, Type = LogicalNoteType.HoldEnd});
+            queue.Enqueue(new LogicalEndureNote{Time = note.StartTime, Type = LogicalNoteType.HoldStart});
+            queue.Enqueue(new LogicalEndureNote{Time = note.StartTime + note.Duration, Type = LogicalNoteType.HoldEnd});
         }
         else
         {
-            q.Enqueue(new LogicalEndureNote{Time = note.StartTime, Type = LogicalNoteType.Tap});
+            queue.Enqueue(new LogicalEndureNote{Time = note.StartTime, Type = LogicalNoteType.Tap});
         }
         EndureNoteEvent?.Invoke(note);
     }
@@ -82,60 +170,78 @@ public class PlayerDamage: PlayerComponent
     {
         missCount++;
         EndureMissEvent?.Invoke();
-        if (missCount >= 5)
+        if (missCount >= missTolerance) // Fail
         {
-            q.Clear();
+            queue.Clear();
+            success = false;
             EndureEndEvent?.Invoke(false);
-            inProcess = false;
-            lastActivatedTime = Time.time;
         }
     }
 
     IEnumerator StartEndureRoutine()
     {
-        while (q.Count > 0)
+        EndureStartEvent?.Invoke();
+
+        success = true;
+        inProcess = true;
+        missCount = 0;
+
+        GenerateNotes();
+
+        while (queue.Count > 0)
         {
-            if (q.Peek().Time + marginTime < Time.time)
+            if (queue.Peek().Time + marginTime < Time.time)
             {
-                Debug.Log($"MISS: {q.Peek().Time - Time.time} Type: {q.Peek().Type}");
-                if (q.Peek().Type == LogicalNoteType.HoldStart)
+                Debug.Log($"MISS: {queue.Peek().Time - Time.time} Type: {queue.Peek().Type}");
+                if (queue.Peek().Type == LogicalNoteType.HoldStart)
                 {
-                    q.Dequeue();
+                    queue.Dequeue();
                 }
-                q.Dequeue();
+                queue.Dequeue();
                 AddMiss();
             }
             yield return null;
         }
+
+        lastActivatedTime = Time.time;
+        inProcess = false;
+
         if (success)
         {
             // Heal
             EndureEndEvent?.Invoke(true);
-            lastActivatedTime = Time.time;
-            inProcess = false;
+            currentHPSection--;
+            PlayerCtrl.HP.Value = PlayerCtrl.Stat.Hp * sections[currentHPSection - 1];
+            dodgeCount++;
         }
+    }
+    IEnumerator InvincibleRoutine()
+    {
+        invincible = true;
+        yield return new WaitForEndOfFrame();
+        invincible = false;
     }
 
     void OnEndure(InputValue value)
     {
-        if (q.Count > 0)
+        if (queue.Count > 0)
         {
-            if (Mathf.Abs(q.Peek().Time - Time.time) < marginTime)
+            if (Mathf.Abs(queue.Peek().Time - Time.time) < marginTime)
             {
-                if (value.isPressed == (q.Peek().Type != LogicalNoteType.HoldEnd))
+                if (value.isPressed == (queue.Peek().Type != LogicalNoteType.HoldEnd))
                 {
                     Debug.Log("HIT");
-                    q.Dequeue();
+                    queue.Dequeue();
                 }
             }
-            else if (value.isPressed)
+            else if (value.isPressed || (queue.Peek().Type == LogicalNoteType.HoldEnd))
             {
-                Debug.Log($"PRESSMISS: {q.Peek().Time - Time.time} Type: {q.Peek().Type}");
-                if (q.Peek().Type == LogicalNoteType.HoldStart)
+                Debug.Log($"PRESSMISS: {queue.Peek().Time - Time.time} Type: {queue.Peek().Type}");
+                if (queue.Peek().Type == LogicalNoteType.HoldStart)
                 {
-                    q.Dequeue();
+                    queue.Dequeue();
                 }
-                q.Dequeue();
+                queue.Dequeue();
                 AddMiss();
             }
         }

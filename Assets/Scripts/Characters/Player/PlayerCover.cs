@@ -82,7 +82,7 @@ public class PlayerCover: PlayerComponent
         Debug.Log("EXIT");
     }
 
-    void Update()
+    public void UpdateCover()
     {
         if (PlayerCtrl.IsCover && (object)exitRoutine == null)
         {

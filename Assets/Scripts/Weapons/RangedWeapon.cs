@@ -66,7 +66,7 @@ public abstract class RangedWeapon: WeaponBase
         }
         return false;
     }
-    public virtual void Reload(ObserverInt ammoInventory = null)
+    public virtual void Reload(ObserverInt ammoInventory)
     {
         if (!IsReloading)
         {
