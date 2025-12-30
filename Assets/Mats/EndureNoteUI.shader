@@ -55,7 +55,7 @@ Shader "Unlit/EndureNoteUI"
                 float startCircleSize = lerp(0.5, 0.08, _StartTime);
                 float endCircleSize = lerp(0.5, 0.08, _EndTime);
 
-                return fixed4(_Color * (startCircleSize > 0.08) ? 1.0 : 0.5) * step(0.0, min(0.0, dist - startCircleSize)) * (1 - step(0.0, min(0.0, dist - endCircleSize)));
+                return fixed4(_Color * ((startCircleSize > 0.08) ? 1.0 : 0.5)) * step(0.0, min(0.0, dist - startCircleSize)) * (1 - step(0.0, min(0.0, dist - endCircleSize)));
             }
             ENDCG
         }
