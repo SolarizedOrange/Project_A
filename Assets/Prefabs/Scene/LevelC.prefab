@@ -637,6 +637,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LevelObject: {fileID: 1321383938077873604}
   LevelBounds: {fileID: 6441558819124246}
+  Extends: {x: 8.5, y: 3.275, z: 3}
 --- !u!54 &8298523890083328134
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -766,7 +767,7 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3

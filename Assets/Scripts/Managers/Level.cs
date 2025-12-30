@@ -4,7 +4,7 @@ public class Level : MonoBehaviour
 {
     [Header("Level Settings")]
     [SerializeField] Transform LevelObject;
-    public Collider LevelBounds;
+    public BoxCollider LevelBounds;
 
     public Vector3 LevelPosition
 	{
@@ -14,17 +14,23 @@ public class Level : MonoBehaviour
         }
         set 
         { 
-            LevelBounds.transform.position = value;
-            LevelObject.position = value + LevelPositionOffset; 
+            transform.position = value - LevelPositionOffset;
         }
 	}
 
+    [SerializeField] public Vector3 Extends;
+
     Vector3 LevelPositionOffset;
+
+	void OnValidate()
+	{
+        Extends = LevelBounds.transform.localScale * 0.5f;
+	}
 
 	void Awake()
 	{
 		LevelObject.gameObject.SetActive(false);
-        LevelPositionOffset = LevelObject.position - LevelBounds.transform.position;
+        LevelPositionOffset = LevelBounds.transform.localPosition;
 	}
 
     public void ToggleActive(bool isActive)
