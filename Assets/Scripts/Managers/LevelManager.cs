@@ -1,126 +1,151 @@
+using System;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using Random = UnityEngine.Random;
 
 public class LevelManager : ManagerBase<LevelManager>
 {
     [Header("Level Settings")]
-    [SerializeField] List<GameObject> levelAssets;
+    [SerializeField] List<Level> levelAssets;
 
     [Header("Chunks Settings")]
-    [SerializeField] float createDistance = 100;
-    [SerializeField] float loadDistance = 10;
+    // [SerializeField] float createDistance = 100;
+    [SerializeField] Vector3 offset;
+    [SerializeField] int loadDistance = 10;
 
-    LinkedList<Level> chunk_x = new ();
-    // LinkedList<Level> chunk_y = new ();
+    Dictionary<Vector2Int,Level> chunkDic;
+    Dictionary<Level,List<Vector2Int>> chunkDicReverse;
 
-    LinkedListNode<Level> rightActiveNode = null;
-    LinkedListNode<Level> leftActiveNode = null;
-    Vector3 playerPos;
-    GameManager gameManager;
+    float maxChunkExtendY;
+    Vector2Int lastPos;
+    Vector2Int playerPos;
+    float playerZ;
+    PlayerController player;
     void Start()
     {
-        gameManager = GameManager.Instance;
-        playerPos = gameManager.Player.transform.position + gameManager.PlayerSpawnOffset;
-        AddLevel();
+        chunkDic = new ();
+        chunkDicReverse = new();
+
+        player = GameManager.Instance.Player;
+        UpdatePlayerPosition();
+        lastPos = playerPos;
+
+        InitMapChunkSize();
+        InitLevel();
     }
 
 	void Update()
 	{
-        playerPos = gameManager.Player.transform.position + gameManager.PlayerSpawnOffset;
-
-		UpdateLevelState();
-        AddLevel();
+        lastPos = playerPos;
+        UpdatePlayerPosition();
+		UpdateLevel();
 	}
 
-	void AddLevel()
-	{
-        // Add Init Level
-        if (chunk_x.Count < 1)
-		{
-            var level = CreateRandomLevel(null, Vector3.zero);
-            level.ToggleActive(true);
-            chunk_x.AddLast(level);
+    void UpdatePlayerPosition()
+    {
+        var pos3D = player.transform.position + offset;
+        playerPos = new Vector2Int(Mathf.RoundToInt(pos3D.x), Mathf.RoundToInt(pos3D.y));
+        playerZ = pos3D.z;
+    }
 
-            rightActiveNode = chunk_x.Last;;
-            leftActiveNode = chunk_x.First;
-		}
-
-        var right = chunk_x.Last.Value;
-        float dist = Mathf.Abs(playerPos.x - (right.LevelPosition.x + right.LevelBounds.bounds.extents.x));
-        if (dist < createDistance)
+    void InitMapChunkSize()
+    {
+        foreach(var item in levelAssets)
         {
-            var newLevel = CreateRandomLevel(right,Vector3.right);
-            chunk_x.AddLast(newLevel);
-        }
-
-        var left = chunk_x.First.Value;
-        dist = Mathf.Abs(playerPos.x - (left.LevelPosition.x - left.LevelBounds.bounds.extents.x));
-        if (dist < createDistance)
-        {
-            var newLevel = CreateRandomLevel(left, -Vector3.right);
-            chunk_x.AddFirst(newLevel);
+            maxChunkExtendY = Mathf.Max(item.Extends.y,maxChunkExtendY);
         }
     }
 
-    Level CreateRandomLevel(Level lastLevel,Vector3 dir)
+    Level CreateRandomLevel(Vector2Int createPos)
 	{
-        // TODO: Level Polling
-        var pick = Instantiate(levelAssets[Random.Range(0, levelAssets.Count)]);
-        var level = pick.GetComponentInChildren<Level>();
-        var pos = playerPos;
+        // TODO: Level Positioning + Pooling
+        var level = levelAssets[Random.Range(0, levelAssets.Count)];
+        var extend = level.Extends;
 
-        if (lastLevel != null)
-            pos = lastLevel.LevelPosition + Vector3.Scale(lastLevel.LevelBounds.bounds.extents, dir) + Vector3.Scale(level.LevelBounds.bounds.extents, dir);
+        // Adjust createPos (real create Pos)
+        Vector3 adjustCretePos = (Vector3Int)createPos + new Vector3(0,0,playerZ);
+        // row check
+        if (chunkDic.TryGetValue(createPos+Vector2Int.right, out var right)) 
+        {
+            adjustCretePos.x = right.LevelPosition.x - right.Extends.x - extend.x;
+            adjustCretePos.y = right.LevelPosition.y - right.Extends.y + extend.y;
+        }
+        else if (chunkDic.TryGetValue(createPos+Vector2Int.left, out var left))
+        {
+            adjustCretePos.x = left.LevelPosition.x + left.Extends.x + extend.x;
+            adjustCretePos.y = left.LevelPosition.y - left.Extends.y + extend.y;
+        }
+        // col check
+        if (chunkDic.TryGetValue(createPos+Vector2Int.up, out var up))
+        {
+            adjustCretePos.y = up.LevelPosition.y - up.Extends.y - (maxChunkExtendY * 2 - extend.y);
+        }
+        else if (chunkDic.TryGetValue(createPos+Vector2Int.down, out var down))
+        {
+            adjustCretePos.y = down.LevelPosition.y + (maxChunkExtendY * 2 - down.Extends.y) + extend.y;
+        }
         
-        level.LevelPosition = pos;
+        level = Instantiate(level);
+        //Test
+        // level.ToggleActive(true);
+
+        level.LevelPosition = adjustCretePos;
+        var minVector2 = adjustCretePos - extend;
+        var min = new Vector2Int((int)minVector2.x, (int)minVector2.y);
+        var maxVector2 = adjustCretePos + extend + new Vector3(0, maxChunkExtendY * 2 - extend.y,0);
+        var max = new Vector2Int((int)maxVector2.x,(int)maxVector2.y);
+        for (int x = min.x; x <= max.x; x++)
+        {
+            for (int y = min.y; y <= max.y; y++)
+            {
+                var pos = new Vector2Int(x,y);
+                if (chunkDic.ContainsKey(pos)) continue;
+                chunkDic.Add(pos, level);
+
+                if (chunkDicReverse.ContainsKey(level) == false)
+                    chunkDicReverse.Add(level,new ());
+                chunkDicReverse[level].Add(pos);
+            }
+        }
         return level;
 	}
 
-    void UpdateLevelState()
+    void InitLevel()
+    {
+        for (int x = playerPos.x - loadDistance; x <= playerPos.x + loadDistance; x++)
+        {
+            for (int y = playerPos.y -loadDistance; y <= playerPos.y + loadDistance; y++)
+            {
+                var curPos = new Vector2Int(x,y);
+                if (chunkDic.ContainsKey(curPos)) continue;
+
+                CreateRandomLevel(curPos);
+            }
+        }
+    }
+
+    void UpdateLevel()
 	{
-        if (chunk_x.Count < 1) return;
+        var diff = playerPos - lastPos;
+        diff = new Vector2Int(Mathf.Abs(diff.x), Mathf.Abs(diff.y));
+        if (diff == Vector2Int.zero) return;
 
-        var curRight = rightActiveNode.Value;
-        float dist = Mathf.Abs(playerPos.x - (curRight.LevelPosition.x + curRight.LevelBounds.bounds.extents.x));
-        if(dist > loadDistance)
-		{
-            curRight.ToggleActive(false);
-            rightActiveNode = rightActiveNode.Previous;
-		}
-        else
+        for (int x = playerPos.x - loadDistance - diff.x; x <= playerPos.x + loadDistance + diff.x; x++)
         {
-            var nextRight = rightActiveNode.Next;
-            if (nextRight != null)
+            for (int y = playerPos.y -loadDistance - diff.y; y <= playerPos.y + loadDistance + diff.y; y++)
             {
-                var nextDist = Mathf.Abs(playerPos.x - (nextRight.Value.LevelPosition.x + nextRight.Value.LevelBounds.bounds.extents.x));
-                if (nextDist < loadDistance)
+                var curPos = new Vector2Int(x,y);
+                if (chunkDic.TryGetValue(curPos, out var chunk))
                 {
-                    nextRight.Value.ToggleActive(true);
-                    rightActiveNode = nextRight;
+                    // Enable Chunk in LoadDistance
+                    chunk.ToggleActive((curPos - playerPos).sqrMagnitude <= loadDistance * loadDistance);
+                }
+                else
+                {
+                    CreateRandomLevel(curPos);
                 }
             }
         }
-
-        var curLeft = leftActiveNode.Value;
-        dist = Mathf.Abs(playerPos.x - (curLeft.LevelPosition.x - curLeft.LevelBounds.bounds.extents.x));
-        if(dist > loadDistance)
-		{
-            curLeft.ToggleActive(false);
-            leftActiveNode = leftActiveNode.Next;
-		}
-        else if (dist < loadDistance)
-        {
-            var nextLeft = leftActiveNode.Previous;
-            if (nextLeft != null)
-            {
-                var nextDist = Mathf.Abs(playerPos.x - (nextLeft.Value.LevelPosition.x - nextLeft.Value.LevelBounds.bounds.extents.x));
-                if (nextDist < loadDistance)
-                {
-                    nextLeft.Value.ToggleActive(true);
-                    leftActiveNode = nextLeft;
-                }
-            }
-        }
-	}
+    }
 }
