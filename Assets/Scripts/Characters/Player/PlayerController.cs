@@ -36,6 +36,9 @@ public class PlayerController : CharacterBase
     {
         UpdateMove();
         UpdateAim();
+        playerCover.UpdateCover();
+        playerCombat.UpdateAttack();
+        playerDamage.UpdateDamage();
     }
 
     public void UpdateMove()
