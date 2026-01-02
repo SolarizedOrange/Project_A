@@ -1,11 +1,20 @@
 using System.Collections;
 using UnityEngine;
 
+class DistanceComparer : System.Collections.Generic.IComparer<RaycastHit>
+{
+    public int Compare(RaycastHit a, RaycastHit b)
+    {
+        return a.distance.CompareTo(b.distance);
+    }
+}
+
 public abstract class RangedWeapon: WeaponBase
 {
     public Transform MuzzlePosition;
 
     [Header("Test Ray Setting")]
+    [SerializeField] int maxPenetration = 3;
     [SerializeField] bool IsFullAuto = true;
     [SerializeField] Color debugRayColor = Color.red;
     public bool IsReloading;
@@ -41,21 +50,47 @@ public abstract class RangedWeapon: WeaponBase
             Vector3 rayPos = 0.1f * (1.0f - Stat.Accuracy) * Random.insideUnitSphere;
             rayPos.z *= 0.5f;
             rayPos = (MuzzlePosition.forward + rayPos).normalized;
+            var hits = new RaycastHit[maxPenetration];
             Ray ray = new Ray(MuzzlePosition.position, rayPos);
-            if (Physics.Raycast(ray, out var hitInfo ,Stat.AttackRange,(int)Layers.HitCollider))
+            int hitCount = Physics.RaycastNonAlloc(ray, hits, Stat.AttackRange, (int)Layers.HitCollider);
+            System.Array.Sort(hits, 0, hitCount, new DistanceComparer());
+            bool isHitCharacter = false;
+            if (hitCount > 0)
             {
                 Debug.DrawRay(MuzzlePosition.position, rayPos * Stat.AttackRange, debugRayColor, 5.0f);
-                var res = hitInfo.collider;
-                if (res.TryGetComponent<HitBox>(out var hitBox))
+                for (int j = 0; j < hitCount; j++)
                 {
-                    // var buff = Character.GetWeaponBuffMul(GetWeaponType(), WeaponStatType.Damage);
-                    hitBox.OnHit(Stat.Damage);
-                }
-                else
-                {
-                    
+                    var res = hits[j].collider;
+                    if (res.TryGetComponent<HitBox>(out var hitBox))
+                    {
+                        isHitCharacter = true;
+                        // var buff = Character.GetWeaponBuffMul(GetWeaponType(), WeaponStatType.Damage);
+                        hitBox.OnHit(Stat.Damage);
+                        // create hit decal projector at point
+                        GameManager.Instance.CreateDecalProjectorAtPoint(hits[j].transform,hits[j].point, hits[j].normal, DecalType.Blood);
+                    }
+                    // case: wall
+                    else
+                    {
+                        GameManager.Instance.CreateDecalProjectorAtPoint(hits[j].transform,hits[j].point, hits[j].normal, isHitCharacter ? DecalType.BloodOnWall : DecalType.BulletHole);
+                        break;
+                    }
                 }
             }
+            // if (Physics.Raycast(ray, out var hitInfo ,Stat.AttackRange,(int)Layers.HitCollider))
+            // {
+            //     Debug.DrawRay(MuzzlePosition.position, rayPos * Stat.AttackRange, debugRayColor, 5.0f);
+            //     var res = hitInfo.collider;
+            //     if (res.TryGetComponent<HitBox>(out var hitBox))
+            //     {
+            //         // var buff = Character.GetWeaponBuffMul(GetWeaponType(), WeaponStatType.Damage);
+            //         hitBox.OnHit(Stat.Damage);
+            //     }
+            //     else
+            //     {
+                    
+            //     }
+            // }
         }
     }
     public override bool CanAttack()
