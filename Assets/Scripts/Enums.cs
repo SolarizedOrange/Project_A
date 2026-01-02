@@ -79,3 +79,10 @@ public enum EndureNoteType
 {
     Tap, Hold
 }
+
+public enum DecalType
+{
+    BulletHole,
+    BloodOnWall,
+    Blood
+}
