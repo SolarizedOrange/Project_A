@@ -45,6 +45,7 @@ public enum EnemyActionType
     Attack,
     Reload,
     Hit,
+    MeleeTargeted
 }
 
 [BlackboardEnum]

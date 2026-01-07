@@ -1,13 +1,7 @@
+using System;
 using System.Collections;
 using UnityEngine;
-
-class DistanceComparer : System.Collections.Generic.IComparer<RaycastHit>
-{
-    public int Compare(RaycastHit a, RaycastHit b)
-    {
-        return a.distance.CompareTo(b.distance);
-    }
-}
+using Random = UnityEngine.Random;
 
 public abstract class RangedWeapon: WeaponBase
 {
@@ -52,28 +46,32 @@ public abstract class RangedWeapon: WeaponBase
             rayPos = (MuzzlePosition.forward + rayPos).normalized;
             var hits = new RaycastHit[maxPenetration];
             Ray ray = new Ray(MuzzlePosition.position, rayPos);
-            int hitCount = Physics.RaycastNonAlloc(ray, hits, Stat.AttackRange, (int)Layers.HitCollider);
-            System.Array.Sort(hits, 0, hitCount, new DistanceComparer());
+            Physics.RaycastNonAlloc(ray, hits, Stat.AttackRange, (int)Layers.HitCollider);
+            Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
+
             bool isHitCharacter = false;
-            if (hitCount > 0)
+            if (hits.Length > 0)
             {
                 Debug.DrawRay(MuzzlePosition.position, rayPos * Stat.AttackRange, debugRayColor, 5.0f);
-                for (int j = 0; j < hitCount; j++)
+                for (int j = 0; j < hits.Length; j++)
                 {
                     var res = hits[j].collider;
-                    if (res.TryGetComponent<HitBox>(out var hitBox))
+                    if (res != null)
                     {
-                        isHitCharacter = true;
-                        // var buff = Character.GetWeaponBuffMul(GetWeaponType(), WeaponStatType.Damage);
-                        hitBox.OnHit(Stat.Damage);
-                        // create hit decal projector at point
-                        GameManager.Instance.CreateDecalProjectorAtPoint(hits[j].transform,hits[j].point, hits[j].normal, DecalType.Blood);
-                    }
-                    // case: wall
-                    else
-                    {
-                        GameManager.Instance.CreateDecalProjectorAtPoint(hits[j].transform,hits[j].point, hits[j].normal, isHitCharacter ? DecalType.BloodOnWall : DecalType.BulletHole);
-                        break;
+                        if(res.TryGetComponent<HitBox>(out var hitBox))
+                        {
+                            isHitCharacter = true;
+                            // var buff = Character.GetWeaponBuffMul(GetWeaponType(), WeaponStatType.Damage);
+                            hitBox.OnHit(Stat.Damage);
+                            // create hit decal projector at point
+                            GameManager.Instance.CreateDecalProjectorAtPoint(hits[j].transform,hits[j].point, hits[j].normal, DecalType.Blood);
+                        }
+                        // case: wall
+                        else
+                        {
+                            GameManager.Instance.CreateDecalProjectorAtPoint(hits[j].transform,hits[j].point, hits[j].normal, isHitCharacter ? DecalType.BloodOnWall : DecalType.BulletHole);
+                            break;
+                        }
                     }
                 }
             }

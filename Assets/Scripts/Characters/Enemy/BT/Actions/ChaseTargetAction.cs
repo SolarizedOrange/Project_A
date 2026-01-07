@@ -11,12 +11,12 @@ public partial class ChaseTargetAction : Action
 {
     [SerializeReference] public BlackboardVariable<EnemyController> Agent;
     [SerializeReference] public BlackboardVariable<CharacterBase> Target;
-    [SerializeReference] public BlackboardVariable<bool> IsHit;
+    [SerializeReference] public BlackboardVariable<EnemyActionType> ActionType;
     [SerializeReference] public BlackboardVariable<Transform> TargetPosition;
 
     protected override Status OnUpdate()
     {
-        if (IsHit.Value)
+        if (ActionType.Value == EnemyActionType.Hit || ActionType.Value == EnemyActionType.MeleeTargeted)
             return Status.Failure;
 
         AimToTarget();
