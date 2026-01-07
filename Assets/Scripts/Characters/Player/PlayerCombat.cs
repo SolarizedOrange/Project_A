@@ -1,6 +1,10 @@
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
+using Random = UnityEngine.Random;
 
 public class PlayerCombat: PlayerComponent
 {
@@ -21,7 +25,7 @@ public class PlayerCombat: PlayerComponent
 
     public void UpdateAttack()
     {
-        if (PlayerCtrl.IsAiming && PlayerCtrl.IsAttacking)
+        if (PlayerCtrl.IsAiming && PlayerCtrl.IsAttacking && PlayerCtrl.IsMeleeAttacking == false)
         {
             if (PlayerCtrl.CurrentWeapon.Attack(hasJustAttacked))
             {
@@ -78,6 +82,19 @@ public class PlayerCombat: PlayerComponent
     {
         PlayerCtrl.IsAttacking = value.isPressed;
         hasJustAttacked = value.isPressed;
+
+        // Melee Attack Input
+        if (PlayerCtrl.IsAiming == false && value.isPressed)
+        {
+            if (PlayerCtrl.IsMeleeAttacking == false)
+            {
+                MeleeAttackStart();
+            }
+            else
+            {
+                MeleeTouch();
+            }
+        }
     }
 
     public void OnReload()
@@ -85,4 +102,134 @@ public class PlayerCombat: PlayerComponent
         StartCoroutine(DoReloadRoutine());
     }
 
+    #region Melee Attack
+    [SerializeField] float meleeRange = 2f;
+    [SerializeField] float meleeCooltime = 10f;
+    [SerializeField] int noteMinCount = 5;
+    [SerializeField] int noteMaxCount = 10;
+    [SerializeField] float noteInterval = 1.5f;
+    [SerializeField] float marginTime = 0.3f;
+    [SerializeField] float marginPositionDistance = 100f;
+    [SerializeField] HitBox targetEnemyBox;
+    [SerializeField] EnemyController targetEnemy;
+
+    public static UnityEvent<EndureNote> EndureNoteEvent = new();
+    public static UnityEvent<bool> EndureEndEvent = new();
+
+    Queue<EndureNote> queue = new();
+    Vector2 mousePos = Vector2.zero;
+    float lastMeleeTime = -1000f;
+    void MeleeAttackStart()
+    {
+        // Check Melee Hit
+        var ray = new Ray(
+            transform.position,
+            transform.forward
+        );
+        var res = new RaycastHit[10];
+        Physics.RaycastNonAlloc(ray, res, meleeRange, (int)Layers.HitCollider);
+        Array.Sort(res, (a, b) => a.distance.CompareTo(b.distance));
+        // MeleeAttackAction();
+        
+        foreach (var hit in res)
+        {
+            if (hit.collider != null)
+            {
+                targetEnemyBox = hit.collider.GetComponent<HitBox>();
+                targetEnemy = targetEnemyBox?.GetComponentInParent<EnemyController>();
+                var canMeleeAttack = Time.time > lastMeleeTime + meleeCooltime
+                    && targetEnemyBox != null
+                    && targetEnemy != null;
+                
+                if (canMeleeAttack)
+                {
+                    // Melee Action
+                    MeleeAttackAction();
+                    return;
+                }
+            }
+        }
+    }
+
+    void MeleeAttackAction()
+    {
+        PlayerDamage.EndureEndEvent.Invoke(false);
+        PlayerCtrl.IsMeleeAttacking = true;
+        // Enemy Targeting and Note Generation
+        targetEnemy.SetEnemyAction(EnemyActionType.MeleeTargeted);
+
+        int noteCount = Random.Range(noteMinCount, noteMaxCount+1);
+        float lastNoteTime = Time.time;
+
+        for (int i = 0; i < noteCount; i++)
+        {
+            var time = lastNoteTime + Random.Range(0.0f, noteInterval);
+            var note = new EndureNote{StartTime = time, Duration = 0.0f, Type = EndureNoteType.Tap, Target = targetEnemy.transform, ScreenOffset = new Vector3(Random.Range(-50, 50), Random.Range(-50, 50), 0)};
+            queue.Enqueue(note);
+            EndureNoteEvent.Invoke(note);
+
+            lastNoteTime = time;
+        }
+        Debug.Log($"MeleeAttack Routine Start {queue.Count}");
+
+        StartCoroutine(MeleeAttackRoutine());
+
+    }
+    
+    IEnumerator MeleeAttackRoutine()
+    {
+        while(queue.Count > 0 && PlayerCtrl.IsMeleeAttacking)
+        {
+            var note = queue.Peek();
+            if (note.StartTime + note.Duration < Time.time)
+            {
+                queue.Dequeue();
+                MeleeAttackEnd(false);
+            }
+            yield return null;
+        }
+        // Successfully cleared all notes
+        if (queue.Count == 0 && PlayerCtrl.IsMeleeAttacking) MeleeAttackEnd(true);
+    }
+
+    public void MeleeTouch()
+    {
+        if (queue.Count > 0)
+        {
+            var note = queue.Peek();
+            if (Mathf.Abs(note.StartTime - Time.time) < marginTime
+                && Vector2.Distance(note.Target.position, mousePos) < marginPositionDistance)
+            {
+                Debug.Log($"Melee Touch");
+                queue.Dequeue();
+            }
+            // miss touching
+            else
+            {
+                MeleeAttackEnd(false);
+            }
+        }
+    }
+
+    public void OnMeleePosition(InputValue value)
+    {
+        mousePos = value.Get<Vector2>();
+    }
+
+    public void MeleeAttackEnd(bool success = false)
+    {
+        Debug.Log($"Melee Attack End. Success: {success}");
+        queue.Clear();
+        PlayerCtrl.IsMeleeAttacking = false;
+        if (success && targetEnemyBox != null)
+        {
+            // Deal Damage
+            // targetEnemyBox.OnHit(HitBoxType.PlayerMelee, PlayerCtrl.MeleeDamage);
+        }
+        targetEnemy.SetEnemyAction(EnemyActionType.None);
+        EndureEndEvent.Invoke(success);
+        lastMeleeTime = Time.time;
+    }
+
+    #endregion
 }

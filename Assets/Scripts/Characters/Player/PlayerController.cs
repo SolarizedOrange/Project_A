@@ -15,6 +15,7 @@ public class PlayerController : CharacterBase
     public bool IsAiming;
     public bool IsReloading;
     public bool IsAttacking;
+    public bool IsMeleeAttacking;
     readonly int SpeedHash = Animator.StringToHash("Speed");
     readonly int AimHash = Animator.StringToHash("IsAiming");
     PlayerCombat playerCombat;
@@ -43,7 +44,8 @@ public class PlayerController : CharacterBase
 
     public void UpdateMove()
     {
-        if (IsCover || MoveDirection.x == 0)
+        // Add Melee Attacking Check
+        if (IsMeleeAttacking || IsCover || MoveDirection.x == 0)
         {
             MoveCtrl.SetTargetVelocity(Vector3.zero * Stat.MoveSpeed);
         }
@@ -60,6 +62,9 @@ public class PlayerController : CharacterBase
 
     public void UpdateAim()
     {
+        // Add Melee Attacking Check
+        if (IsMeleeAttacking) return;
+        
         if (IsAiming)
         {
             AimPos = mouseInputAction.ReadValue<Vector2>();

@@ -15,12 +15,19 @@ public class EnemyController: CharacterBase
 	protected override void Awake()
 	{
 		base.Awake();
+		PlayerDamageRoutineSetup();
 		EquipWeapon(GetComponentInChildren<WeaponBase>());
 		foreach (var item in BulletAmmo.Values)
 		{
 			item.Value = 999999;
 		}
 	}
+
+	void OnDestroy()
+	{
+		PlayerDamageRoutineCleanup();
+	}
+
 	void Update()
 	{
 		SyncSpeedAnimator();
@@ -44,8 +51,7 @@ public class EnemyController: CharacterBase
 		// Debuff
 		if (hitBoxType == HitBoxType.Head)
 		{
-			Agent.BlackboardReference.GetVariable<EnemyActionType>("CurrentAction", out var curAction);
-			curAction.Value = EnemyActionType.Hit;
+			SetEnemyAction(EnemyActionType.Hit);
 		}
 		else if (hitBoxType == HitBoxType.Leg)
 		{
@@ -71,4 +77,34 @@ public class EnemyController: CharacterBase
 	{
 		Animator.SetFloat(SpeedHash, MoveCtrl.Ctrl.linearVelocity.magnitude);
 	}
+
+	public void SetEnemyAction(EnemyActionType actionType)
+	{
+		Agent.BlackboardReference.GetVariable<EnemyActionType>("CurrentAction", out var curAction);
+		curAction.Value = actionType;
+	}
+
+	#region Player Damage Routine
+	public bool IsPlayPlayerDamageRoutine = false;
+	void PlayerDamageRoutineSetup()
+	{
+		PlayerDamage.EndureStartEvent.AddListener(OnPlayerDamageEndureStart);
+        PlayerDamage.EndureEndEvent.AddListener(OnPlayerDamageEndureEnd);
+	}
+
+	void PlayerDamageRoutineCleanup()
+	{
+		PlayerDamage.EndureStartEvent.RemoveListener(OnPlayerDamageEndureStart);
+		PlayerDamage.EndureEndEvent.RemoveListener(OnPlayerDamageEndureEnd);
+	}
+
+    void OnPlayerDamageEndureStart()
+    {
+        IsPlayPlayerDamageRoutine = true;
+    }
+    void OnPlayerDamageEndureEnd(bool success)
+    {
+        IsPlayPlayerDamageRoutine = false;
+    }
+	#endregion
 }

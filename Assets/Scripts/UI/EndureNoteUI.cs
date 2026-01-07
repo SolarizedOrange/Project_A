@@ -9,6 +9,11 @@ public class EndureNoteUI : MonoBehaviour
     float endTime;
     public float EndTime {get {return endTime;}}
 
+    Transform target;
+    public Transform Target {get {return target;}}
+    Vector3 screenOffset;
+    public Vector3 ScreenOffset {get {return screenOffset;}}
+
     float DisplayTime = 1.0f;
     Material mat;
 
@@ -32,6 +37,8 @@ public class EndureNoteUI : MonoBehaviour
     {
         startTime = note.StartTime;
         endTime = note.StartTime + Mathf.Max(note.Duration, 0.05f);
+        target = note.Target;
+        screenOffset = note.ScreenOffset;
     }
 
     public void Hit()

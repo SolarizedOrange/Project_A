@@ -10,6 +10,9 @@ public class EndureNote
     public float StartTime;
     public float Duration;
     public EndureNoteType Type;
+    // For PositionEndureNote
+    public Transform Target = null;
+    public Vector3 ScreenOffset = Vector3.zero;
 }
 
 public class PlayerDamage: PlayerComponent
@@ -46,9 +49,20 @@ public class PlayerDamage: PlayerComponent
     public static UnityEvent<EndureNote> EndureNoteEvent = new();
     public static UnityEvent EndureMissEvent = new();
 
-    public void UpdateDamage()
+	void OnEnable()
+	{
+		EndureEndEvent.AddListener(OnMeleeAttackRoutine);
+	}
+
+    void OnDisable()
     {
-        if (!inProcess && currentHPSection > 1 && Time.time > lastActivatedTime + cooldown)
+        EndureEndEvent.RemoveListener(OnMeleeAttackRoutine);
+    }
+
+	public void UpdateDamage()
+    {
+        if (!inProcess && currentHPSection > 1 && Time.time > lastActivatedTime + cooldown
+        && PlayerCtrl.IsMeleeAttacking == false)
         {
             StartCoroutine(StartEndureRoutine());
         }
@@ -245,5 +259,15 @@ public class PlayerDamage: PlayerComponent
                 AddMiss();
             }
         }
+    }
+
+    void OnMeleeAttackRoutine(bool success)
+    {
+        // Block Damage Routine for Melee Attacks
+        // Immunity on melee attack frames
+        invincible = true;
+        // Block damage Routine
+        queue.Clear();
+        this.success = false;
     }
 }

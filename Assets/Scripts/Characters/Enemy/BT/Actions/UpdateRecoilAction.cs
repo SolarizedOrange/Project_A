@@ -10,7 +10,7 @@ public partial class UpdateRecoilAction : Action
 {
     [SerializeReference] public BlackboardVariable<EnemyController> Agent;
     [SerializeReference] public BlackboardVariable<Transform> TargetPosition;
-    [SerializeReference] public BlackboardVariable<CharacterBase> Target;
+    [SerializeReference] public BlackboardVariable<PlayerController> Target;
     [SerializeReference] public BlackboardVariable<EnemyActionType> Type;
 
     protected override Status OnUpdate()
