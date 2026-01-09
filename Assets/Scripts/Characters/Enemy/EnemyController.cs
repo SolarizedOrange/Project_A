@@ -12,9 +12,8 @@ public class EnemyController: CharacterBase
     public BehaviorGraphAgent Agent;
     public Vector3 Recoil;
 	bool isDebuffApplied;
-	protected override void Awake()
+	protected override void Start()
 	{
-		base.Awake();
 		PlayerDamageRoutineSetup();
 		EquipWeapon(GetComponentInChildren<WeaponBase>());
 		foreach (var item in BulletAmmo.Values)
@@ -42,6 +41,7 @@ public class EnemyController: CharacterBase
 		if (HP.Value < 0.001f)
 		{
 			characterCollider.excludeLayers = (int)Layers.Player;
+			Die();
 			return;
 		}
 
