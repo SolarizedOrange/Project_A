@@ -725,7 +725,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DontDestroyOnLoadCheck: 0
   Player: {fileID: 1097694270078968495}
-  PlayerSpawnOffset: {x: 0, y: 0, z: 0}
+  bloodDecalPrefab: {fileID: 0}
+  bloodOnWallDecalPrefab: {fileID: 0}
+  bulletHoleDecalPrefab: {fileID: 0}
 --- !u!4 &966311391
 Transform:
   m_ObjectHideFlags: 0
@@ -2207,18 +2209,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 189761730177077663, guid: 17c6bf1532692d044bddf7cf8319f84a, type: 3}
-      propertyPath: m_Size.x
-      value: 1.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 189761730177077663, guid: 17c6bf1532692d044bddf7cf8319f84a, type: 3}
-      propertyPath: m_Size.y
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 2973398768998039625, guid: 17c6bf1532692d044bddf7cf8319f84a, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6236016170068327932, guid: 17c6bf1532692d044bddf7cf8319f84a, type: 3}
       propertyPath: m_Name
       value: Player
@@ -2287,10 +2277,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 5397251269715790506, guid: 56a1f285e2fd44747a870e9531d03a98, type: 3}
-      propertyPath: managedReferences[8739563303496056898].m_Value
-      value: 
-      objectReference: {fileID: 1097694270078968495}
     - target: {fileID: 5710684950034404780, guid: 56a1f285e2fd44747a870e9531d03a98, type: 3}
       propertyPath: m_Name
       value: Enemy
