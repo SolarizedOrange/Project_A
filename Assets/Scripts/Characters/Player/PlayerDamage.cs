@@ -49,20 +49,24 @@ public class PlayerDamage: PlayerComponent
     public static UnityEvent<EndureNote> EndureNoteEvent = new();
     public static UnityEvent EndureMissEvent = new();
 
-	void OnEnable()
-	{
-		EndureEndEvent.AddListener(OnMeleeAttackRoutine);
-	}
+	// void OnEnable()
+	// {
+	// 	EndureEndEvent.AddListener(OnMeleeAttackRoutine);
+	// }
 
-    void OnDisable()
-    {
-        EndureEndEvent.RemoveListener(OnMeleeAttackRoutine);
-    }
+    // void OnDisable()
+    // {
+    //     EndureEndEvent.RemoveListener(OnMeleeAttackRoutine);
+    // }
 
 	public void UpdateDamage()
     {
-        if (!inProcess && currentHPSection > 1 && Time.time > lastActivatedTime + cooldown
-        && PlayerCtrl.IsMeleeAttacking == false)
+        if (PlayerCtrl.IsMeleeAttacking)
+        {
+            StartCoroutine(InvincibleRoutine());
+        }
+        else if (!inProcess && currentHPSection > 1 && Time.time > lastActivatedTime + cooldown
+        )
         {
             StartCoroutine(StartEndureRoutine());
         }
@@ -90,6 +94,12 @@ public class PlayerDamage: PlayerComponent
 
     void CheckHP()
     {
+        if (PlayerCtrl.HP.Value == 0)
+        {
+            PlayerCtrl.Die();
+            return;
+        }
+
         if (PlayerCtrl.HP.Value <= PlayerCtrl.Stat.Hp * sections[currentHPSection])
         {
             for (int i = currentHPSection + 1; i < sections.Length; i++)
@@ -188,7 +198,6 @@ public class PlayerDamage: PlayerComponent
         {
             queue.Clear();
             success = false;
-            EndureEndEvent?.Invoke(false);
         }
     }
 
@@ -204,6 +213,12 @@ public class PlayerDamage: PlayerComponent
 
         while (queue.Count > 0)
         {
+            if (PlayerCtrl.IsMeleeAttacking)
+            {
+                queue.Clear();
+                success = false;
+                break;
+            }
             if (queue.Peek().Time + marginTime < Time.time)
             {
                 Debug.Log($"MISS: {queue.Peek().Time - Time.time} Type: {queue.Peek().Type}");
@@ -220,10 +235,10 @@ public class PlayerDamage: PlayerComponent
         lastActivatedTime = Time.time;
         inProcess = false;
 
+        EndureEndEvent?.Invoke(success);
         if (success)
         {
             // Heal
-            EndureEndEvent?.Invoke(true);
             currentHPSection--;
             PlayerCtrl.HP.Value = PlayerCtrl.Stat.Hp * sections[currentHPSection - 1];
             dodgeCount++;
@@ -261,13 +276,10 @@ public class PlayerDamage: PlayerComponent
         }
     }
 
-    void OnMeleeAttackRoutine(bool success)
-    {
-        // Block Damage Routine for Melee Attacks
-        // Immunity on melee attack frames
-        invincible = true;
-        // Block damage Routine
-        queue.Clear();
-        this.success = false;
-    }
+    // void OnMeleeAttackRoutine(bool success)
+    // {
+    //     // Block damage Routine
+    //     queue.Clear();
+    //     this.success = false;
+    // }
 }
