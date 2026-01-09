@@ -3,20 +3,34 @@ using System.Collections;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
+class RaycastComparator : System.Collections.Generic.IComparer<RaycastHit>
+{
+    public int Compare(RaycastHit a, RaycastHit b)
+    {
+        return a.distance.CompareTo(b.distance);
+    }
+}
+
 public abstract class RangedWeapon: WeaponBase
 {
-    public Transform MuzzlePosition;
-
-    [Header("Test Ray Setting")]
+#region WeaponSettings
+    [Header("Weapon Settings")]
+    [HideInInspector] public Transform MuzzlePosition;
     [SerializeField] int maxPenetration = 3;
     [SerializeField] bool IsFullAuto = true;
-    [SerializeField] Color debugRayColor = Color.red;
     public bool IsReloading;
     protected int ammo;
     public int Ammo { get{ return ammo; }}
+#endregion
+#region Debug
+    [Header("Test Ray Setting")]
+    [SerializeField] Color debugRayColor = Color.red;
+    [SerializeField] Color debugPointColor = Color.blue;
+#endregion
 
-    void Start()
+    public override void InitWeapon(CharacterBase character)
     {
+        base.InitWeapon(character);
         ammo = Stat.Capacity;
     }
 
@@ -44,51 +58,64 @@ public abstract class RangedWeapon: WeaponBase
             Vector3 rayPos = 0.1f * (1.0f - Stat.Accuracy) * Random.insideUnitSphere;
             rayPos.z *= 0.5f;
             rayPos = (MuzzlePosition.forward + rayPos).normalized;
-            var hits = new RaycastHit[maxPenetration];
             Ray ray = new Ray(MuzzlePosition.position, rayPos);
-            Physics.RaycastNonAlloc(ray, hits, Stat.AttackRange, (int)Layers.HitCollider);
-            Array.Sort(hits, (a, b) => a.distance.CompareTo(b.distance));
 
-            bool isHitCharacter = false;
-            if (hits.Length > 0)
+            var comp = new RaycastComparator();
+            var hits = new RaycastHit[maxPenetration];
+            int hitCount = Physics.RaycastNonAlloc(ray, hits, Stat.AttackRange, (int)Layers.Default | (int)Layers.HitCollider);
+
+            if (hitCount > 0)
             {
+                Array.Sort(hits, 0, hitCount, comp);
                 Debug.DrawRay(MuzzlePosition.position, rayPos * Stat.AttackRange, debugRayColor, 5.0f);
-                for (int j = 0; j < hits.Length; j++)
+                for (int j = 0; j < hitCount; j++)
                 {
                     var res = hits[j].collider;
-                    if (res != null)
+                    Debug.DrawLine(
+                        hits[j].point - Camera.main.transform.up * 0.5f,
+                        hits[j].point + Camera.main.transform.up * 0.5f,
+                        debugPointColor,
+                        5.0f
+                    );
+                    Debug.DrawLine(
+                        hits[j].point - Camera.main.transform.right * 0.5f,
+                        hits[j].point + Camera.main.transform.right * 0.5f,
+                        debugPointColor,
+                        5.0f
+                    );
+                    if (res.TryGetComponent<HitBox>(out var hitBox))
                     {
-                        if(res.TryGetComponent<HitBox>(out var hitBox))
-                        {
-                            isHitCharacter = true;
-                            // var buff = Character.GetWeaponBuffMul(GetWeaponType(), WeaponStatType.Damage);
-                            hitBox.OnHit(Stat.Damage);
-                            // create hit decal projector at point
-                            GameManager.Instance.CreateDecalProjectorAtPoint(hits[j].transform,hits[j].point, hits[j].normal, DecalType.Blood);
-                        }
-                        // case: wall
-                        else
-                        {
-                            GameManager.Instance.CreateDecalProjectorAtPoint(hits[j].transform,hits[j].point, hits[j].normal, isHitCharacter ? DecalType.BloodOnWall : DecalType.BulletHole);
-                            break;
-                        }
+                        // var buff = Character.GetWeaponBuffMul(GetWeaponType(), WeaponStatType.Damage);
+                        hitBox.OnHit(Stat.Damage);
                     }
                 }
             }
-            // if (Physics.Raycast(ray, out var hitInfo ,Stat.AttackRange,(int)Layers.HitCollider))
-            // {
-            //     Debug.DrawRay(MuzzlePosition.position, rayPos * Stat.AttackRange, debugRayColor, 5.0f);
-            //     var res = hitInfo.collider;
-            //     if (res.TryGetComponent<HitBox>(out var hitBox))
-            //     {
-            //         // var buff = Character.GetWeaponBuffMul(GetWeaponType(), WeaponStatType.Damage);
-            //         hitBox.OnHit(Stat.Damage);
-            //     }
-            //     else
-            //     {
-                    
-            //     }
-            // }
+
+            var ragdollHits = new RaycastHit[maxPenetration];
+            int ragdollHitCount = Physics.RaycastNonAlloc(ray, ragdollHits, Stat.AttackRange, (int)Layers.Default | (int)Layers.RagdollCollider);
+            if (ragdollHitCount > 0)
+            {
+                Array.Sort(ragdollHits, 0, ragdollHitCount, comp);
+                bool isHitCharacter = false;
+
+                for (int j = 0; j < ragdollHitCount; j++)
+                {
+                    if ((1 << ragdollHits[j].collider.gameObject.layer) == (int)Layers.RagdollCollider)
+                    {
+                        ragdollHits[j].rigidbody.AddForce(MuzzlePosition.forward * Stat.Damage, ForceMode.Impulse);
+
+                        isHitCharacter = true;
+                        // create hit decal projector at point
+                        GameManager.Instance.CreateDecalProjectorAtPoint(hits[j].transform,hits[j].point, hits[j].normal, DecalType.Blood);
+                    }
+                    // case: wall
+                    else
+                    {
+                        GameManager.Instance.CreateDecalProjectorAtPoint(hits[j].transform,hits[j].point, hits[j].normal, isHitCharacter ? DecalType.BloodOnWall : DecalType.BulletHole);
+                        break;
+                    }
+                }
+            }
         }
     }
     public override bool CanAttack()

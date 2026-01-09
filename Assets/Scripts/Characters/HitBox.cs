@@ -4,6 +4,13 @@ public class HitBox : MonoBehaviour
 {
     [SerializeField] HitBoxType type;
     CharacterBase character;
+    public CharacterBase Character
+    {
+        get
+        {
+            return character;
+            }
+    }
 
     Quaternion originalRotation;
     void Awake()

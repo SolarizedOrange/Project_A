@@ -68,15 +68,6 @@
                     "processors": "",
                     "interactions": "Press(behavior=2)",
                     "initialStateCheck": false
-                },
-                {
-                    "name": "MeleePosition",
-                    "type": "Value",
-                    "id": "7e493620-7f78-4db8-b902-7eb90ae5aa59",
-                    "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -198,17 +189,6 @@
                     "processors": "",
                     "groups": "",
                     "action": "Endure",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "2708bc0e-e2b9-442a-b812-9eece6bb3ce2",
-                    "path": "<Mouse>/position",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "MeleePosition",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

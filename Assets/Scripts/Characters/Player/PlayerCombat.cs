@@ -25,7 +25,22 @@ public class PlayerCombat: PlayerComponent
 
     public void UpdateAttack()
     {
-        if (PlayerCtrl.IsAiming && PlayerCtrl.IsAttacking && PlayerCtrl.IsMeleeAttacking == false)
+        if (PlayerCtrl.IsAiming)
+        {
+            RangedAttack();
+        }
+        else
+        {
+            MeleeAttack();
+        }
+
+        PlayerCtrl.Recoil = Vector3.Lerp(PlayerCtrl.Recoil, Vector3.zero, recoverRecoil ? 2f * Time.deltaTime : 0.25f * Time.deltaTime);
+        hasJustAttacked = false;
+    }
+
+    void RangedAttack()
+    {
+        if (PlayerCtrl.IsAttacking)
         {
             if (PlayerCtrl.CurrentWeapon.Attack(hasJustAttacked))
             {
@@ -36,11 +51,7 @@ public class PlayerCombat: PlayerComponent
                 PlayerCtrl.Recoil.x = Mathf.Clamp(PlayerCtrl.Recoil.x, -0.3f, 0.3f);
             }
         }
-
-        PlayerCtrl.Recoil = Vector3.Lerp(PlayerCtrl.Recoil, Vector3.zero, recoverRecoil ? 2f * Time.deltaTime : 0.25f * Time.deltaTime);
-        hasJustAttacked = false;
     }
-
     IEnumerator DoRecoilRoutine()
     {
         recoverRecoil = false;
@@ -82,19 +93,6 @@ public class PlayerCombat: PlayerComponent
     {
         PlayerCtrl.IsAttacking = value.isPressed;
         hasJustAttacked = value.isPressed;
-
-        // Melee Attack Input
-        if (PlayerCtrl.IsAiming == false && value.isPressed)
-        {
-            if (PlayerCtrl.IsMeleeAttacking == false)
-            {
-                MeleeAttackStart();
-            }
-            else
-            {
-                MeleeTouch();
-            }
-        }
     }
 
     public void OnReload()
@@ -104,21 +102,36 @@ public class PlayerCombat: PlayerComponent
 
     #region Melee Attack
     [SerializeField] float meleeRange = 2f;
-    [SerializeField] float meleeCooltime = 10f;
+    [SerializeField] float meleeCooldown = 10f;
     [SerializeField] int noteMinCount = 5;
     [SerializeField] int noteMaxCount = 10;
-    [SerializeField] float noteInterval = 1.5f;
+    [SerializeField] float noteInterval = 0.25f;
     [SerializeField] float marginTime = 0.3f;
-    [SerializeField] float marginPositionDistance = 100f;
+    [SerializeField] float marginPositionDistance = 70f;
     [SerializeField] HitBox targetEnemyBox;
     [SerializeField] EnemyController targetEnemy;
 
-    public static UnityEvent<EndureNote> EndureNoteEvent = new();
-    public static UnityEvent<bool> EndureEndEvent = new();
+    public static UnityEvent<EndureNote> MeleeNoteEvent = new();
+    public static UnityEvent<bool> MeleeEndEvent = new();
 
     Queue<EndureNote> queue = new();
-    Vector2 mousePos = Vector2.zero;
     float lastMeleeTime = -1000f;
+
+    void MeleeAttack()
+    {
+        if (hasJustAttacked)
+        {
+            if (PlayerCtrl.IsMeleeAttacking)
+            {   
+                // Melee Attack Input
+                MeleeTouch();
+            }
+            else
+            {
+                MeleeAttackStart();
+            }
+        }
+    }
     void MeleeAttackStart()
     {
         // Check Melee Hit
@@ -126,70 +139,91 @@ public class PlayerCombat: PlayerComponent
             transform.position,
             transform.forward
         );
-        var res = new RaycastHit[10];
-        Physics.RaycastNonAlloc(ray, res, meleeRange, (int)Layers.HitCollider);
-        Array.Sort(res, (a, b) => a.distance.CompareTo(b.distance));
-        // MeleeAttackAction();
-        
-        foreach (var hit in res)
+        if (Physics.Raycast(ray, out var hit, meleeRange, (int)Layers.HitCollider))
         {
-            if (hit.collider != null)
+            targetEnemyBox = hit.collider.GetComponent<HitBox>();
+            targetEnemy = targetEnemyBox.Character as EnemyController;
+
+            Debug.DrawLine(
+                hit.point - Camera.main.transform.up * 0.5f,
+                hit.point + Camera.main.transform.up * 0.5f,
+                Color.green,
+                5.0f
+            );
+            Debug.DrawLine(
+                hit.point - Camera.main.transform.right * 0.5f,
+                hit.point + Camera.main.transform.right * 0.5f,
+                Color.green,
+                5.0f
+            );
+
+            if (targetEnemy == null) return;
+
+            Debug.Log($"{targetEnemy} {targetEnemyBox}");
+            if (Time.time > lastMeleeTime + meleeCooldown)
             {
-                targetEnemyBox = hit.collider.GetComponent<HitBox>();
-                targetEnemy = targetEnemyBox?.GetComponentInParent<EnemyController>();
-                var canMeleeAttack = Time.time > lastMeleeTime + meleeCooltime
-                    && targetEnemyBox != null
-                    && targetEnemy != null;
-                
-                if (canMeleeAttack)
-                {
-                    // Melee Action
-                    MeleeAttackAction();
-                    return;
-                }
+                // Melee Action
+                MeleeAttackAction();
+                return;
             }
         }
     }
 
     void MeleeAttackAction()
     {
-        PlayerDamage.EndureEndEvent.Invoke(false);
         PlayerCtrl.IsMeleeAttacking = true;
         // Enemy Targeting and Note Generation
         targetEnemy.SetEnemyAction(EnemyActionType.MeleeTargeted);
 
         int noteCount = Random.Range(noteMinCount, noteMaxCount+1);
-        float lastNoteTime = Time.time;
+        float lastNoteTime = Time.time + 3.0f;
 
         for (int i = 0; i < noteCount; i++)
         {
-            var time = lastNoteTime + Random.Range(0.0f, noteInterval);
-            var note = new EndureNote{StartTime = time, Duration = 0.0f, Type = EndureNoteType.Tap, Target = targetEnemy.transform, ScreenOffset = new Vector3(Random.Range(-50, 50), Random.Range(-50, 50), 0)};
+            var time = lastNoteTime + noteInterval * Random.Range(1, 5);
+            Debug.Log(time);
+            var note = new EndureNote{
+                StartTime = time,
+                Duration = 0.0f,
+                Type = EndureNoteType.Tap,
+                Target = targetEnemy.transform,
+                ScreenOffset = new Vector3
+                (
+                    Random.Range(-1.0f, 1.0f),
+                    Random.Range(-1.0f, 1.0f),
+                    0
+                )
+            };
             queue.Enqueue(note);
-            EndureNoteEvent.Invoke(note);
+            MeleeNoteEvent.Invoke(note);
 
             lastNoteTime = time;
         }
         Debug.Log($"MeleeAttack Routine Start {queue.Count}");
 
         StartCoroutine(MeleeAttackRoutine());
-
     }
     
     IEnumerator MeleeAttackRoutine()
     {
-        while(queue.Count > 0 && PlayerCtrl.IsMeleeAttacking)
+        bool success = true;
+
+        while(queue.Count > 0)
         {
             var note = queue.Peek();
-            if (note.StartTime + note.Duration < Time.time)
+            if (note.StartTime + note.Duration + marginTime < Time.time)
             {
-                queue.Dequeue();
-                MeleeAttackEnd(false);
+                Debug.Log($"MISS: {note.StartTime - Time.time}");
+                success = false;
+                break;
             }
             yield return null;
         }
         // Successfully cleared all notes
-        if (queue.Count == 0 && PlayerCtrl.IsMeleeAttacking) MeleeAttackEnd(true);
+        if (PlayerCtrl.IsMeleeAttacking)
+        {
+            MeleeAttackEnd(success);
+        }
     }
 
     public void MeleeTouch()
@@ -197,39 +231,61 @@ public class PlayerCombat: PlayerComponent
         if (queue.Count > 0)
         {
             var note = queue.Peek();
+            Debug.DrawLine(
+                PlayerCtrl.AimPos - Camera.main.transform.up * 0.5f,
+                PlayerCtrl.AimPos + Camera.main.transform.up * 0.5f,
+                Color.red,
+                5.0f
+            );
+            Debug.DrawLine(
+                PlayerCtrl.AimPos - Camera.main.transform.right * 0.5f,
+                PlayerCtrl.AimPos + Camera.main.transform.right * 0.5f,
+                Color.red,
+                5.0f
+            );
+
+            Debug.DrawLine(
+                note.Target.position + note.ScreenOffset - Camera.main.transform.up * 0.5f,
+                note.Target.position + note.ScreenOffset + Camera.main.transform.up * 0.5f,
+                Color.cyan,
+                5.0f
+            );
+            Debug.DrawLine(
+                note.Target.position + note.ScreenOffset - Camera.main.transform.right * 0.5f,
+                note.Target.position + note.ScreenOffset + Camera.main.transform.right * 0.5f,
+                Color.cyan,
+                5.0f
+            );
+            Debug.Log($"TOUCH: {note.StartTime - Time.time} {Vector2.Distance(note.Target.position + note.ScreenOffset, PlayerCtrl.AimPos)}");
             if (Mathf.Abs(note.StartTime - Time.time) < marginTime
-                && Vector2.Distance(note.Target.position, mousePos) < marginPositionDistance)
+                && Vector2.Distance(note.Target.position + note.ScreenOffset, PlayerCtrl.AimPos) < marginPositionDistance)
             {
+                Debug.Log($"SUCCESS: {note.StartTime - Time.time}");
                 Debug.Log($"Melee Touch");
                 queue.Dequeue();
             }
             // miss touching
             else
             {
+                Debug.Log($"TOUCHMISS: {note.StartTime - Time.time}");
                 MeleeAttackEnd(false);
             }
         }
     }
 
-    public void OnMeleePosition(InputValue value)
-    {
-        mousePos = value.Get<Vector2>();
-    }
-
-    public void MeleeAttackEnd(bool success = false)
+    public void MeleeAttackEnd(bool success)
     {
         Debug.Log($"Melee Attack End. Success: {success}");
         queue.Clear();
         PlayerCtrl.IsMeleeAttacking = false;
-        if (success && targetEnemyBox != null)
+        if (success)
         {
             // Deal Damage
             // targetEnemyBox.OnHit(HitBoxType.PlayerMelee, PlayerCtrl.MeleeDamage);
         }
         targetEnemy.SetEnemyAction(EnemyActionType.None);
-        EndureEndEvent.Invoke(success);
+        MeleeEndEvent.Invoke(success);
         lastMeleeTime = Time.time;
     }
-
     #endregion
 }

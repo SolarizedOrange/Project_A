@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine.Animations;
+using UnityEngine.Assertions;
 
 [RequireComponent(typeof(MovementController))]
 public class CharacterBase : MonoBehaviour
@@ -118,9 +118,63 @@ public class CharacterBase : MonoBehaviour
 		{
             CurrentWeapon.gameObject.SetActive(true);
             CurrentWeapon.InitWeapon(this);
-			CurrentWeapon.ParentConstraint.SetSource(0,handConstraint);
+			CurrentWeapon.ParentConstraint.SetSource(0, handConstraint);
 		}
 	}
+#endregion
+
+#region Ragdoll
+    Collider[] ragdollColliders;
+    Rigidbody[] ragdollRigidbodies;
+
+    void InitRagdoll()
+    {
+        ragdollColliders = Animator.gameObject.GetComponentsInChildren<Collider>();
+        ragdollRigidbodies = Animator.gameObject.GetComponentsInChildren<Rigidbody>();
+
+        Assert.AreEqual(ragdollColliders.Length, ragdollRigidbodies.Length);
+    }
+
+    void ActivateRagdoll()
+    {
+        Rigidbody ctrlRigidbody = GetComponent<Rigidbody>();
+        Animator.enabled = false;
+        for (int i = 0; i < ragdollColliders.Length; i++)
+        {
+            ragdollColliders[i].enabled = true;
+            ragdollRigidbodies[i].isKinematic = false;
+            ragdollRigidbodies[i].linearVelocity = ctrlRigidbody.linearVelocity;
+            ragdollRigidbodies[i].angularVelocity = ctrlRigidbody.angularVelocity;
+        }
+
+        MoveCtrl.enabled = false;
+        GetComponent<Rigidbody>().isKinematic = true;
+        GetComponent<Collider>().enabled = false;
+
+        if (CurrentWeapon != null)
+        {
+            CurrentWeapon.ActivatePhysics();
+        }
+    }
+
+    void DeactivateRagdoll()
+    {
+        Animator.enabled = true;
+        for (int i = 0; i < ragdollColliders.Length; i++)
+        {
+            ragdollColliders[i].enabled = false;
+            ragdollRigidbodies[i].isKinematic = true;
+        }
+
+        MoveCtrl.enabled = true;
+        GetComponent<Rigidbody>().isKinematic = false;
+        GetComponent<Collider>().enabled = true;
+
+        if (CurrentWeapon != null)
+        {
+            CurrentWeapon.DeactivatePhysics();
+        }
+    }
 #endregion
 
     protected virtual void Awake()
@@ -128,12 +182,34 @@ public class CharacterBase : MonoBehaviour
         MoveCtrl = GetComponent<MovementController>();
         InitPerk();
         InitStat();
+        InitRagdoll();
         handConstraint = new ();
         handConstraint.weight = 1f;
         handConstraint.sourceTransform = handPosition;
 
+        DeactivateRagdoll();
+    }
+
+    protected virtual void Start()
+    {
         EquipWeapon(CurrentWeapon);
     }
+
+    public void Die()
+    {
+        foreach (var col in GetComponentsInChildren<HitBox>())
+        {
+            col.GetComponent<Collider>().enabled = false;
+        }
+        ActivateRagdoll();
+    }
+
+#if DEBUG
+    public void Revive()
+    {
+        DeactivateRagdoll();
+    }
+#endif
 
 	public virtual void OnDamage(HitBoxType hitBoxType, float damage) {}
 }

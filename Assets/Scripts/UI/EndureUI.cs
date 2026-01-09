@@ -20,8 +20,8 @@ public class EndureUI : MonoBehaviour
         PlayerDamage.EndureMissEvent.AddListener(RemoveNoteUI);
 
         // Melee Attack
-        PlayerCombat.EndureNoteEvent.AddListener(AddNoteUI);
-        PlayerCombat.EndureEndEvent.AddListener(EndNoteUI);
+        PlayerCombat.MeleeNoteEvent.AddListener(AddNoteUI);
+        PlayerCombat.MeleeEndEvent.AddListener(EndNoteUI);
     }
 
     void OnDisable()
@@ -31,8 +31,8 @@ public class EndureUI : MonoBehaviour
         PlayerDamage.EndureMissEvent.RemoveListener(RemoveNoteUI);
 
         // Melee Attack
-        PlayerCombat.EndureNoteEvent.RemoveListener(AddNoteUI);
-        PlayerCombat.EndureEndEvent.RemoveListener(EndNoteUI);
+        PlayerCombat.MeleeNoteEvent.RemoveListener(AddNoteUI);
+        PlayerCombat.MeleeEndEvent.RemoveListener(EndNoteUI);
     }
 
     void AddNoteUI(EndureNote note)
@@ -68,14 +68,8 @@ public class EndureUI : MonoBehaviour
         if (queue.Count > 0)
         {
             var noteUI = queue.Peek();
-            if (noteUI.Target != null)
-            {
-                transform.position = mainCamera.WorldToScreenPoint(noteUI.Target.position) + noteUI.ScreenOffset;
-            }
-            else 
-            {
-                transform.position = mainCamera.WorldToScreenPoint(player.transform.position);
-            }
+            
+            transform.position = mainCamera.WorldToScreenPoint(player.transform.position);
 
             if (Time.time - noteUI.EndTime > 3.0f)
             {

@@ -10,6 +10,7 @@ public class PlayerController : CharacterBase
     [SerializeField] Transform AimOrigin;
     [SerializeField] Transform AimTarget;
     public Vector2 MoveDirection;
+    public Vector2 MousePos;
     public Vector3 AimPos;
     public Vector3 Recoil;
     public bool IsAiming;
@@ -62,14 +63,15 @@ public class PlayerController : CharacterBase
 
     public void UpdateAim()
     {
+        MousePos = mouseInputAction.ReadValue<Vector2>();
+        AimPos = MousePos;
+        AimPos.z = Vector3.Dot(transform.position - Camera.main.transform.position, Camera.main.transform.forward);
+        AimPos = Camera.main.ScreenToWorldPoint(AimPos);
         // Add Melee Attacking Check
         if (IsMeleeAttacking) return;
         
         if (IsAiming)
         {
-            AimPos = mouseInputAction.ReadValue<Vector2>();
-            AimPos.z = Vector3.Dot(transform.position - Camera.main.transform.position, Camera.main.transform.forward);
-            AimPos = Camera.main.ScreenToWorldPoint(AimPos);
             MoveCtrl.SetTargetRotation(AimPos - transform.position);
             if ((AimPos - AimOrigin.position).sqrMagnitude > 0.1f)
             {
@@ -87,7 +89,7 @@ public class PlayerController : CharacterBase
 
     public void OnAim(InputValue value)
     {
-        IsAiming = CurrentWeapon != null && value.isPressed;
+        IsAiming = CurrentWeapon != null && !IsMeleeAttacking && value.isPressed;
         AimRig.weight = IsAiming ? 1 : 0;
     }
 
