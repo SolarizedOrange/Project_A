@@ -4,10 +4,16 @@ using Unity.Behavior;
 [Flags]
 public enum Layers
 {
+    Default = 1,
+    TransparentFX = 1 << 1,
+    IgnoreRaycast = 1 << 2,
+    Water = 1 << 3,
+    UI = 1 << 4,
     PlayerCoverable = 1 << 6,
     HitCollider = 1 << 7,
     EnemyCoverable = 1 << 8,
     Player = 1 << 9,
+    RagdollCollider = 1 << 10,
 }
 
 public enum WeaponType
