@@ -5,7 +5,6 @@ public class Level : MonoBehaviour
     [Header("Level Settings")]
     [SerializeField] Transform LevelObject;
     public BoxCollider LevelBounds;
-
     public Vector3 LevelPosition
 	{
 		get 
@@ -18,14 +17,9 @@ public class Level : MonoBehaviour
         }
 	}
 
-    [SerializeField] public Vector3 Extends;
+    public Vector3 Extends;
 
     Vector3 LevelPositionOffset;
-
-	void OnValidate()
-	{
-        Extends = LevelBounds.transform.localScale * 0.5f;
-	}
 
 	void Awake()
 	{
@@ -46,4 +40,22 @@ public class Level : MonoBehaviour
             character.transform.SetParent(LevelObject.transform);
         }
 	}
+
+    [ContextMenu("Calculate Level Size")]
+    public void CalculateLevelSize()
+    {
+        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        if (renderers.Length == 0) return;
+
+        Bounds combinedBounds = renderers[0].bounds;
+
+        foreach (Renderer render in renderers)
+        {
+            combinedBounds.Encapsulate(render.bounds);
+        }
+
+        LevelBounds.size = combinedBounds.size;
+        LevelBounds.transform.position = combinedBounds.center;
+        Extends = Vector3.Scale(LevelBounds.transform.localScale, LevelBounds.size) * 0.5f;
+    }
 }
