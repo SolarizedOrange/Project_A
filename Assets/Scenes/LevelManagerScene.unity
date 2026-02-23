@@ -165,6 +165,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DontDestroyOnLoadCheck: 0
   Player: {fileID: 1440870875}
+  bloodDecalPrefab: {fileID: 0}
+  bloodOnWallDecalPrefab: {fileID: 0}
+  bulletHoleDecalPrefab: {fileID: 0}
 --- !u!1 &743895220
 GameObject:
   m_ObjectHideFlags: 0
@@ -212,9 +215,10 @@ MonoBehaviour:
   DontDestroyOnLoadCheck: 0
   levelAssets:
   - {fileID: 6765645414410866625, guid: 102de7700ae0b404eb210587cc93f684, type: 3}
-  - {fileID: 27657773164291082, guid: fd030601c0e34744c9500a0fc25d3b2f, type: 3}
   - {fileID: 3455311319673222402, guid: 23e752ad6030e9242977aa11007b4e48, type: 3}
-  offset: {x: 0, y: 10, z: 0.5}
+  - {fileID: 27657773164291082, guid: fd030601c0e34744c9500a0fc25d3b2f, type: 3}
+  offset: {x: 0, y: 0, z: 0}
+  margin: {x: 0, y: 0.1}
   loadDistance: 20
 --- !u!1001 &1440870874
 PrefabInstance:
