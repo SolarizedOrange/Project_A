@@ -12,6 +12,7 @@ public class LevelManager : ManagerBase<LevelManager>
     [Header("Chunks Settings")]
     // [SerializeField] float createDistance = 100;
     [SerializeField] Vector3 offset;
+    [SerializeField] Vector2 margin;
     [SerializeField] int loadDistance = 10;
 
     Dictionary<Vector2Int,Level> chunkDic;
@@ -68,22 +69,22 @@ public class LevelManager : ManagerBase<LevelManager>
         // row check
         if (chunkDic.TryGetValue(createPos+Vector2Int.right, out var right)) 
         {
-            adjustCretePos.x = right.LevelPosition.x - right.Extends.x - extend.x;
+            adjustCretePos.x = right.LevelPosition.x - right.Extends.x - extend.x - margin.x;
             adjustCretePos.y = right.LevelPosition.y - right.Extends.y + extend.y;
         }
         else if (chunkDic.TryGetValue(createPos+Vector2Int.left, out var left))
         {
-            adjustCretePos.x = left.LevelPosition.x + left.Extends.x + extend.x;
+            adjustCretePos.x = left.LevelPosition.x + left.Extends.x + extend.x + margin.x;
             adjustCretePos.y = left.LevelPosition.y - left.Extends.y + extend.y;
         }
         // col check
         if (chunkDic.TryGetValue(createPos+Vector2Int.up, out var up))
         {
-            adjustCretePos.y = up.LevelPosition.y - up.Extends.y - (maxChunkExtendY * 2 - extend.y);
+            adjustCretePos.y = up.LevelPosition.y - up.Extends.y - (maxChunkExtendY * 2 - extend.y) - margin.y;
         }
         else if (chunkDic.TryGetValue(createPos+Vector2Int.down, out var down))
         {
-            adjustCretePos.y = down.LevelPosition.y + (maxChunkExtendY * 2 - down.Extends.y) + extend.y;
+            adjustCretePos.y = down.LevelPosition.y + (maxChunkExtendY * 2 - down.Extends.y) + extend.y + margin.y;
         }
         
         level = Instantiate(level);

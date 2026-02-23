@@ -1,3 +1,5 @@
+using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 public class Level : MonoBehaviour
@@ -56,6 +58,17 @@ public class Level : MonoBehaviour
 
         LevelBounds.size = combinedBounds.size;
         LevelBounds.transform.position = combinedBounds.center;
-        Extends = Vector3.Scale(LevelBounds.transform.localScale, LevelBounds.size) * 0.5f;
+        Extends = Vector3.Scale(LevelBounds.transform.lossyScale, LevelBounds.size) * 0.5f;
+
+        #if UNITY_EDITOR
+            EditorUtility.SetDirty(this);
+            if (LevelBounds != null) EditorUtility.SetDirty(LevelBounds);
+
+            var stage = PrefabStageUtility.GetCurrentPrefabStage();
+            if (stage != null)
+            {
+                EditorSceneManager.MarkSceneDirty(stage.scene);
+            }
+        #endif
     }
 }
