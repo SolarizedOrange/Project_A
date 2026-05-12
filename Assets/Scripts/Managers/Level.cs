@@ -6,27 +6,37 @@ public class Level : MonoBehaviour
 {
     [Header("Level Settings")]
     [SerializeField] Transform LevelObject;
+    [SerializeField] bool isActiveOnStart = false;
     public BoxCollider LevelBounds;
-    public Vector3 LevelPosition
+
+
+    Vector3 levelCenter;
+    // z axis is not center, z is zPivot.
+    public Vector3 LevelCenter
 	{
 		get 
         { 
-            return LevelBounds.transform.position; 
+            return levelCenter;
         }
         set 
         { 
-            transform.position = value - LevelPositionOffset;
+            var cur = LevelBounds.transform.position + LevelBounds.center;
+            cur.z = transform.position.z + ZPivot.localPosition.z;
+
+            var dif = value - cur;
+            transform.position += dif;
+
+            levelCenter = value;
         }
 	}
 
-    public Vector3 Extends;
+    public Transform ZPivot;
 
-    Vector3 LevelPositionOffset;
+    public Vector3 Extends;
 
 	void Awake()
 	{
-		LevelObject.gameObject.SetActive(false);
-        LevelPositionOffset = LevelBounds.transform.localPosition;
+		LevelObject.gameObject.SetActive(isActiveOnStart);
 	}
 
     public void ToggleActive(bool isActive)
@@ -34,19 +44,10 @@ public class Level : MonoBehaviour
         LevelObject.gameObject.SetActive(isActive);
     }
 
-	void OnTriggerEnter(Collider other)
-	{
-        var character = other.GetComponentInParent<CharacterBase>();
-		if (character != null)
-        {
-            character.transform.SetParent(LevelObject.transform);
-        }
-	}
-
-    [ContextMenu("Calculate Level Size")]
+	[ContextMenu("Calculate Level Size")]
     public void CalculateLevelSize()
     {
-        Renderer[] renderers = GetComponentsInChildren<Renderer>();
+        Renderer[] renderers = GetComponentsInChildren<Renderer>(true);
         if (renderers.Length == 0) return;
 
         Bounds combinedBounds = renderers[0].bounds;
@@ -55,10 +56,9 @@ public class Level : MonoBehaviour
         {
             combinedBounds.Encapsulate(render.bounds);
         }
-
-        LevelBounds.size = combinedBounds.size;
         LevelBounds.transform.position = combinedBounds.center;
-        Extends = Vector3.Scale(LevelBounds.transform.lossyScale, LevelBounds.size) * 0.5f;
+        LevelBounds.size = combinedBounds.size;
+        Extends = combinedBounds.size * 0.5f;
 
         #if UNITY_EDITOR
             EditorUtility.SetDirty(this);

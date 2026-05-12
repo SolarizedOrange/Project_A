@@ -3,7 +3,7 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class ElevatorLevel : Level
 {
-    private ElevatorLevel linkedLevel;
+    ElevatorLevel linkedLevel;
     public ElevatorLevel LinkedLevel
     {
         set

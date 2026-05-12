@@ -12,6 +12,8 @@ public class MovingBox : MonoBehaviour
     [SerializeField] float arrivalDistance = 0.1f;
     [SerializeField] Ease returnEase = Ease.InOutSine;
     Vector3 originPos;
+    Sequence stepSequence;
+    
 	void Start()
 	{
 		player = GameManager.Instance.Player;
@@ -26,14 +28,13 @@ public class MovingBox : MonoBehaviour
     }
 
 
-    private Sequence _stepSequence;
 
     public void StartStepping()
     {
-        _stepSequence?.Kill();
-        _stepSequence = DOTween.Sequence();
+        stepSequence?.Kill();
+        stepSequence = DOTween.Sequence();
 
-        _stepSequence
+        stepSequence
             .AppendCallback(MoveStep)
             .AppendInterval(interval) 
             .SetLoops(-1);    
@@ -61,8 +62,8 @@ public class MovingBox : MonoBehaviour
 
     void StopStepping()
     {
-        _stepSequence?.Kill();
-        _stepSequence = null;
+        stepSequence?.Kill();
+        stepSequence = null;
     }
 
     public void ReturnToOrigin()
