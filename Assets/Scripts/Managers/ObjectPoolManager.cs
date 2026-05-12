@@ -9,12 +9,12 @@ public class PoolAttribute : Attribute { }
 
 public static class PoolExtension
 {
-    public static GameObject Spawn(GameObject prefab, Vector3 position = default, Quaternion rotation = default)
+    public static GameObject Spawn(this GameObject origin, GameObject prefab, Vector3 position = default, Quaternion rotation = default)
     {
         return ObjectPoolManager.Instance.GetObject(prefab, position, rotation);
     }
 
-    public static void Despawn(GameObject prefab)
+    public static void Despawn(this GameObject origin, GameObject prefab)
     {
         ObjectPoolManager.Instance.ReturnObject(prefab);
     }
@@ -29,7 +29,7 @@ public class ObjectPoolManager : ManagerBase<ObjectPoolManager>
         base.Awake();
 
         RuntimeAutoScan();
-        
+
 		foreach (var item in PoolPrefabs)
         {
             CreateObject(item);
