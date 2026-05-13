@@ -14,9 +14,9 @@ public static class PoolExtension
         return ObjectPoolManager.Instance.GetObject(prefab, position, rotation);
     }
 
-    public static void Despawn(this GameObject origin, GameObject prefab)
+    public static void Despawn(this GameObject origin, GameObject Instance)
     {
-        ObjectPoolManager.Instance.ReturnObject(prefab);
+        ObjectPoolManager.Instance.ReturnObject(Instance);
     }
 }
 
@@ -69,7 +69,13 @@ public class ObjectPoolManager : ManagerBase<ObjectPoolManager>
         if (pools.ContainsKey(prefab)) return;
         
         var objectPool = new ObjectPool<GameObject>(
-            createFunc: () => Instantiate(prefab),
+            createFunc: () => 
+            {
+                var obj = Instantiate(prefab);
+                var poolObject = obj.AddComponent<ObjectPoolTag>();
+                poolObject.Prefab = prefab;
+                return obj.gameObject;
+            },
             actionOnGet: obj => obj.SetActive(true),
             actionOnRelease: obj => obj.SetActive(false),
             actionOnDestroy: obj => Destroy(obj),
@@ -91,16 +97,19 @@ public class ObjectPoolManager : ManagerBase<ObjectPoolManager>
         return obj;
     }
 
-    public void ReturnObject(GameObject prefab)
+    public void ReturnObject(GameObject instance)
     {
-        if (pools.TryGetValue(prefab, out var pool))
+        if (instance.TryGetComponent<ObjectPoolTag>(out var pooledObj))
         {
-            pool.Release(prefab);
+            GameObject originPrefab = pooledObj.Prefab;
+
+            if (originPrefab != null && pools.TryGetValue(originPrefab, out var pool))
+            {
+                pool.Release(instance);
+                return;
+            }
         }
-        else
-        {
-            Destroy(prefab);
-        }
+        Destroy(instance);
     }
 
 }
