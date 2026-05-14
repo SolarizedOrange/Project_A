@@ -477,6 +477,26 @@ PrefabInstance:
       propertyPath: m_LocalPosition.z
       value: -3.5000038
       objectReference: {fileID: 0}
+    - target: {fileID: 4045224273921179119, guid: 919eb84efb2547440966456f6b0ce8b7, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4045224273921179119, guid: 919eb84efb2547440966456f6b0ce8b7, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4045224273921179119, guid: 919eb84efb2547440966456f6b0ce8b7, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.7071068
+      objectReference: {fileID: 0}
+    - target: {fileID: 4045224273921179119, guid: 919eb84efb2547440966456f6b0ce8b7, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4045224273921179119, guid: 919eb84efb2547440966456f6b0ce8b7, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -90
+      objectReference: {fileID: 0}
     - target: {fileID: 5216264705858270989, guid: 919eb84efb2547440966456f6b0ce8b7, type: 3}
       propertyPath: m_Mesh
       value: 
@@ -528,7 +548,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ObjectPrefab: {fileID: 5710684950034404780, guid: 56a1f285e2fd44747a870e9531d03a98, type: 3}
   SpawnPoint: {fileID: 376132462}
-  SpawnInterval: 10
+  SpawnInterval: 1000
 --- !u!4 &376132462 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4045224273921179119, guid: 919eb84efb2547440966456f6b0ce8b7, type: 3}

@@ -17,7 +17,7 @@ public partial class CalcDistanceAction : Action
         if(Self.Value.CurrentWeapon == null) return Status.Failure;
         
         if (Vector3.Dot(Target.Value.transform.position - Self.Value.transform.position,
-            Self.Value.transform.right) > 0)
+            Self.Value.transform.forward) > 0)
         {
             var distance = Vector3.Distance(Self.Value.transform.position, Target.Value.transform.position);
             var weaponDistance = 0f;
