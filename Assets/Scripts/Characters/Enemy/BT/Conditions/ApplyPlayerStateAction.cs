@@ -10,7 +10,7 @@ using System.Collections.Generic;
 public partial class ApplyPlayerStateAction : Action
 {
     [SerializeReference] public BlackboardVariable<EnemyController> Agent;
-    [SerializeReference] public BlackboardVariable<PlayerController> Player;
+    [SerializeReference] public BlackboardVariable<CharacterBase> Player;
     [SerializeReference] public BlackboardVariable<float> DebuffAttackRate;
     [SerializeReference] public BlackboardVariable<EnemyActionType> ActionType;
 
