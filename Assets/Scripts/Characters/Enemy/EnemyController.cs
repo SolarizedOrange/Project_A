@@ -16,6 +16,7 @@ public class EnemyController: CharacterBase
 	{
 		PlayerDamageRoutineSetup();
 		EquipWeapon(GetComponentInChildren<WeaponBase>());
+
 		foreach (var item in BulletAmmo.Values)
 		{
 			item.Value = 999999;
@@ -29,6 +30,17 @@ public class EnemyController: CharacterBase
 
 	void Update()
 	{
+		if (Agent.enabled == false)
+		{
+			if (Agent.BlackboardReference.GetVariable<CharacterBase>("Target", out var target) && target != null)
+			{
+				Agent.enabled = true;
+				Agent.Restart();
+			}
+			else if (GameManager.Instance && GameManager.Instance.Player)
+				Agent.BlackboardReference.SetVariableValue("Target", GameManager.Instance.Player);
+		}
+
 		SyncSpeedAnimator();
 	}
 	

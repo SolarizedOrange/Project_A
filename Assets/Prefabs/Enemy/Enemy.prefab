@@ -2096,7 +2096,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5710684950034404780}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f0038c16c34866b4f9e25c9c0dc0f7e6, type: 3}
   m_Name: 
@@ -2118,6 +2118,7 @@ MonoBehaviour:
   - rid: 2622587377929946009
   - rid: 2622587398898844164
   - rid: 2622587421360915219
+  - rid: 8403630355755565132
   m_OriginalGraph: {fileID: -8989826534361754030, guid: 8d470dfabddaa2b4398cc799f16949f1, type: 2}
   m_IsInitialised: 0
   m_IsStarted: 0
@@ -2172,6 +2173,14 @@ MonoBehaviour:
           m_Value1: 18322791715407176543
         Name: ExitCoverMinDistance
         m_Value: 4
+    - rid: 8403630355755565132
+      type: {class: 'BlackboardVariable`1[[PlayerController, Assembly-CSharp]]', ns: Unity.Behavior, asm: Unity.Behavior}
+      data:
+        GUID:
+          m_Value0: 17572156853850629801
+          m_Value1: 1051990135333767115
+        Name: Target
+        m_Value: {fileID: 0}
     - rid: 8739563098805371128
       type: {class: 'BlackboardVariable`1[[UnityEngine.GameObject, UnityEngine.CoreModule]]', ns: Unity.Behavior, asm: Unity.Behavior}
       data:
