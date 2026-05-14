@@ -11,8 +11,8 @@ public partial class WaitForSpecifyAction : Action
     [SerializeReference] public BlackboardVariable<EnemyActionType> ActionType;
     [SerializeReference] public BlackboardVariable<EnemyActionType> EqualType;
     [SerializeReference] public BlackboardVariable<bool> IsEqual;
-    private int currentFrame;
-    [CreateProperty] private int frameDelta;
+    int currentFrame;
+    [CreateProperty] int frameDelta;
     
 
     protected override Status OnStart()

@@ -9,7 +9,7 @@ using Unity.Properties;
 public partial class RandomTimeout : Modifier
 {
     [SerializeReference] public BlackboardVariable<float> RandomDuration;
-    [CreateProperty] private float m_Timer = 0.0f;
+    [CreateProperty] float m_Timer = 0.0f;
 
     protected override Status OnStart()
     {

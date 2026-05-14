@@ -19,7 +19,7 @@ public class PerkItem : ItemBase
 	public PerkGroup PerkGroup;
 	public List<PerkItemContainer> BuffList;	
 
-	private void OnValidate()
+	void OnValidate()
 	{
 		for (int i = 0; i < BuffList.Count; i++)
 		{

@@ -16,7 +16,7 @@ TagManager:
   - EnemyCoverable
   - Player
   - RagdollCollider
-  - 
+  - CinemachineCollider
   - 
   - 
   - 

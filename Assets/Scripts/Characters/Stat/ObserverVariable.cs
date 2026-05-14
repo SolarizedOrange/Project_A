@@ -5,7 +5,7 @@ using UnityEngine.Events;
 [Serializable]
 public class ObserverBool
 {
-	[SerializeField] private bool value;
+	[SerializeField]  bool value;
 	UnityEvent<bool> onValueChanged;
 
 	public bool Value
@@ -41,7 +41,7 @@ public class ObserverBool
 [Serializable]
 public class ObserverInt
 {
-	[SerializeField] private int value;
+	[SerializeField] int value;
 	UnityEvent<int> onValueChanged;
 
 	public int Value
@@ -78,7 +78,7 @@ public class ObserverInt
 [Serializable]
 public class ObserverFloat
 {
-	[SerializeField] private float value;
+	[SerializeField] float value;
 	public UnityEvent<float> onValueChanged;
 
 	public float Value
