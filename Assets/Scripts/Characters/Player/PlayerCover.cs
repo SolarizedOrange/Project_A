@@ -44,8 +44,8 @@ public class PlayerCover: PlayerComponent
             if (minDist > dist)
             {
                 closestCover = cover;
-                originPos = cover.transform.position;
-                originPos.z = 0;
+                originPos = PlayerCtrl.transform.position;
+                originPos.x = cover.transform.position.x;
                 PlayerCtrl.MoveCtrl.SetTargetPositionXZ(originPos);
                 // PlayerCtrl.MoveCtrl.SetTargetRotation(Vector3.right);
                 minDist = dist;
@@ -86,7 +86,7 @@ public class PlayerCover: PlayerComponent
     {
         if (PlayerCtrl.IsCover && (object)exitRoutine == null)
         {
-            if (Math.Abs((PlayerCtrl.transform.position - originPos).sqrMagnitude) > 0.2f)
+            if ((PlayerCtrl.transform.position - originPos).sqrMagnitude > 0.2f)
             {
                 if (PlayerCtrl.IsAiming)
                 {
