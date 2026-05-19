@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -106,12 +107,20 @@ public abstract class RangedWeapon: WeaponBase
 
                         isHitCharacter = true;
                         // create hit decal projector at point
-                        GameManager.Instance.CreateDecalProjectorAtPoint(hits[j].transform,hits[j].point, hits[j].normal, DecalType.Blood);
+                        // GameManager.Instance.CreateDecalProjectorAtPoint(ragdollHits[j].transform,ragdollHits[j].point, ragdollHits[j].normal, DecalType.Blood);
+                        PaintManager.Instance.Paint(
+                            ragdollHits[j].collider.gameObject.GetComponent<RagdollHitbox>().Owner.RagdollPaintable,
+                            ragdollHits[j].point,
+                            0.1f
+                        );
                     }
                     // case: wall
                     else
                     {
-                        GameManager.Instance.CreateDecalProjectorAtPoint(hits[j].transform,hits[j].point, hits[j].normal, isHitCharacter ? DecalType.BloodOnWall : DecalType.BulletHole);
+                        var wall = ragdollHits[j].collider.GetComponent<Paintable>();
+                        if (wall != null)
+                        // GameManager.Instance.CreateDecalProjectorAtPoint(ragdollHits[j].transform,ragdollHits[j].point, ragdollHits[j].normal, isHitCharacter ? DecalType.BloodOnWall : DecalType.BulletHole);
+                        PaintManager.Instance.Paint(wall, hits[j].point);
                         break;
                     }
                 }

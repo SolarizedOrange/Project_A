@@ -14,6 +14,7 @@ public class EnemyController: CharacterBase
 	bool isDebuffApplied;
 	protected override void Start()
 	{
+		base.Start();
 		PlayerDamageRoutineSetup();
 		EquipWeapon(GetComponentInChildren<WeaponBase>());
 
