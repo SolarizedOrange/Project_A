@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.Animations;
 using UnityEngine.Assertions;
+using UnityEngine.Animations.Rigging;
 
 [RequireComponent(typeof(MovementController))]
 public class CharacterBase : MonoBehaviour
@@ -109,23 +110,23 @@ public class CharacterBase : MonoBehaviour
 
     public void EquipWeapon(WeaponBase weapon)
 	{
+        if (weapon == null) return;
+
         if (CurrentWeapon != null)
             CurrentWeapon.gameObject.SetActive(false);
 
         CurrentWeapon = weapon;
 
-        if (CurrentWeapon != null)
-		{
-            CurrentWeapon.gameObject.SetActive(true);
-            CurrentWeapon.InitWeapon(this);
-			CurrentWeapon.ParentConstraint.SetSource(0, handConstraint);
-		}
+        CurrentWeapon.gameObject.SetActive(true);
+        CurrentWeapon.InitWeapon(this);
+        CurrentWeapon.ParentConstraint.SetSource(0, handConstraint);
 	}
 #endregion
 
 #region Ragdoll
     Collider[] ragdollColliders;
     Rigidbody[] ragdollRigidbodies;
+    public Paintable RagdollPaintable;
 
     void InitRagdoll()
     {
@@ -141,7 +142,7 @@ public class CharacterBase : MonoBehaviour
         Animator.enabled = false;
         for (int i = 0; i < ragdollColliders.Length; i++)
         {
-            ragdollColliders[i].enabled = true;
+            ragdollColliders[i].isTrigger = false;
             ragdollRigidbodies[i].isKinematic = false;
             ragdollRigidbodies[i].linearVelocity = ctrlRigidbody.linearVelocity;
             ragdollRigidbodies[i].angularVelocity = ctrlRigidbody.angularVelocity;
@@ -162,7 +163,8 @@ public class CharacterBase : MonoBehaviour
         Animator.enabled = true;
         for (int i = 0; i < ragdollColliders.Length; i++)
         {
-            ragdollColliders[i].enabled = false;
+            // ragdollColliders[i].enabled = false;
+            ragdollColliders[i].isTrigger = true;
             ragdollRigidbodies[i].isKinematic = true;
         }
 
@@ -187,11 +189,11 @@ public class CharacterBase : MonoBehaviour
         handConstraint.weight = 1f;
         handConstraint.sourceTransform = handPosition;
 
-        DeactivateRagdoll();
     }
 
     protected virtual void Start()
     {
+        DeactivateRagdoll();
         EquipWeapon(CurrentWeapon);
     }
 
